@@ -4,13 +4,9 @@
 
 int main(int argc, char* argv[])
 {
-	Image img(10, 10, rgb(0.1f, 0.1f, 0.7f));
+	Image img(1024, 1024, rgb(0.1f, 0.1f, 0.7f));
 
-	std::ofstream ofs;
-	ofs.open("try.ppm", std::ofstream::out);
+	img.writePNG("try.png");
 
-	img.writePPM(ofs);
-
-	ofs.close();
 	return 0;
 }

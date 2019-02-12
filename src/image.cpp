@@ -1,6 +1,8 @@
 #include "image.h"
 #include <iostream>
 
+// Class: Image
+
 // Constructors
 Image::Image() {}
 
@@ -172,3 +174,56 @@ void Image::readPPM(std::string fname)
 		}
 	}
 }
+
+void Image::writePNG(std::string fname)
+{
+	int i, j, idx;
+	std::vector<unsigned char> img(ny * nx * 4);
+	std::vector<unsigned char> png;
+
+	unsigned error;
+	unsigned int ir, ig, ib;
+	unsigned char cr, cg, cb;
+
+	idx = 0;
+	for(j = ny-1; j >= 0; j--)
+	{
+		for(i = 0; i < nx; i++)
+		{
+			ir = (unsigned int)(256*raster[i][j].r());
+			ig = (unsigned int)(256*raster[i][j].g());
+			ib = (unsigned int)(256*raster[i][j].b());
+
+			// Clamp to 255
+			if (ir > 255) ir = 255;
+			if (ig > 255) ig = 255;
+			if (ib > 255) ib = 255;
+
+			cr = (unsigned char)ir;
+			cg = (unsigned char)ig;
+			cb = (unsigned char)ib;
+
+			img[idx]   = cr;	// R
+			img[idx+1] = cg;	// G
+			img[idx+2] = cb;	// B
+			img[idx+3] = 255;	// A (fully opaque)
+	
+			idx += 4;
+		}
+	}
+
+	error = lodepng::encode(png, img, nx, ny);
+	if(!error) lodepng::save_file(png, fname);
+
+	//if there's an error, display it
+	if(error)
+	{
+		std::cerr << "encoder error " << error << ": " 
+			<< lodepng_error_text(error) << std::endl;
+	}
+}
+
+// Class: flatImage
+
+// Constructors
+flatImage::flatImage() {}
