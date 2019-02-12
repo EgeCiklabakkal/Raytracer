@@ -11,7 +11,7 @@ class rgb
 	float _r, _g, _b;
 
 	// Constructors
-	rgb(float r, float g, float b);
+	rgb(float r=0, float g=0, float b=0);
 	rgb(const rgb& original) { *this = original; }
 
 	// Setters
