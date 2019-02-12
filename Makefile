@@ -37,4 +37,4 @@ clean:
 
 .PHONY: run
 run:
-./$(BIN_NAME) $(ARGS)
+	./$(BIN_NAME) $(ARGS)
