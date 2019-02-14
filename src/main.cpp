@@ -14,11 +14,11 @@ int main(int argc, char* argv[])
 	std::vector<Shape*> shapes = {&sphere, &triangle};
 	Image img(width, height);
 
-	tmax = 100000.0f;
 	for(int i = 0; i < width; i++)
 	{
 		for(int j = 0; j < height; j++)
 		{
+			tmax = 100000.0f;
 			hit = false;
 			Ray r(Vec3(i, j, 0), direction);
 
