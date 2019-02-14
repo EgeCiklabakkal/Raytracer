@@ -75,6 +75,13 @@ class Vec3
 	friend float tripleProduct(const Vec3& v1, const Vec3& v2, const Vec3& v3);
 };
 
+class Vec3i
+{
+	public:
+
+	int e[3];
+};
+
 inline Vec3::Vec3(float p0, float p1, float p2)
 {
 	e[0] = p0;

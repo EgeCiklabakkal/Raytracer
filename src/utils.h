@@ -10,5 +10,8 @@
 #include "triangle.h"
 #include "sphere.h"
 #include "camera.h"
+#include "light.h"
+#include "material.h"
+#include "light.h"
 
 #endif
