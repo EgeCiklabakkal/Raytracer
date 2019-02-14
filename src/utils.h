@@ -9,5 +9,6 @@
 #include "shape.h"
 #include "triangle.h"
 #include "sphere.h"
+#include "camera.h"
 
 #endif
