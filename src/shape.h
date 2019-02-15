@@ -15,6 +15,19 @@ class HitRecord
 	float t;
 	Vec3 normal;
 	rgb color;
+
+	HitRecord() {}
+	HitRecord(float _t, const Vec3& _normal, const rgb& _color=rgb()) :
+	t(_t), normal(_normal), color(_color) {}
+
+	HitRecord& operator=(const HitRecord& rhs)
+	{
+		t      = rhs.t;
+		normal = rhs.normal;
+		color  = rhs.color;
+
+		return *this;
+	}
 };
 
 class Shape

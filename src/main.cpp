@@ -11,7 +11,12 @@ int main(int argc, char* argv[])
 	width = 500; height = 500;
 	Sphere sphere = Sphere(Vec3(250, 250, -1000), 150, rgb(0.2f, 0.1f, 0.8f));
 	Triangle triangle = Triangle(Vec3(300, 600, -800), Vec3(0, 100, -1000), Vec3(450, 20, -1000), rgb(0.9f, 0.2f, 0.1f));
-	std::vector<Shape*> shapes = {&sphere, &triangle};
+	Triangle meshElement0 = Triangle(Vec3(0, 0, -900), Vec3(400, 0, -900), Vec3(100, 400, -900), rgb(0.3f, 0.8f, 0.4f));
+	Triangle meshElement1 = Triangle(Vec3(400, 0, -900), Vec3(700, 0, -900), Vec3(100, 400, -900), rgb(0.1f, 0.9f, 0.1f));
+
+	std::vector<Triangle> meshElements =  {meshElement0, meshElement1};
+	TriangleMesh mesh(meshElements, Material());
+	std::vector<Shape*> shapes = {&sphere, &triangle, &mesh};
 	Image img(width, height);
 
 	std::array<float, 4> lrbt = {-50.0f, 50.0f, -50.0f, 50.0f};

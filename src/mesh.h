@@ -13,18 +13,13 @@ class TriangleMesh : public Shape
 	public:
 
 	// Member variables
-	std::vector<Vec3> *vertex_data_ptr;
-	std::vector<Material> *material_data_ptr;
-
 	std::vector<Triangle> triangles;	// each face stores id of 3 vertices
-	int material_id;
+	Material material;
 
 	// Constructors
 	TriangleMesh() {}
-	TriangleMesh(std::vector<Vec3> *vertex_ptr, std::vector<Material> *material_ptr,
-		std::vector<Triangle>& _triangles, int _material_id) :
-	vertex_data_ptr(vertex_ptr), material_data_ptr(material_ptr), triangles(_triangles),
-	material_id(_material_id) {}
+	TriangleMesh(std::vector<Triangle> _triangles, Material _material) :
+	triangles(_triangles), material(_material) {}
 
 	bool hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const;
 	bool shadowHit(const Ray& r, float tmin, float tmax, float time) const;
