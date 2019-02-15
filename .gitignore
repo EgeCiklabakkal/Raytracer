@@ -1,5 +1,6 @@
-# vim swap files
+# swap files
 *.swp
+*.swo
 
 # image files
 *.ppm
