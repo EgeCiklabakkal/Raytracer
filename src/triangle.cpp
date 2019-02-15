@@ -15,7 +15,7 @@ Triangle::Triangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2, const rgb&
 	│c  f  i│ │ t │   │ l │
 	└       ┘ └   ┘   └   ┘
 */
-bool Triangle::hit(const Ray& r, float tmin, float tmax, float time, hitRecord& record) const
+bool Triangle::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const
 {
 	float _a = vertices[0].x() - vertices[1].x();
 	float _b = vertices[0].y() - vertices[1].y();
@@ -52,9 +52,9 @@ bool Triangle::hit(const Ray& r, float tmin, float tmax, float time, hitRecord& 
 
 	if(_t >= tmin && _t <= tmax)
 	{
-		record.t = _t;
+		record.t      = _t;
 		record.normal = unitVector(cross((vertices[1]-vertices[0]), (vertices[2]-vertices[0])));
-		record.color = color;
+		record.color  = color;
 		return true;
 	}
 

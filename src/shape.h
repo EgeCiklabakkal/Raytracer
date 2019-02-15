@@ -8,8 +8,10 @@
 class Ray;
 class rgb;
 
-struct hitRecord
+class HitRecord
 {
+	public:
+
 	float t;
 	Vec3 normal;
 	rgb color;
@@ -19,7 +21,7 @@ class Shape
 {
 	public:
 
-	virtual bool hit(const Ray& r, float tmin, float tmax, float time, hitRecord& record) const=0;
+	virtual bool hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const=0;
 	virtual bool shadowHit(const Ray& r, float tmin, float tmax, float time) const=0;
 };
 

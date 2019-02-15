@@ -6,7 +6,7 @@ center(_center), radius(_radius), color(_color) {}
 /*
 	At² + Bt + C = 0
 */
-bool Sphere::hit(const Ray& r, float tmin, float tmax, float time, hitRecord& record) const
+bool Sphere::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const
 {
 	Vec3 d  = r.direction();
 	Vec3 o  = r.origin();

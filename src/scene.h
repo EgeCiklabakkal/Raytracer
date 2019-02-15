@@ -16,6 +16,7 @@ class Scene
 	Vec3 ambient_light;
 	std::vector<Light> lights;
 	std::vector<Material> materials;
+	std::vector<Vec3> vertex_data;
 	std::vector<Shape*> shapes;
 
 	void loadFromXml(const std::string& fname);

@@ -5,6 +5,12 @@ class Light
 {
 	public:
 
+};
+
+class PointLight
+{
+	public:
+
 	Vec3 position;
 	Vec3 intensity;
 };

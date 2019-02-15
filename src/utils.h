@@ -13,5 +13,6 @@
 #include "light.h"
 #include "material.h"
 #include "light.h"
+#include "mesh.h"
 
 #endif

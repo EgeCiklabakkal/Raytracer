@@ -17,7 +17,7 @@ class Triangle : public Shape
 	Triangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2, const rgb& _color=rgb());
 	
 	// Virtual Methods
-	bool hit(const Ray& r, float tmin, float tmax, float time, hitRecord& record) const;
+	bool hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const;
 	bool shadowHit(const Ray& r, float tmin, float tmax, float time) const;
 
 	// Getters

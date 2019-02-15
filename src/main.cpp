@@ -3,7 +3,7 @@
 int main(int argc, char* argv[])
 {
 	int width, height;
-	hitRecord record;
+	HitRecord record;
 	bool hit;
 	float tmax;
 	Vec3 direction(0, 0, -1);
@@ -14,13 +14,16 @@ int main(int argc, char* argv[])
 	std::vector<Shape*> shapes = {&sphere, &triangle};
 	Image img(width, height);
 
+	std::array<float, 4> lrbt = {-50.0f, 50.0f, -50.0f, 50.0f};
+	Camera cam = Camera(Vec3(250.0f, 250.0f, -500.0f), direction, Vec3(0.0f, 1.0f, 0.0f), lrbt, 100.0f, width, height, "simple.png");
+
 	for(int i = 0; i < width; i++)
 	{
 		for(int j = 0; j < height; j++)
 		{
 			tmax = 100000.0f;
 			hit = false;
-			Ray r(Vec3(i, j, 0), direction);
+			Ray r = cam.getRay(i, j);
 
 			for(const Shape* shape : shapes)
 			{
