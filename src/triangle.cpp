@@ -64,6 +64,7 @@ bool Triangle::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& 
 		record.t      = _t;
 		record.normal = unitVector(cross((vertices[1]-vertices[0]), (vertices[2]-vertices[0])));
 		record.color  = color;
+		record.material  = material;
 		return true;
 	}
 

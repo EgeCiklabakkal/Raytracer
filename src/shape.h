@@ -4,6 +4,7 @@
 #include "ray.h"
 #include "vector3.h"
 #include "rgb.h"
+#include "material.h"
 
 class Ray;
 class rgb;
@@ -15,16 +16,22 @@ class HitRecord
 	float t;
 	Vec3 normal;
 	rgb color;
+	Material material;
 
+	// Constructors
 	HitRecord() {}
 	HitRecord(float _t, const Vec3& _normal, const rgb& _color=rgb()) :
 	t(_t), normal(_normal), color(_color) {}
+	HitRecord(float _t, const Vec3& _normal, const Material& _material) :
+	t(_t), normal(_normal), material(_material) {}
+
 
 	HitRecord& operator=(const HitRecord& rhs)
 	{
 		t      = rhs.t;
 		normal = rhs.normal;
 		color  = rhs.color;
+		material = rhs.material;
 
 		return *this;
 	}

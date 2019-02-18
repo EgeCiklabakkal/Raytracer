@@ -21,7 +21,9 @@ class Scene
 	std::vector<Shape*> shapes;
 
 	~Scene();
+	// Methods
 	void loadFromXML(const std::string& fname);
+	rgb rayColor(const Ray& r, int max_recursion_depth);
 };
 
 #endif

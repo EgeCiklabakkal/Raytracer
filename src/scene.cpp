@@ -3,6 +3,11 @@
 #include <iostream>
 #include "utils.h"
 
+rgb Scene::rayColor(const Ray& r, int max_recursion_depth)
+{
+	return rgb();
+}
+
 Scene::~Scene()
 {
 	// Free lights
@@ -20,6 +25,7 @@ Scene::~Scene()
 	shapes.clear();
 }
 
+// Parse XML
 void Scene::loadFromXML(const std::string& fname)
 {
 	tinyxml2::XMLDocument doc;

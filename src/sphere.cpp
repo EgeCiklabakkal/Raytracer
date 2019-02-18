@@ -37,6 +37,7 @@ bool Sphere::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& re
 		record.t      = _t;
 		record.normal = unitVector(o + _t*d - center);
 		record.color  = color;
+		record.material  = material;
 		return true;
 	}
 
