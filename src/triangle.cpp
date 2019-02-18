@@ -47,7 +47,7 @@ bool Triangle::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& 
 
 	float beta = (_j*(eihf) + _k*(gfdi) + _l*(dheg)) / M;
 
-	if(beta <= 0.0f || beta >= 1.0f) return false;
+	if(beta < 0.0f || beta > 1.0f) return false;
 
 	float akjb = (_a * _k) - (_j * _b);
 	float jcal = (_j * _c) - (_a * _l);
@@ -55,7 +55,7 @@ bool Triangle::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& 
 
 	float gamma = (_i*(akjb) + _h*(jcal) + _g*(blkc)) / M;
 
-	if(gamma <= 0.0f || beta + gamma >= 1.0f) return false;
+	if(gamma < 0.0f || beta + gamma > 1.0f) return false;
 
 	float _t = -(_f*(akjb) + _e*(jcal) + _d*(blkc)) / M;
 
@@ -93,7 +93,7 @@ bool Triangle::shadowHit(const Ray& r, float tmin, float tmax, float time) const
 
 	float beta = (_j*(eihf) + _k*(gfdi) + _l*(dheg)) / M;
 
-	if(beta <= 0.0f || beta >= 1.0f) return false;
+	if(beta < 0.0f || beta > 1.0f) return false;
 
 	float akjb = (_a * _k) - (_j * _b);
 	float jcal = (_j * _c) - (_a * _l);
@@ -101,7 +101,7 @@ bool Triangle::shadowHit(const Ray& r, float tmin, float tmax, float time) const
 
 	float gamma = (_i*(akjb) + _h*(jcal) + _g*(blkc)) / M;
 
-	if(gamma <= 0.0f || beta + gamma >= 1.0f) return false;
+	if(gamma < 0.0f || beta + gamma > 1.0f) return false;
 
 	float _t = -(_f*(akjb) + _e*(jcal) + _d*(blkc)) / M;
 
