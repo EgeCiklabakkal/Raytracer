@@ -34,8 +34,14 @@ class Shape
 {
 	public:
 
+	virtual ~Shape() = 0;
+
 	virtual bool hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const=0;
 	virtual bool shadowHit(const Ray& r, float tmin, float tmax, float time) const=0;
+
+	virtual void print() const=0;
 };
+
+inline Shape::~Shape() {}
 
 #endif

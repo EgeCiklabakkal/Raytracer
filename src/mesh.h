@@ -8,6 +8,9 @@
 #include "shape.h"
 #include "triangle.h"
 
+// Mesh class can be changed at a later time to store vertices, rather than triangles
+// Then MeshTriangle class can inherit from class Mesh
+
 class TriangleMesh : public Shape
 {
 	public:
@@ -18,11 +21,14 @@ class TriangleMesh : public Shape
 
 	// Constructors
 	TriangleMesh() {}
-	TriangleMesh(std::vector<Triangle> _triangles, Material _material) :
+	TriangleMesh(std::vector<Triangle>& _triangles, const Material& _material) :
 	triangles(_triangles), material(_material) {}
+	virtual ~TriangleMesh() {}
 
 	bool hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const;
 	bool shadowHit(const Ray& r, float tmin, float tmax, float time) const;
+
+	void print() const;
 };
 
 #endif

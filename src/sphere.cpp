@@ -3,6 +3,9 @@
 Sphere::Sphere(const Vec3& _center, float _radius, const rgb& _color) :
 center(_center), radius(_radius), color(_color) {}
 
+Sphere::Sphere(const Vec3& _center, float _radius, const Material& _material) :
+center(_center), radius(_radius), material(_material) {}
+
 /*
 	At² + Bt + C = 0
 */
@@ -69,4 +72,9 @@ bool Sphere::shadowHit(const Ray& r, float tmin, float tmax, float time) const
 	}
 
 	return false;
+}
+
+void Sphere::print() const
+{
+	std::cout << "center: " << center << " radius: " << radius << std::endl;
 }

@@ -6,6 +6,9 @@
 *.ppm
 *.png
 
+# input files
+*.xml
+
 # executable
 raytracer
 

@@ -5,6 +5,7 @@
 #include "vector3.h"
 #include "rgb.h"
 #include "ray.h"
+#include "material.h"
 
 class Triangle : public Shape
 {
@@ -12,9 +13,15 @@ class Triangle : public Shape
 	
 	// Member variables
 	Vec3 vertices[3];	// are in ccw order
+	rgb color;
+	Material material;
 
 	// Constructors
 	Triangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2, const rgb& _color=rgb());
+	Triangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2, const Material& _material);
+
+	// Destructor
+	virtual ~Triangle() {}
 	
 	// Virtual Methods
 	bool hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const;
@@ -25,7 +32,8 @@ class Triangle : public Shape
 	Vec3 p1() { return vertices[1]; }
 	Vec3 p2() { return vertices[2]; }
 
-	rgb color;
+	// Methods
+	void print() const;
 };
 
 #endif

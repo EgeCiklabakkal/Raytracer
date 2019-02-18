@@ -8,6 +8,15 @@ Triangle::Triangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2, const rgb&
 	color = _color;
 }
 
+Triangle::Triangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2, const Material& _material)
+{
+	vertices[0] = _p0;
+	vertices[1] = _p1;
+	vertices[2] = _p2;
+	material = _material;
+}
+
+
 /*
 	┌       ┐ ┌   ┐   ┌   ┐
 	│a  d  g│ │ β │   │ j │
@@ -97,4 +106,9 @@ bool Triangle::shadowHit(const Ray& r, float tmin, float tmax, float time) const
 	float _t = -(_f*(akjb) + _e*(jcal) + _d*(blkc)) / M;
 
 	return (_t >= tmin && _t <= tmax);
+}
+
+void Triangle::print() const
+{
+	std::cout << vertices[0] << vertices[1] << vertices[2] << std::endl;
 }

@@ -1,25 +1,27 @@
 #ifndef _SCENE_H_
 #define _SCENE_H_
 
-#include "vector3.h"
 #include <vector>
 #include <string>
+#include "vector3.h"
+#include "rgb.h"
 
 class Scene
 {
 	public:
 
-	Vec3i background_color;
+	rgb background_color;
 	float shadow_ray_epsilon;
 	int max_recursion_depth;
 	std::vector<Camera> cameras;
-	Vec3 ambient_light;
-	std::vector<Light> lights;
+	AmbientLight ambient_light;
+	std::vector<Light*> lights;
 	std::vector<Material> materials;
 	std::vector<Vec3> vertex_data;
 	std::vector<Shape*> shapes;
 
-	void loadFromXml(const std::string& fname);
+	~Scene();
+	void loadFromXML(const std::string& fname);
 };
 
 #endif

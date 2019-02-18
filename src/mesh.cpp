@@ -40,3 +40,11 @@ bool TriangleMesh::shadowHit(const Ray& r, float tmin, float tmax, float time) c
 
 	return false;
 }
+
+void TriangleMesh::print() const
+{
+	for(const Triangle& triangle : triangles)
+	{
+		triangle.print();
+	}
+}
