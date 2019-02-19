@@ -4,11 +4,9 @@ int main(int argc, char* argv[])
 {
 	int width, height;
 	HitRecord record;
-	bool hit;
-	float tmax;
 
 	Scene scene;
-	scene.loadFromXML("simple.xml");
+	scene.loadFromXML(argv[1]);
 
 	for(Camera& cam: scene.cameras)
 	{
@@ -23,11 +21,15 @@ int main(int argc, char* argv[])
 			{
 				Ray r = cam.getRay(i, j);
 
-				img.set(i, j, scene.rayColor(r, 6));
+				rgb pixel_color = scene.rayColor(r, scene.max_recursion_depth);
+				pixel_color /= 256.0f;
+				pixel_color.clamp();
+
+				img.set(i, j, pixel_color);
 			}
 		}
 
-		img.writePNG("simple.png");
+		img.writePNG(cam.image_name);
 	}
 
 	return 0;

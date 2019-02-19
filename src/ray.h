@@ -2,6 +2,9 @@
 #define _RAY_H_
 
 #include "vector3.h"
+#include "shape.h"
+
+class HitRecord;
 
 class Ray
 {
@@ -27,6 +30,7 @@ class Ray
 	// Methods
 	Vec3 pointAtParameter(float t) const
 	{ return data[0] + t*data[1]; }
+	Ray reflectionRay(const HitRecord& record) const;
 
 	// Function aliases
 	Vec3 o() const { return origin(); }

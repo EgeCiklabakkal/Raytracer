@@ -212,8 +212,15 @@ void Image::writePNG(std::string fname)
 		}
 	}
 
+	std::string img_name(fname);
+	size_t dot = fname.find_last_of(".");
+	if(dot != std::string::npos)
+	{
+		img_name = fname.substr(0, dot) + ".png";
+	}
+
 	error = lodepng::encode(png, img, nx, ny);
-	if(!error) lodepng::save_file(png, fname);
+	if(!error) lodepng::save_file(png, img_name);
 
 	//if there's an error, display it
 	if(error)

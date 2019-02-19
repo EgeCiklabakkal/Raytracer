@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <math.h>
 #include "vector3.h"
 #include "rgb.h"
 
@@ -23,9 +24,11 @@ class Scene
 	~Scene();
 	// Methods
 	void loadFromXML(const std::string& fname);
-	rgb rayColor(const Ray& r, int max_recursion_depth);
-	rgb ambientColor(const HitRecord& record);
-	rgb diffuseColor(const Ray& r, const HitRecord& record, const Light* light_ptr);
+	rgb rayColor(const Ray& r, int recursion_depth) const;
+	rgb ambientColor(const HitRecord& record) const;
+	rgb diffuseColor(const Ray& r, const HitRecord& record, const Light* light_ptr) const;
+	rgb specularColor(const Ray& r, const HitRecord& record, const Light* light_ptr) const;
+	rgb reflectionColor(const Ray& r, const HitRecord& record, int recursion_depth) const;
 };
 
 #endif
