@@ -24,6 +24,8 @@ class Scene
 	// Methods
 	void loadFromXML(const std::string& fname);
 	rgb rayColor(const Ray& r, int max_recursion_depth);
+	rgb ambientColor(const HitRecord& record);
+	rgb diffuseColor(const Ray& r, const HitRecord& record, const Light* light_ptr);
 };
 
 #endif

@@ -21,28 +21,9 @@ int main(int argc, char* argv[])
 		{
 			for(int j = 0; j < height; j++)
 			{
-				tmax = 100000.0f;
-				hit = false;
 				Ray r = cam.getRay(i, j);
 
-				for(const Shape* shape : scene.shapes)
-				{
-					if(shape->hit(r, 0.0001f, tmax, 0.0f, record))
-					{
-						tmax = record.t;
-						hit = true;
-					}
-				}
-
-				if(hit)
-				{
-					img.set(i, j, rgb(0.8f, 0.1f, 0.1f));
-				}
-		
-				else
-				{
-					img.set(i, j, rgb(0.1f, 0.1f, 0.1f));
-				}
+				img.set(i, j, scene.rayColor(r, 6));
 			}
 		}
 

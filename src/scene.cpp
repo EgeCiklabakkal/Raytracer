@@ -5,7 +5,61 @@
 
 rgb Scene::rayColor(const Ray& r, int max_recursion_depth)
 {
-	return rgb();
+	rgb rcolor;
+	float tmax = 100000.0f;		// Note: tmax, tmin, time can be made an argument
+	float tmin = 0.0001f;		
+	float time = 0.0f;
+	bool hit = false;
+	HitRecord record;
+
+	for(const Shape* shape : this->shapes)
+	{
+		if(shape->hit(r, tmin, tmax, 0.0f, record))
+		{
+			tmax = record.t;
+			hit = true;
+		}
+	}
+	
+	if(hit)
+	{
+		rcolor = ambientColor(record);
+
+		// Loop over lights
+		for(const Light* light_ptr : this->lights)
+		{
+			rcolor += diffuseColor(r, record, light_ptr);
+		}
+
+		// color was in bytes
+		rcolor /= 256.0f;
+		rcolor.clamp();
+		return rcolor;
+	}
+
+	return background_color;
+}
+
+rgb Scene::ambientColor(const HitRecord& record)
+{
+	rgb Ia(ambient_light.intensity);
+	rgb ka(record.material.ambient);
+
+	return ka * Ia;
+}
+
+rgb Scene::diffuseColor(const Ray& r, const HitRecord& record, const Light* light_ptr)
+{
+	rgb I(light_ptr->intensity);
+	rgb kd(record.material.diffuse);
+
+	Vec3 x = r.pointAtParameter(record.t);
+	Vec3 wi(light_ptr->position - x);
+	float r2 = wi.squaredLength();
+
+	float costheta = std::max(0.0f, dot(wi, record.normal));
+
+	return (kd * costheta * I) / r2;
 }
 
 Scene::~Scene()
@@ -61,6 +115,7 @@ void Scene::loadFromXML(const std::string& fname)
 	background_color._g = float(icolor)/256.0f;
 	ss >> icolor;
 	background_color._b = float(icolor)/256.0f;
+	background_color.clamp();
 
 	// ShadowRayEpsilon
 	element = scene_element->FirstChildElement("ShadowRayEpsilon");

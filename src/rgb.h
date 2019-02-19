@@ -2,6 +2,7 @@
 #define _RGB_H_
 
 #include <iostream>
+#include "vector3.h"
 
 class rgb
 {
@@ -13,6 +14,7 @@ class rgb
 	// Constructors
 	rgb(float r=0, float g=0, float b=0);
 	rgb(const rgb& original) { *this = original; }
+	rgb(const Vec3& v);
 
 	// Setters
 	void setRed(float r)   { _r = r; }
@@ -49,10 +51,15 @@ class rgb
 
 	// Clamp to (0, 1.0) range
 	void clamp();
+
+	//Methods
+	void initFromBytes(const Vec3& color_in_bytes);
 };
 
 // Constructor
 inline rgb::rgb(float r, float g, float b) : _r(r), _g(g), _b(b) {}
+
+inline rgb::rgb(const Vec3& v) : _r(v.e[0]), _g(v.e[1]), _b(v.e[2]) {}
 
 // Assignment Operators
 inline rgb& rgb::operator=(const rgb& rhs)
@@ -148,6 +155,15 @@ inline void rgb::clamp()
 	if(this->_r < 0.0f) this->_r = 0.0f;
 	if(this->_g < 0.0f) this->_g = 0.0f;
 	if(this->_b < 0.0f) this->_b = 0.0f;
+}
+
+inline void rgb::initFromBytes(const Vec3& color_in_bytes)
+{
+	Vec3 fcolor = color_in_bytes / 256.0f;
+	this->_r = fcolor.x();
+	this->_g = fcolor.y();
+	this->_b = fcolor.z();
+	this->clamp();
 }
 
 #endif

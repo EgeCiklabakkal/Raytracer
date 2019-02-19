@@ -7,21 +7,20 @@ class Light
 {
 	public:
 
+	Vec3 position;
+	Vec3 intensity;
 };
 
 class PointLight : public Light
 {
 	public:
 
-	Vec3 position;
-	Vec3 intensity;
 };
 
 class AmbientLight : public Light
 {
 	public:
 
-	Vec3 intensity;	
 };
 
 #endif
