@@ -43,9 +43,10 @@ rgb Scene::rayColor(const Ray& r, int recursion_depth) const
 			if(!continue_light_loop)
 			{
 				rcolor += diffuseColor(r, record, light_ptr) +
-						specularColor(r, record, light_ptr) +
-						reflectionColor(r, record, recursion_depth);
+						specularColor(r, record, light_ptr);
 			}
+
+			rcolor += reflectionColor(r, record, recursion_depth);
 		}
 
 		// color is in bytes
