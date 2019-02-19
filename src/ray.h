@@ -3,6 +3,7 @@
 
 #include "vector3.h"
 #include "shape.h"
+#include "light.h"
 
 class HitRecord;
 
@@ -30,7 +31,10 @@ class Ray
 	// Methods
 	Vec3 pointAtParameter(float t) const
 	{ return data[0] + t*data[1]; }
-	Ray reflectionRay(const HitRecord& record) const;
+
+	Ray reflectionRay(const HitRecord& record, float epsilon) const;
+	Ray shadowRay(const HitRecord& record, const Light* light_ptr, float epsilon) const;
+	float parameterAtPoint(const Vec3& point) const;
 
 	// Function aliases
 	Vec3 o() const { return origin(); }

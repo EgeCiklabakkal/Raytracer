@@ -28,9 +28,24 @@ rgb Scene::rayColor(const Ray& r, int recursion_depth) const
 		// Loop over lights
 		for(const Light* light_ptr : this->lights)
 		{
-			rcolor += diffuseColor(r, record, light_ptr) +
-					specularColor(r, record, light_ptr) +
-					reflectionColor(r, record, recursion_depth);
+			bool continue_light_loop = false;
+			Ray shadow_ray(r.shadowRay(record, light_ptr, shadow_ray_epsilon));
+			float tlight = shadow_ray.parameterAtPoint(light_ptr->position);
+			for(const Shape* shape : this->shapes)
+			{
+				if(shape->shadowHit(shadow_ray, 0.0f, tlight, time))
+				{
+					continue_light_loop = true;
+					break;	
+				}		
+			}
+
+			if(!continue_light_loop)
+			{
+				rcolor += diffuseColor(r, record, light_ptr) +
+						specularColor(r, record, light_ptr) +
+						reflectionColor(r, record, recursion_depth);
+			}
 		}
 
 		// color is in bytes
@@ -93,7 +108,7 @@ rgb Scene::reflectionColor(const Ray& r, const HitRecord& record, int recursion_
 		return rgb();
 	}
 
-	return km * rayColor(r.reflectionRay(record), recursion_depth - 1);
+	return km * rayColor(r.reflectionRay(record, shadow_ray_epsilon), recursion_depth - 1);
 }
 
 Scene::~Scene()
