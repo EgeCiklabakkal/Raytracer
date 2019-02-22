@@ -20,6 +20,7 @@ class Scene
 	std::vector<Material> materials;
 	std::vector<Vec3> vertex_data;
 	std::vector<Shape*> shapes;
+	std::vector<Mesh*> meshes;
 
 	~Scene();
 	// Methods

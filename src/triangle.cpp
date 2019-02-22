@@ -8,11 +8,13 @@ Triangle::Triangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2, const rgb&
 	color = _color;
 }
 
-Triangle::Triangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2, const Material& _material)
+Triangle::Triangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2, 
+			const Vec3& _normal, const Material& _material)
 {
 	vertices[0] = _p0;
 	vertices[1] = _p1;
 	vertices[2] = _p2;
+	normal = _normal;
 	material = _material;
 }
 
@@ -62,7 +64,7 @@ bool Triangle::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& 
 	if(_t >= tmin && _t <= tmax)
 	{
 		record.t      = _t;
-		record.normal = unitVector(cross((vertices[1]-vertices[0]), (vertices[2]-vertices[0])));
+		record.normal = normal;
 		record.color  = color;
 		record.material  = material;
 		return true;
@@ -107,9 +109,4 @@ bool Triangle::shadowHit(const Ray& r, float tmin, float tmax, float time) const
 	float _t = -(_f*(akjb) + _e*(jcal) + _d*(blkc)) / M;
 
 	return (_t >= tmin && _t <= tmax);
-}
-
-void Triangle::print() const
-{
-	std::cout << vertices[0] << vertices[1] << vertices[2] << std::endl;
 }

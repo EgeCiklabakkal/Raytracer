@@ -74,8 +74,3 @@ bool Sphere::shadowHit(const Ray& r, float tmin, float tmax, float time) const
 
 	return false;
 }
-
-void Sphere::print() const
-{
-	std::cout << "center: " << center << " radius: " << radius << std::endl;
-}

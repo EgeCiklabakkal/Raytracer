@@ -24,8 +24,6 @@ class Sphere : public Shape
 
 	bool hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const;
 	bool shadowHit(const Ray& r, float tmin, float tmax, float time) const;	
-
-	void print() const;
 };
 
 #endif

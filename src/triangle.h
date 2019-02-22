@@ -13,12 +13,14 @@ class Triangle : public Shape
 	
 	// Member variables
 	Vec3 vertices[3];	// are in ccw order
-	rgb color;
+	Vec3 normal;
 	Material material;
+	rgb color;
 
 	// Constructors
 	Triangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2, const rgb& _color=rgb());
-	Triangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2, const Material& _material);
+	Triangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2,
+			 const Vec3& _normal, const Material& _material);
 
 	// Destructor
 	virtual ~Triangle() {}
@@ -33,7 +35,6 @@ class Triangle : public Shape
 	Vec3 p2() { return vertices[2]; }
 
 	// Methods
-	void print() const;
 };
 
 #endif
