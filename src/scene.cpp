@@ -45,9 +45,9 @@ rgb Scene::rayColor(const Ray& r, int recursion_depth) const
 				rcolor += diffuseColor(r, record, light_ptr) +
 						specularColor(r, record, light_ptr);
 			}
-
-			rcolor += reflectionColor(r, record, recursion_depth);
 		}
+		// Add color from reflections
+		rcolor += reflectionColor(r, record, recursion_depth);
 
 		// color is in bytes
 		return rcolor;
@@ -236,9 +236,9 @@ void Scene::loadFromXML(const std::string& fname)
 	ss << child->GetText() << std::endl;
 	ss >> ambient_light.intensity[0] >> ambient_light.intensity[1] >> ambient_light.intensity[2];
 	element = element->FirstChildElement("PointLight");
-	PointLight *point_light = new PointLight();
 	while(element)
 	{
+		PointLight *point_light = new PointLight();
 		child = element->FirstChildElement("Position");
 		ss << child->GetText() << std::endl;
 		child = element->FirstChildElement("Intensity");
@@ -251,7 +251,6 @@ void Scene::loadFromXML(const std::string& fname)
 
 		lights.push_back(point_light);
 		element = element->NextSiblingElement("PointLight");
-
 	}
 
 	// Materials
