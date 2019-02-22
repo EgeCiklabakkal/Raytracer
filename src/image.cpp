@@ -35,6 +35,16 @@ Image::Image(int w, int h, rgb background)
 	}
 }
 
+//Destructor
+Image::~Image()
+{
+	for(int i = 0; i < nx; i++)
+	{
+		delete [] raster[i];
+	}
+	delete [] raster;
+}
+
 // Methods
 bool Image::set(int x, int y, const rgb& color)
 {

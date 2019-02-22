@@ -20,6 +20,7 @@ class Image
 	Image();
 	Image(int w, int h);
 	Image(int w, int h, rgb background);
+	~Image();
 	bool set(int x, int y, const rgb& color);
 	void gammaCorrect(float gamma);
 	void writePPM(std::ostream& out);
