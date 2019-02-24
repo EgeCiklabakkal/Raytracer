@@ -1,9 +1,14 @@
 #ifndef _UTILS_H_
 #define _UTILS_H_
 
+// Macros
+#define DEFAULT_THREAD_COUNT 8
+
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
+#include <thread>
+#include <utility>
 #include <vector>
 
 #include "util/tinyxml2.h"
@@ -17,6 +22,7 @@
 #include "ray.h"
 #include "rdmGen.h"
 #include "rgb.h"
+#include "safeStack.h"
 #include "scene.h"
 #include "shape.h"
 #include "sphere.h"

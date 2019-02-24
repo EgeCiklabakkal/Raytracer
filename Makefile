@@ -18,7 +18,7 @@ SOURCES = $(shell find $(SRC_PATH) -name '*.$(SRC_EXT)')
 HEADERS = $(shell find $(SRC_PATH) -name '*.$(HED_EXT)')
 
 # flags #
-COMPILE_FLAGS = -std=c++11 -Wall -g #-O3
+COMPILE_FLAGS = -std=c++11 -Wall -pthread -g -O3
 
 # arguments #
 ARGS = ""

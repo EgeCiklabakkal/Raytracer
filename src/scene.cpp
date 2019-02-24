@@ -1,5 +1,66 @@
 #include "utils.h"
 
+void Scene::raytraceImages(int threadCount)
+{
+	int width, height;
+	HitRecord record;
+
+	for(const Camera& cam: cameras)
+        {
+                width  = cam.image_width;
+                height = cam.image_height;
+
+                Image img(width, height);
+
+                // Determine the pixels;
+                SafeStack<std::pair<float, float>> pixels(width * height);
+                for(int i = 0; i < width; i++)
+                {
+                        for(int j = 0; j < height; j++)
+                        {
+                                pixels.sstack.push_back(std::make_pair((float)i, (float)j));
+                        }
+                } 
+
+		// Create threads
+		std::vector<std::thread> threads;
+
+		for(int i = 0; i < threadCount; i++)
+		{
+			threads.push_back(std::thread(raytrace_routine, 
+						this, &cam, &img, &pixels));
+		}
+
+		// Wait for them to complete
+		for(int i = 0; i < threadCount; i++)
+		{
+			threads[i].join();
+		}
+
+                img.writePNG(cam.image_name);
+        }
+}
+
+void Scene::raytrace_routine(Scene* scene, const Camera* cam, Image* img, 
+		SafeStack<std::pair<float, float>>* pixels)
+{
+	std::pair<float, float> currPixel;
+	while(pixels->pop(currPixel))
+	{
+		int i, j;
+		i = currPixel.first;
+		j = currPixel.second;
+
+		Ray r = cam->getRay(i, j);
+
+		rgb pixel_color = scene->rayColor(r, scene->max_recursion_depth);
+		pixel_color /= 256.0f;
+		pixel_color.clamp();
+
+		img->set(i, j, pixel_color);
+	}
+}
+
 rgb Scene::rayColor(const Ray& r, int recursion_depth) const
 {
 	rgb rcolor;

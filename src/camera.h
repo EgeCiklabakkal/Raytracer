@@ -43,14 +43,14 @@ class Camera
 		q  = position + near_distance*gaze + near_plane[0]*across + near_plane[2]*up;
 	}
 
-	Ray getRay(int x, int y)	// Single sample
+	Ray getRay(int x, int y) const	// Single sample
 	{
 		Vec3 s = q + (pw*x + pw/2)*across + (ph*y + ph/2)*up;
 
 		return Ray(position, unitVector(s - position));
 	}
 
-	Ray getRay(float x, float y);	// TODO: define here
+	Ray getRay(float x, float y) const;	// TODO: define here
 };
 
 #endif
