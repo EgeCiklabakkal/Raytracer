@@ -29,7 +29,7 @@ class Image
 	void writePNG(std::string fname);
 };
 
-class flatImage
+class FlatImage
 {
 	public:
 
@@ -38,9 +38,9 @@ class flatImage
 	int nx;
 	int ny;
 
-	flatImage();
-	flatImage(int w, int h);
-	flatImage(int w, int h, rgb background);
+	FlatImage();
+	FlatImage(int w, int h);
+	FlatImage(int w, int h, rgb background);
 	bool set(int x, int y, const rgb& color);
 	void gammaCorrect(float gamma);
 	void writePPM(std::ostream& out);

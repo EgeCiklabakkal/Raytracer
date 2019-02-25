@@ -52,6 +52,9 @@ class rgb
 	// Clamp to (0, 1.0) range
 	void clamp();
 
+	// Clamp to (0, 255) range
+	void clamp256();
+
 	//Methods
 	void initFromBytes(const Vec3& color_in_bytes);
 };
@@ -151,6 +154,18 @@ inline void rgb::clamp()
 	if(this->_r > 1.0f) this->_r = 1.0f;
 	if(this->_g > 1.0f) this->_g = 1.0f;
 	if(this->_b > 1.0f) this->_b = 1.0f;
+
+	if(this->_r < 0.0f) this->_r = 0.0f;
+	if(this->_g < 0.0f) this->_g = 0.0f;
+	if(this->_b < 0.0f) this->_b = 0.0f;
+}
+
+// Clamp to (0, 255) range
+inline void rgb::clamp256()
+{
+	if(this->_r > 255.0f) this->_r = 255.0f;
+	if(this->_g > 255.0f) this->_g = 255.0f;
+	if(this->_b > 255.0f) this->_b = 255.0f;
 
 	if(this->_r < 0.0f) this->_r = 0.0f;
 	if(this->_g < 0.0f) this->_g = 0.0f;

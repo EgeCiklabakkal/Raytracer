@@ -240,7 +240,51 @@ void Image::writePNG(std::string fname)
 	}
 }
 
-// Class: flatImage
+// Class: FlatImage
 
 // Constructors
-flatImage::flatImage() {}
+FlatImage::FlatImage() {}
+
+FlatImage::FlatImage(int w, int h) : raster(w * h * 4, 0), nx(w), ny(h) {}
+
+// Methods
+bool FlatImage::set(int x, int y, const rgb& color)
+{
+	if(0 > x || x > this->nx) return false;
+	if(0 > y || y > this->ny) return false;
+
+	unsigned char cr, cg, cb;
+
+	cr = (unsigned char)color._r;
+	cg = (unsigned char)color._g;
+	cb = (unsigned char)color._b;
+
+	raster[(((ny-1) - y)*nx + x)*4]     = cr;
+	raster[(((ny-1) - y)*nx + x)*4 + 1] = cg;
+	raster[(((ny-1) - y)*nx + x)*4 + 2] = cb;
+	raster[(((ny-1) - y)*nx + x)*4 + 3] = 255;
+	return true;
+}
+
+void FlatImage::writePNG(std::string fname)
+{
+	std::vector<unsigned char> png;
+	unsigned error;
+
+	std::string img_name(fname);
+	size_t dot = fname.find_last_of(".");
+	if(dot != std::string::npos)
+	{
+		img_name = fname.substr(0, dot) + ".png";
+	}
+
+	error = lodepng::encode(png, raster, nx, ny);
+	if(!error) lodepng::save_file(png, img_name);
+
+	//if there's an error, display it
+	if(error)
+	{
+		std::cerr << "encoder error " << error << ": " 
+			<< lodepng_error_text(error) << std::endl;
+	}
+}
