@@ -204,7 +204,7 @@ rgb Scene::refractionColor(const Ray& r, const HitRecord& record, int recursion_
 
 		else
 		{
-			Vec3 a(Vec3(1.0f, 1.0f, 1.0f) - transparency);
+			Vec3 a(transparency);
 			k = Vec3(pow(a.x(), record.t), pow(a.y(), record.t), pow(a.z(), record.t));
 			
 			nrecord.normal = -nrecord.normal;
