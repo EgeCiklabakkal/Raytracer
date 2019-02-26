@@ -3,6 +3,7 @@
 
 // Macros
 #define DEFAULT_THREAD_COUNT 8
+#define DEFAULT_AIR_REFRACTION_INDEX 1.0f
 
 #include <iostream>
 #include <sstream>

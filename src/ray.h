@@ -1,6 +1,7 @@
 #ifndef _RAY_H_
 #define _RAY_H_
 
+#include <utility>
 #include "vector3.h"
 #include "shape.h"
 #include "light.h"
@@ -34,7 +35,10 @@ class Ray
 
 	Ray reflectionRay(const HitRecord& record, float epsilon) const;
 	Ray shadowRay(const HitRecord& record, const Light* light_ptr, float epsilon) const;
+	Ray transmissionRay(const HitRecord& record, const Vec3& d, float epsilon) const;
 	float parameterAtPoint(const Vec3& point) const;
+	bool refract(const HitRecord& record, std::pair<float, float> refractionIndexes,
+			Vec3& transmissionDirection) const;
 
 	// Function aliases
 	Vec3 o() const { return origin(); }

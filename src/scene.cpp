@@ -103,8 +103,9 @@ rgb Scene::rayColor(const Ray& r, int recursion_depth) const
 						specularColor(r, record, light_ptr);
 			}
 		}
-		// Add color from reflections
+		// Add color from reflections, refractions
 		rcolor += reflectionColor(r, record, recursion_depth);
+		rcolor += refractionColor(r, record, recursion_depth);
 
 		// color is in bytes
 		return rcolor;
@@ -166,7 +167,69 @@ rgb Scene::reflectionColor(const Ray& r, const HitRecord& record, int recursion_
 		return rgb();
 	}
 
-	return km * rayColor(r.reflectionRay(record, shadow_ray_epsilon), recursion_depth - 1);
+	if(!record.material.mirror.length())
+	{
+		return rgb();
+	}
+
+	return km * rayColor(r.reflectionRay(record, intersection_test_epsilon), 	
+				recursion_depth - 1);
+}
+
+rgb Scene::refractionColor(const Ray& r, const HitRecord& record, int recursion_depth) const
+{
+	Vec3 transparency = record.material.transparency;
+
+	if(!recursion_depth)
+	{
+		return rgb();
+	}
+
+	if(transparency.length())	// if p is on a dielectric
+	{
+		Vec3 transmissionDirection;
+		Vec3 k;
+		float c, n1, n2;
+		Ray reflectionRay = r.reflectionRay(record, intersection_test_epsilon);
+		n1 = DEFAULT_AIR_REFRACTION_INDEX;
+		n2 = record.material.refraction_index;
+		HitRecord nrecord(record);
+
+		if(dot(r.direction(), record.normal) < 0)
+		{
+			r.refract(record, std::pair<float, float>(n1, n2), transmissionDirection);
+			c = -dot(r.direction(), record.normal);
+			k = Vec3(1.0f, 1.0f, 1.0f);
+		}
+
+		else
+		{
+			Vec3 a(Vec3(1.0f, 1.0f, 1.0f) - transparency);
+			k = Vec3(pow(a.x(), record.t), pow(a.y(), record.t), pow(a.z(), record.t));
+			
+			nrecord.normal = -nrecord.normal;
+			if(r.refract(nrecord, std::pair<float, float>(n2, n1), 
+				transmissionDirection))
+			{
+				c = dot(transmissionDirection, record.normal);
+			}
+
+			else
+			{
+				return rgb(k) * rayColor(reflectionRay, recursion_depth - 1);
+			}
+		}
+		
+		float R0 = ((n1 - n2)*(n1 - n2)) / ((n1 + n2)*(n1 + n2));
+		float R  = R0 + (1 - R0) * (1 - c) * (1 - c) * (1 - c) * (1 - c) * (1 - c);
+		Ray transmissionRay(r.transmissionRay(nrecord, transmissionDirection, 
+					intersection_test_epsilon));
+
+		return rgb(k) * (R * rayColor(reflectionRay, recursion_depth - 1)
+					+ (1 - R) * rayColor(transmissionRay, recursion_depth - 1));
+	}
+
+	return rgb();
 }
 
 Scene::~Scene()

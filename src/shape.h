@@ -24,6 +24,7 @@ class HitRecord
 	t(_t), normal(_normal), color(_color) {}
 	HitRecord(float _t, const Vec3& _normal, const Material& _material) :
 	t(_t), normal(_normal), material(_material) {}
+	HitRecord(const HitRecord& rhs) { *this = rhs; }
 
 
 	HitRecord& operator=(const HitRecord& rhs)

@@ -13,6 +13,7 @@ class Scene
 
 	rgb background_color;
 	float shadow_ray_epsilon;
+	float intersection_test_epsilon;
 	int max_recursion_depth;
 	std::vector<Camera> cameras;
 	AmbientLight ambient_light;
@@ -34,6 +35,7 @@ class Scene
 	rgb diffuseColor(const Ray& r, const HitRecord& record, const Light* light_ptr) const;
 	rgb specularColor(const Ray& r, const HitRecord& record, const Light* light_ptr) const;
 	rgb reflectionColor(const Ray& r, const HitRecord& record, int recursion_depth) const;
+	rgb refractionColor(const Ray& r, const HitRecord& record, int recursion_depth) const;
 };
 
 #endif
