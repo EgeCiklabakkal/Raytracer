@@ -1,17 +1,37 @@
 <Scene>
     <BackgroundColor>0 0 0</BackgroundColor>
 
+    <ShadowRayEpsilon>1e-3</ShadowRayEpsilon>
+
     <MaxRecursionDepth>6</MaxRecursionDepth>
 
     <Cameras>
         <Camera id="1">
+            <Position>0 3 60</Position>
+            <Gaze>0 0 -1</Gaze>
+            <Up>0 1 0</Up>
+            <NearPlane>-0.1 0.1 -0.1 0.1</NearPlane>
+            <NearDistance>1</NearDistance>
+            <ImageResolution>512 512</ImageResolution>
+            <ImageName>scienceTree_512x512.ppm</ImageName>
+        </Camera>
+        <Camera id="2">
+            <Position>0 3 60</Position>
+            <Gaze>0 0 -1</Gaze>
+            <Up>0 1 0</Up>
+            <NearPlane>-0.1 0.1 -0.1 0.1</NearPlane>
+            <NearDistance>1</NearDistance>
+            <ImageResolution>1080 1080</ImageResolution>
+            <ImageName>scienceTree_1080x1080.ppm</ImageName>
+        </Camera>
+        <Camera id="3">
             <Position>5 5 10</Position>
             <Gaze>-0.4 -0.2 -1</Gaze>
             <Up>0 1 0</Up>
             <NearPlane>-1 1 -0.5 0.5</NearPlane>
             <NearDistance>1</NearDistance>
             <ImageResolution>1440 720</ImageResolution>
-            <ImageName>scienceTree.png</ImageName>
+            <ImageName>scienceTree_1440x720.ppm</ImageName>
         </Camera>
     </Cameras>
 
@@ -42,10 +62,8 @@
             <AmbientReflectance>0.200000 0.200000 0.200000</AmbientReflectance>
             <DiffuseReflectance>0.200000 0.200000 0.200000</DiffuseReflectance>
             <SpecularReflectance>0.500000 0.500000 0.500000</SpecularReflectance>
-            <PhongExponent>3</PhongExponent>
             <MirrorReflectance>0 0 0</MirrorReflectance>
-            <Transparency>0.99 0.99 0.99</Transparency>
-            <RefractionIndex>1.5</RefractionIndex>
+            <PhongExponent>3</PhongExponent>
         </Material>
         <Material id="4">
             <AmbientReflectance>1 1 1</AmbientReflectance>

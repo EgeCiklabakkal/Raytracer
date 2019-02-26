@@ -3,7 +3,7 @@
 
     <ShadowRayEpsilon>1e-3</ShadowRayEpsilon>
 
-    <IntersectionTestEpsilon>1e-6</IntersectionTestEpsilon>
+    <MaxRecursionDepth>6</MaxRecursionDepth>
 
     <Cameras>
         <Camera id="1">
@@ -13,7 +13,7 @@
             <NearPlane>-1 1 -1 1</NearPlane>
             <NearDistance>1</NearDistance>
             <ImageResolution>800 800</ImageResolution>
-            <ImageName>simple.png</ImageName>
+            <ImageName>simple.ppm</ImageName>
         </Camera>
     </Cameras>
 
@@ -30,6 +30,7 @@
             <AmbientReflectance>1 1 1</AmbientReflectance>
             <DiffuseReflectance>1 1 1</DiffuseReflectance>
             <SpecularReflectance>1 1 1</SpecularReflectance>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
             <PhongExponent>1</PhongExponent>
         </Material>
     </Materials>

@@ -1,5 +1,8 @@
 #include "utils.h"
 
+bool getChildTextWithDefault(tinyxml2::XMLElement* element, std::stringstream& ss, 
+				std::string name, std::string _default);
+
 // Parse XML
 void Scene::loadFromXML(const std::string& fname)
 {
@@ -49,6 +52,18 @@ void Scene::loadFromXML(const std::string& fname)
 		ss << "0.001" << std::endl;
 	}
 	ss >> shadow_ray_epsilon;
+
+	element = scene_element->FirstChildElement("IntersectionTestEpsilon");
+	if(element)
+	{
+		ss << element->GetText() << std::endl;
+	}
+
+	else
+	{
+		ss << "1e-6" << std::endl;
+	}
+	ss >> intersection_test_epsilon;
 
 	// MaxRecursionDepth
 	element = scene_element->FirstChildElement("MaxRecursionDepth");
@@ -136,20 +151,24 @@ void Scene::loadFromXML(const std::string& fname)
 		ss << child->GetText() << std::endl;
 		child = element->FirstChildElement("SpecularReflectance");
 		ss << child->GetText() << std::endl;
-		child = element->FirstChildElement("MirrorReflectance");
-		ss << child->GetText() << std::endl;
-		child = element->FirstChildElement("PhongExponent");
-		ss << child->GetText() << std::endl;
+		getChildTextWithDefault(element, ss, "MirrorReflectance", "0 0 0");
+		getChildTextWithDefault(element, ss, "PhongExponent", "1");
+		getChildTextWithDefault(element, ss, "Transparency", "0 0 0");
+		getChildTextWithDefault(element, ss, "RefractionIndex", "1");
 
 		ss >> material.ambient[0] >> material.ambient[1] >> material.ambient[2];
 		ss >> material.diffuse[0] >> material.diffuse[1] >> material.diffuse[2];
 		ss >> material.specular[0] >> material.specular[1] >> material.specular[2];
 		ss >> material.mirror[0] >> material.mirror[1] >> material.mirror[2];
 		ss >> material.phong_exponent;
+		ss >> material.transparency[0] >> material.transparency[1] 
+			>> material.transparency[2];
+		ss >> material.refraction_index;
 
 		materials.push_back(material);
 		element = element->NextSiblingElement("Material");
 	}
+	ss.clear();
 
 	// VertexData
 	element = scene_element->FirstChildElement("VertexData");
@@ -255,5 +274,23 @@ void Scene::loadFromXML(const std::string& fname)
 		shapes.push_back(sphere_ptr);
 
 		element = element->NextSiblingElement("Sphere");
+	}
+}
+
+// Helpers
+bool getChildTextWithDefault(tinyxml2::XMLElement* element, std::stringstream& ss, 
+				std::string name, std::string _default)
+{
+	auto child = element->FirstChildElement(name.data());
+	if(child)
+	{
+		ss << child->GetText() << std::endl;
+		return true;
+	}
+
+	else
+	{
+		ss << _default << std::endl;
+		return false;
 	}
 }

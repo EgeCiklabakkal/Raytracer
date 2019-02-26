@@ -1,16 +1,20 @@
 <Scene>
     <BackgroundColor>0 0 0</BackgroundColor>
 
+    <ShadowRayEpsilon>1e-3</ShadowRayEpsilon>
+
+    <MaxRecursionDepth>6</MaxRecursionDepth>
+
     <Cameras>
         <Camera id="1">
-            <Position>-0.02 0.10 1.5</Position>
+            <Position>-0.02 -0.05 1.5</Position>
             <Gaze>0 0 -1</Gaze>
             <Up>0 1 0</Up>
-            <NearPlane>-0.1 0.1 -0.1 0.1</NearPlane>
+            <NearPlane>-0.1 0.1 0.0 0.2</NearPlane>
             <NearDistance>1</NearDistance>
             <ImageResolution>512 512</ImageResolution>
             <NumSamples>1</NumSamples>
-            <ImageName>bunny.png</ImageName>
+            <ImageName>bunny.ppm</ImageName>
         </Camera>
     </Cameras>
 
@@ -27,6 +31,7 @@
             <AmbientReflectance>0.2 0.2 0.2</AmbientReflectance>
             <DiffuseReflectance>0.8 0.8 0.8</DiffuseReflectance>
             <SpecularReflectance>0.2 0.2 0.2</SpecularReflectance>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
             <PhongExponent>3</PhongExponent>
         </Material>
     </Materials>

@@ -1,5 +1,5 @@
 <Scene>
-    <MaxRecursionDepth>3</MaxRecursionDepth>
+    <MaxRecursionDepth>6</MaxRecursionDepth>
 
     <BackgroundColor>0 0 0</BackgroundColor>
 
@@ -11,7 +11,7 @@
             <NearPlane>-10 10 -10 10</NearPlane>
             <NearDistance>10</NearDistance>
             <ImageResolution>800 800</ImageResolution>
-            <ImageName>cornellbox.png</ImageName>
+            <ImageName>cornellbox_glass.png</ImageName>
         </Camera>
     </Cameras>
 
@@ -52,9 +52,11 @@
             <MirrorReflectance>0.9 0.9 0.9</MirrorReflectance>
         </Material>
         <Material id="6">
-            <AmbientReflectance>1 1 1</AmbientReflectance>
-            <DiffuseReflectance>0.05 0.05 0.05</DiffuseReflectance>
-            <SpecularReflectance>0.1 0.1 0.1</SpecularReflectance>
+            <AmbientReflectance>0 0 0</AmbientReflectance>
+            <DiffuseReflectance>0 0 0</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <Transparency>0.99 0.99 0.99</Transparency>
+            <RefractionIndex>2.0</RefractionIndex>
         </Material>
     </Materials>
 
@@ -108,7 +110,7 @@
             </Faces>
         </Mesh>
         <Sphere id="1">
-            <Material>4</Material>
+            <Material>6</Material>
             <Center>9</Center>
             <Radius>4</Radius>
         </Sphere>

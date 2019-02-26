@@ -1,0 +1,117 @@
+<Scene>
+    <BackgroundColor>0 0 0</BackgroundColor>
+    <ShadowRayEpsilon>1e-3</ShadowRayEpsilon>
+    <IntersectionTestEpsilon>1e-6</IntersectionTestEpsilon>
+	<BackgroundColor> 0 0 0 </BackgroundColor>
+	<MaxRecursionDepth> 2 </MaxRecursionDepth>	
+
+    <Cameras>
+        <Camera id="1">
+            <Position> 0 0 0 </Position>
+            <Gaze> 0 0 -1 </Gaze>
+            <Up> 0 1 0 </Up>
+            <NearPlane> -1 1 -1 1 10</NearPlane>
+            <NearDistance>10</NearDistance>
+            <ImageResolution> 720 720 </ImageResolution>
+            <ImageName> spheres.png </ImageName>
+        </Camera>
+    </Cameras>
+
+    <Lights>
+        <AmbientLight> 25 25 25 </AmbientLight>
+        <PointLight id="1">
+            <Position> -4 4 -13  </Position>
+            <Intensity> 4550 4550 4550 </Intensity> 
+        </PointLight>
+        <PointLight id="2">
+            <Position> 4 4 -13  </Position>
+            <Intensity> 4550 4550 4550 </Intensity> 
+        </PointLight>
+    </Lights>
+
+    <Materials>
+        <Material id="1">
+            <AmbientReflectance> 1 1 1 </AmbientReflectance>
+            <DiffuseReflectance> 1 1 1 </DiffuseReflectance>
+            <SpecularReflectance> 1 1 1 </SpecularReflectance>
+            <PhongExponent>100</PhongExponent>
+            <MirrorReflectance> 0 0 0 </MirrorReflectance>
+        </Material>	
+        <Material id="2">
+            <AmbientReflectance> 1 1 1 </AmbientReflectance>
+            <DiffuseReflectance> 1 0 0 </DiffuseReflectance>
+            <SpecularReflectance> 1 1 1 </SpecularReflectance>
+            <PhongExponent>100</PhongExponent>
+            <MirrorReflectance> 1 1 1 </MirrorReflectance>
+        </Material>	
+        <Material id="3">
+            <AmbientReflectance> 1 1 1 </AmbientReflectance>
+            <DiffuseReflectance> 0 1 0 </DiffuseReflectance>
+            <SpecularReflectance> 1 1 1 </SpecularReflectance>
+            <PhongExponent>100</PhongExponent>
+            <MirrorReflectance> 0 0 0 </MirrorReflectance>
+        </Material>	
+        <Material id="4">
+            <AmbientReflectance> 1 1 1 </AmbientReflectance>
+            <DiffuseReflectance> 0.2 0.2 0.2 </DiffuseReflectance>
+            <SpecularReflectance> 0 0 0 </SpecularReflectance>
+            <PhongExponent>1</PhongExponent>
+            <MirrorReflectance> 1 1 1 </MirrorReflectance>
+        </Material>	
+        <Material id="5">
+            <AmbientReflectance> 1 1 1 </AmbientReflectance>
+            <DiffuseReflectance> 0.1 0.9 0.9 </DiffuseReflectance>
+            <SpecularReflectance> 0 0 0 </SpecularReflectance>
+            <PhongExponent>1</PhongExponent>
+            <MirrorReflectance> 0 0 0 </MirrorReflectance>
+        </Material>	
+    </Materials>
+
+    <VertexData>
+		-10 -0.8 0   
+		10 -0.8 0    
+		-10 -0.8 -100
+		10 -0.8 -100 
+		0 -0.2 -17   
+		0.5 -0.5 -15 
+		1.0 -0.5 -16 
+		-1.0 -0.5 -13
+		-0.8 -0.5 -12
+	</VertexData>
+
+    <Objects>
+        <Triangle id="1">
+            <Indices> 1 2 3 </Indices>
+            <Material> 4 </Material>
+        </Triangle>
+        <Triangle id="2">
+            <Indices> 3 2 4 </Indices>
+            <Material> 4 </Material>
+        </Triangle>
+        <Sphere id="1">
+            <Center> 5 </Center>
+            <Radius> 0.6 </Radius>
+            <Material> 2 </Material>
+        </Sphere>
+        <Sphere id="2">
+            <Center> 6 </Center>
+            <Radius> 0.3 </Radius>
+            <Material> 5 </Material>
+        </Sphere>
+        <Sphere id="3">
+            <Center> 7 </Center>
+            <Radius> 0.3 </Radius>
+            <Material> 3 </Material>
+        </Sphere>		
+        <Sphere id="4">
+            <Center> 8 </Center>
+            <Radius> 0.3 </Radius>
+            <Material> 1 </Material>
+        </Sphere>		
+        <Sphere id="5">
+            <Center> 9 </Center>
+            <Radius> 0.3 </Radius>
+            <Material> 5 </Material>
+        </Sphere>		
+    </Objects>
+</Scene>
