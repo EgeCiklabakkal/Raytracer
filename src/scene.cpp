@@ -172,7 +172,7 @@ rgb Scene::reflectionColor(const Ray& r, const HitRecord& record, int recursion_
 		return rgb();
 	}
 
-	return km * rayColor(r.reflectionRay(record, intersection_test_epsilon), 	
+	return km * rayColor(r.reflectionRay(record, shadow_ray_epsilon), 	
 				recursion_depth - 1);
 }
 
