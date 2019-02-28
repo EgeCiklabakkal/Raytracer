@@ -9,7 +9,7 @@ Ray Ray::reflectionRay(const HitRecord& record, float epsilon) const
 
 	Vec3 wr = -wo + 2 * n * (dot(n, wo));
 	wr.makeUnitVector();
-	Ray reflection_ray(x + wr * epsilon, wr);
+	Ray reflection_ray(x + n * epsilon, wr);
 	
 	return reflection_ray;
 }
@@ -27,7 +27,7 @@ Ray Ray::transmissionRay(const HitRecord& record, const Vec3& d, float epsilon) 
 {
 	Vec3 x = pointAtParameter(record.t);
 
-	return Ray(x + d * epsilon, d);
+	return Ray(x + -record.normal * epsilon, d);
 }
 
 // When using this method, make sure point is on the ray
