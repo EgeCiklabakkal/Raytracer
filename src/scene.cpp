@@ -190,7 +190,7 @@ rgb Scene::refractionColor(const Ray& r, const HitRecord& record, int recursion_
 		Vec3 transmissionDirection;
 		Vec3 k;
 		float c, n1, n2;
-		Ray reflectionRay = r.reflectionRay(record, intersection_test_epsilon);
+		Ray reflectionRay = r.reflectionRay(record, shadow_ray_epsilon);
 		n1 = DEFAULT_AIR_REFRACTION_INDEX;
 		n2 = record.material.refraction_index;
 		HitRecord nrecord(record);
@@ -223,7 +223,7 @@ rgb Scene::refractionColor(const Ray& r, const HitRecord& record, int recursion_
 		float R0 = ((n1 - n2)*(n1 - n2)) / ((n1 + n2)*(n1 + n2));
 		float R  = R0 + (1 - R0) * (1 - c) * (1 - c) * (1 - c) * (1 - c) * (1 - c);
 		Ray transmissionRay(r.transmissionRay(nrecord, transmissionDirection, 
-					intersection_test_epsilon));
+					shadow_ray_epsilon));
 
 		return rgb(k) * (R * rayColor(reflectionRay, recursion_depth - 1)
 					+ (1 - R) * rayColor(transmissionRay, recursion_depth - 1));

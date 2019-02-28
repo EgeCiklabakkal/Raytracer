@@ -9,7 +9,7 @@ Ray Ray::reflectionRay(const HitRecord& record, float epsilon) const
 
 	Vec3 wr = -wo + 2 * n * (dot(n, wo));
 	wr.makeUnitVector();
-	Ray reflection_ray(x + n * epsilon, wr);
+	Ray reflection_ray(x + wr * epsilon, wr);
 	
 	return reflection_ray;
 }
@@ -20,14 +20,14 @@ Ray Ray::shadowRay(const HitRecord& record, const Light* light_ptr, float epsilo
 	Vec3 wi = light_ptr->position - x;
 	wi.makeUnitVector();
 
-	return Ray(x + record.normal * epsilon, wi);
+	return Ray(x + wi * epsilon, wi);
 }
 
 Ray Ray::transmissionRay(const HitRecord& record, const Vec3& d, float epsilon) const
 {
 	Vec3 x = pointAtParameter(record.t);
 
-	return Ray(x + (-record.normal) * epsilon, d);
+	return Ray(x + d * epsilon, d);
 }
 
 // When using this method, make sure point is on the ray
