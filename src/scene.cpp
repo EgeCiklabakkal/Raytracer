@@ -50,7 +50,8 @@ void Scene::raytrace_routine(Scene* scene, const Camera* cam, FlatImage* img,
 		int i, j;
 		i = currPixel.first;
 		j = currPixel.second;
-
+// Uncomment(and comment active following lines) for MSAA
+/*		
 		std::vector<Ray> sampledRays(num_samples);
 		cam->sampleRays(i, j, sampledRays, num_samples);
 
@@ -67,6 +68,11 @@ void Scene::raytrace_routine(Scene* scene, const Camera* cam, FlatImage* img,
 		pixel_color /= weightsum;
 
 		img->set(i, j, pixel_color);
+*/
+		Ray r = cam->getRay(i, j);
+		rgb raycolor = scene->rayColor(r, scene->max_recursion_depth);
+		raycolor.clamp256();
+		img->set(i, j, raycolor);
 	}
 }
 
