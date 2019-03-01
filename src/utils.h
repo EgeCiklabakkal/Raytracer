@@ -4,6 +4,7 @@
 // Macros
 #define DEFAULT_THREAD_COUNT 8
 #define DEFAULT_AIR_REFRACTION_INDEX 1.0f
+#define DEFAULT_NUM_SAMPLES 64
 
 #include <iostream>
 #include <sstream>

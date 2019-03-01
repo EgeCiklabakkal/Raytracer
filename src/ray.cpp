@@ -27,7 +27,7 @@ Ray Ray::transmissionRay(const HitRecord& record, const Vec3& d, float epsilon) 
 {
 	Vec3 x = pointAtParameter(record.t);
 
-	return Ray(x + -record.normal * epsilon, d);
+	return Ray(x + -record.normal * epsilon, unitVector(d));
 }
 
 // When using this method, make sure point is on the ray

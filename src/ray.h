@@ -14,10 +14,11 @@ class Ray
 
 	// Origin, Direction
 	Vec3 data[2];
+	float weight;
 
 	// Constructors
 	Ray() {}
-	Ray(const Vec3& origin, const Vec3& direction)
+	Ray(const Vec3& origin, const Vec3& direction, float _weight=1.0f) : weight(_weight)
 	{ data[0] = origin; data[1] = direction; }
 	Ray(const Ray& r) { *this = r; }
 	

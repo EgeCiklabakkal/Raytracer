@@ -1,10 +1,12 @@
 #ifndef _CAMERA_H_
 #define _CAMERA_H_
 
-#include "ray.h"
 #include "ONB.h"
-#include <string>
+#include "ray.h"
 #include <array>
+#include <random>
+#include <string>
+#include <vector>
 
 class Camera
 {
@@ -43,14 +45,14 @@ class Camera
 		q  = position + near_distance*gaze + near_plane[0]*across + near_plane[2]*up;
 	}
 
-	Ray getRay(int x, int y) const	// Single sample
+	Ray getRay(float x, float y) const
 	{
 		Vec3 s = q + (pw*x + pw/2)*across + (ph*y + ph/2)*up;
 
 		return Ray(position, unitVector(s - position));
 	}
 
-	Ray getRay(float x, float y) const;	// TODO: define here
+	void sampleRays(float x, float y, std::vector<Ray>& rays, int num_samples=1) const;
 };
 
 #endif

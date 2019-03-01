@@ -28,7 +28,7 @@ void Scene::raytraceImages(int threadCount)
 		for(int i = 0; i < threadCount; i++)
 		{
 			threads.push_back(std::thread(raytrace_routine, 
-						this, &cam, &img, &pixels));
+						this, &cam, &img, &pixels, DEFAULT_NUM_SAMPLES));
 		}
 
 		// Wait for them to complete
@@ -42,7 +42,7 @@ void Scene::raytraceImages(int threadCount)
 }
 
 void Scene::raytrace_routine(Scene* scene, const Camera* cam, FlatImage* img, 
-		SafeStack<std::pair<float, float>>* pixels)
+		SafeStack<std::pair<float, float>>* pixels, int num_samples)
 {
 	std::pair<float, float> currPixel;
 	while(pixels->pop(currPixel))
@@ -51,10 +51,20 @@ void Scene::raytrace_routine(Scene* scene, const Camera* cam, FlatImage* img,
 		i = currPixel.first;
 		j = currPixel.second;
 
-		Ray r = cam->getRay(i, j);
+		std::vector<Ray> sampledRays(num_samples);
+		cam->sampleRays(i, j, sampledRays, num_samples);
 
-		rgb pixel_color = scene->rayColor(r, scene->max_recursion_depth);
-		pixel_color.clamp256();
+		rgb pixel_color(0.0f, 0.0f, 0.0f);
+		float weightsum = 0.0f;
+		for(const Ray& r : sampledRays)
+		{
+			rgb raycolor = scene->rayColor(r, scene->max_recursion_depth);
+			raycolor.clamp256();
+
+			weightsum += r.weight;
+			pixel_color += raycolor * r.weight;
+		}
+		pixel_color /= weightsum;
 
 		img->set(i, j, pixel_color);
 	}
@@ -64,7 +74,7 @@ rgb Scene::rayColor(const Ray& r, int recursion_depth, bool isEntering) const
 {
 	rgb rcolor(0.0f, 0.0f, 0.0f);
 	float tmax = 100000.0f;		// Note: tmax, tmin, time can be made an argument
-	float tmin = 0.0001f;		
+	float tmin = shadow_ray_epsilon;		
 	float time = 0.0f;
 	bool hit = false;
 	HitRecord record;
