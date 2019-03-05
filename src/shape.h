@@ -5,9 +5,11 @@
 #include "vector3.h"
 #include "rgb.h"
 #include "material.h"
+#include "BBox.h"
 
 class Ray;
 class rgb;
+class BBox;
 
 class HitRecord
 {
@@ -46,6 +48,7 @@ class Shape
 
 	virtual bool hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const=0;
 	virtual bool shadowHit(const Ray& r, float tmin, float tmax, float time) const=0;
+	virtual bool boundingBox(float time0, float time1, BBox& _box) const=0;
 };
 
 inline Shape::~Shape() {}

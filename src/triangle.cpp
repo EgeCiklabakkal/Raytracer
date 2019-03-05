@@ -110,3 +110,21 @@ bool Triangle::shadowHit(const Ray& r, float tmin, float tmax, float time) const
 
 	return (_t >= tmin && _t <= tmax);
 }
+
+bool Triangle::boundingBox(float time0, float time1, BBox& _box) const
+{
+	Vec3 vx(vertices[0].x(), vertices[1].x(), vertices[2].x());
+	Vec3 vy(vertices[0].y(), vertices[1].y(), vertices[2].y());
+	Vec3 vz(vertices[0].z(), vertices[1].z(), vertices[2].z());
+
+	float xmin = vx.minComponent();
+	float ymin = vy.minComponent();
+	float zmin = vz.minComponent();
+
+	float xmax = vx.maxComponent();
+	float ymax = vy.maxComponent();
+	float zmax = vz.maxComponent();
+
+	_box = BBox(Vec3(xmin, ymin, zmin), Vec3(xmax, ymax, zmax));
+	return true;
+}

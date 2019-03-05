@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "util/tinyxml2.h"
+#include "BVH.h"
 #include "camera.h"
 #include "dynArray.h"
 #include "image.h"

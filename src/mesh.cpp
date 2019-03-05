@@ -84,3 +84,21 @@ bool MeshTriangle::shadowHit(const Ray& r, float tmin, float tmax, float time) c
 
         return (_t >= tmin && _t <= tmax);
 }
+
+bool MeshTriangle::boundingBox(float time0, float time1, BBox& _box) const
+{
+        Vec3 vx(a().x(), b().x(), c().x());
+        Vec3 vy(a().y(), b().y(), c().y());
+        Vec3 vz(a().z(), b().z(), c().z());
+
+        float xmin = vx.minComponent(); 
+        float ymin = vy.minComponent(); 
+        float zmin = vz.minComponent(); 
+
+        float xmax = vx.maxComponent();
+        float ymax = vy.maxComponent();
+        float zmax = vz.maxComponent();
+
+        _box = BBox(Vec3(xmin, ymin, zmin), Vec3(xmax, ymax, zmax));
+        return true;
+}
