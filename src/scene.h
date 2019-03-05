@@ -6,6 +6,7 @@
 #include <math.h>
 #include "vector3.h"
 #include "rgb.h"
+#include "BVH.h"
 
 class Scene
 {
@@ -22,6 +23,7 @@ class Scene
 	std::vector<Vec3> vertex_data;
 	std::vector<Shape*> shapes;
 	std::vector<Mesh*> meshes;
+	BVH *bvh;
 
 	~Scene();
 	// Methods

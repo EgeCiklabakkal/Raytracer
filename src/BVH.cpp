@@ -5,6 +5,7 @@ BVH::BVH(Shape* s0, Shape* s1)
 	BBox b0, b1;
 	left  = s0;
 	right = s1;
+	lastBranch = true;
 
 	s0->boundingBox(0.0f, 0.0f, b0);
 	s1->boundingBox(0.0f, 0.0f, b1);
@@ -23,19 +24,25 @@ BVH::BVH(Shape** shapes, int n, int axis, float time0, float time1)
 		*this = BVH(shapes[0], shapes[1]);
 	}
 
-	// Bounding Box calculation
-	shapes[0]->boundingBox(time0, time1, box);
-	for(int i = 1; i < n; i++)
+	else
 	{
-		BBox temp;
-		shapes[i]->boundingBox(time0, time1, temp);
-		box = surrounding_box(box, temp);
+		// Bounding Box calculation
+		BBox boxAccumulator;
+		shapes[0]->boundingBox(time0, time1, boxAccumulator);
+		for(int i = 1; i < n; i++)
+		{
+			BBox temp;
+			shapes[i]->boundingBox(time0, time1, temp);
+			boxAccumulator = surrounding_box(boxAccumulator, temp);
+		}
+		box = boxAccumulator;
+		lastBranch = false;
+
+		int midpoint = partitionBySpace(shapes, n, axis);
+
+		left  = new BVH(shapes, midpoint, (axis+1) % 3, time0, time1);
+		right = new BVH(&shapes[midpoint], n - midpoint, (axis+1) % 3, time0, time1);
 	}
-
-	int midpoint = partitionBySpace(shapes, n, axis);
-
-	left  = new BVH(shapes, midpoint, (axis+1) % 3, time0, time1);
-	right = new BVH(&shapes[midpoint], n - midpoint, (axis+1) % 3, time0, time1);
 }
 
 bool BVH::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const

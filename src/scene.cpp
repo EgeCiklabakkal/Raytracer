@@ -279,4 +279,6 @@ Scene::~Scene()
 		delete mesh;
 	}
 	meshes.clear();
+
+	delete bvh;
 }
