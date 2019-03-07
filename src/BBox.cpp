@@ -17,7 +17,7 @@ bool BBox::hit(const Ray& r, float tmin, float tmax) const
 		tmin = ti_min > tmin ? ti_min : tmin;
 		tmax = ti_max < tmax ? ti_max : tmax;
 
-		if(tmin >= tmax)
+		if(tmin > tmax)
 		{
                 	return false;
                 }

@@ -1,6 +1,9 @@
 #ifndef _CAMERA_H_
 #define _CAMERA_H_
 
+// for gaussian calculation
+#define INV_SQRT_2PI 0.3989422804014327
+
 #include "ONB.h"
 #include "ray.h"
 #include <array>
@@ -52,7 +55,8 @@ class Camera
 		return Ray(position, unitVector(s - position));
 	}
 
-	void sampleRays(float x, float y, std::vector<Ray>& rays, int num_samples=1) const;
+	// num_samples should be perfect square(even if it isn't it is "cast" to lower ps)
+	void sampleRays(float x, float y, std::vector<Ray>& rays, int num_samples=64) const;
 };
 
 #endif

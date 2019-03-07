@@ -29,6 +29,11 @@ void Scene::raytraceImages(int threadCount)
 		{
 			threads.push_back(std::thread(raytrace_routine, 
 						this, &cam, &img, &pixels, DEFAULT_NUM_SAMPLES));
+
+			// Use the following for single sample
+			//threads.push_back(std::thread(raytrace_singleSample, 
+			//			this, &cam, &img, &pixels));
+
 		}
 
 		// Wait for them to complete
@@ -50,8 +55,7 @@ void Scene::raytrace_routine(Scene* scene, const Camera* cam, FlatImage* img,
 		int i, j;
 		i = currPixel.first;
 		j = currPixel.second;
-// Uncomment(and comment active following lines) for MSAA
-/*		
+	
 		std::vector<Ray> sampledRays(num_samples);
 		cam->sampleRays(i, j, sampledRays, num_samples);
 
@@ -68,7 +72,19 @@ void Scene::raytrace_routine(Scene* scene, const Camera* cam, FlatImage* img,
 		pixel_color /= weightsum;
 
 		img->set(i, j, pixel_color);
-*/
+	}
+}
+
+void Scene::raytrace_singleSample(Scene* scene, const Camera* cam, FlatImage* img, 
+		SafeStack<std::pair<float, float>>* pixels)
+{
+	std::pair<float, float> currPixel;
+	while(pixels->pop(currPixel))
+	{
+		int i, j;
+		i = currPixel.first;
+		j = currPixel.second;
+
 		Ray r = cam->getRay(i, j);
 		rgb raycolor = scene->rayColor(r, scene->max_recursion_depth);
 		raycolor.clamp256();
