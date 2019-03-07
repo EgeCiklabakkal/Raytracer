@@ -45,7 +45,7 @@ class MeshTriangle : public Shape
 	// Virtual Methods
 	bool hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const;
 	bool shadowHit(const Ray& r, float tmin, float tmax, float time) const;
-	bool boundingBox(float time0, float time1, BBox& _box) const;
+	bool boundingBox(float time0, float time1, BBox& _box, float epsilon) const;
 
 	// Getters
 	Vec3 a() const { return (*parent_mesh->scene_vertex_data)[p[0]]; }

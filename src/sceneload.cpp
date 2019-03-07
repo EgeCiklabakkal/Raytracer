@@ -277,7 +277,7 @@ void Scene::loadFromXML(const std::string& fname)
 	}
 
 	// BVH
-	bvh = new BVH(shapes.data(), (int)shapes.size(), 0, 0.0f, 0.0f);
+	bvh = new BVH(shapes.data(), (int)shapes.size(), 0, 0.0f, 0.0f, intersection_test_epsilon);
 }
 
 // Helpers

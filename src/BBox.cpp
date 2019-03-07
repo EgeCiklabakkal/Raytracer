@@ -6,12 +6,12 @@ bool BBox::hit(const Ray& r, float tmin, float tmax) const
 	{
 		float a = 1.0f / r.direction()[i];
 
-		float ti_min = _min[i] - r.origin()[i] * a;
-		float ti_max = _max[i] - r.origin()[i] * a;
+		float ti_min = (_min[i] - r.origin()[i]) * a;
+		float ti_max = (_max[i] - r.origin()[i]) * a;
 
 		if(a < 0.0f)
 		{
-			std::swap(tmin, tmax);
+			std::swap(ti_min, ti_max);
 		}
 
 		tmin = ti_min > tmin ? ti_min : tmin;
