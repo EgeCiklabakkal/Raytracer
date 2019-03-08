@@ -1,13 +1,10 @@
 #ifndef _CAMERA_H_
 #define _CAMERA_H_
 
-// for gaussian calculation
-#define INV_SQRT_2PI 0.3989422804014327
-
-#include "ONB.h"
 #include "ray.h"
+#include "ONB.h"
+#include "rtmath.h"
 #include <array>
-#include <random>
 #include <string>
 #include <vector>
 

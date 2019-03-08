@@ -25,6 +25,7 @@
 #include "ray.h"
 #include "rdmGen.h"
 #include "rgb.h"
+#include "rtmath.h"
 #include "safeStack.h"
 #include "scene.h"
 #include "shape.h"
