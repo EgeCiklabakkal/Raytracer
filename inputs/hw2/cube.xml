@@ -1,0 +1,41 @@
+<Scene>
+    <MaxRecursionDepth>3</MaxRecursionDepth>
+
+    <BackgroundColor>0 0 0</BackgroundColor>
+
+    <Cameras>
+        <Camera id="1" type="lookAt">
+            <Position>3 3 3</Position>
+            <GazePoint>0 0 0</GazePoint>
+            <Up>0 1 0</Up>
+            <FovY>25</FovY>
+            <NearDistance>1</NearDistance>
+            <ImageResolution>800 800</ImageResolution>
+            <ImageName>cube.png</ImageName>
+            <NumSamples>1</NumSamples>
+        </Camera>
+    </Cameras>
+
+    <Lights>
+        <AmbientLight>20 20 20</AmbientLight>
+        <PointLight id="1">
+            <Position>0 4 2</Position>
+            <Intensity>35000 35000 35000</Intensity>
+        </PointLight>
+    </Lights>
+
+    <Materials>
+        <Material id="1">
+            <AmbientReflectance>1 1 1</AmbientReflectance>
+            <DiffuseReflectance>1 0.2 0.2</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+        </Material>
+    </Materials>
+
+    <Objects>
+        <Mesh id="1">
+            <Material>1</Material>
+            <Faces plyFile="ply/cube.ply" />
+        </Mesh>
+    </Objects>
+</Scene>
