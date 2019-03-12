@@ -14,8 +14,8 @@ class BVH : public Shape
 	// axis is 0:x, 1:y, 2:z
 
 	BVH() {}
-	BVH(Shape* s0, Shape* s1, float epsilon);
-	BVH(Shape** shapes, int n, int axis, float time0, float time1, float epsilon=0.0f);
+	BVH(Shape* s0, Shape* s1);
+	BVH(Shape** shapes, int n, int axis, float time0, float time1);
 	~BVH() 
 	{
 		if(!lastBranch)
@@ -26,8 +26,8 @@ class BVH : public Shape
 
 	bool hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const;
 	bool shadowHit(const Ray& r, float tmin, float tmax, float time) const;
-	bool boundingBox(float time0, float time1, BBox& _box, float epsilon) const;
-	int partitionBySpace(Shape** shapes, int n, int axis, float epsilon=0.0f);
+	bool boundingBox(float time0, float time1, BBox& _box) const;
+	int partitionBySpace(Shape** shapes, int n, int axis);
 };
 
 #endif

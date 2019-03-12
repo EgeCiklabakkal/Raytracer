@@ -75,13 +75,10 @@ bool Sphere::shadowHit(const Ray& r, float tmin, float tmax, float time) const
 	return false;
 }
 
-bool Sphere::boundingBox(float time0, float time1, BBox& _box, float epsilon) const
+bool Sphere::boundingBox(float time0, float time1, BBox& _box) const
 {
-	float dfmin = radius - epsilon;
-	float dfmax = radius + epsilon;
-	Vec3 dvmin(dfmin, dfmin, dfmin);
-	Vec3 dvmax(dfmax, dfmax, dfmax);
+	Vec3 radius3(radius, radius, radius);
 
-	_box = BBox(center - dvmin, center + dvmax);
+	_box = BBox(center - radius3, center + radius3);
 	return true;
 }

@@ -1,47 +1,47 @@
 #include "BVH.h"
 
-BVH::BVH(Shape* s0, Shape* s1, float epsilon)
+BVH::BVH(Shape* s0, Shape* s1)
 {
 	BBox b0, b1;
 	left  = s0;
 	right = s1;
 	lastBranch = true;
 
-	s0->boundingBox(0.0f, 0.0f, b0, epsilon);
-	s1->boundingBox(0.0f, 0.0f, b1, epsilon);
+	s0->boundingBox(0.0f, 0.0f, b0);
+	s1->boundingBox(0.0f, 0.0f, b1);
 	box = BBox(surrounding_box(b0, b1));
 }
 
-BVH::BVH(Shape** shapes, int n, int axis, float time0, float time1, float epsilon)
+BVH::BVH(Shape** shapes, int n, int axis, float time0, float time1)
 {
 	if(n == 1)
 	{
-		*this = BVH(shapes[0], shapes[0], epsilon);
+		*this = BVH(shapes[0], shapes[0]);
 	}
 
 	else if(n == 2)
 	{
-		*this = BVH(shapes[0], shapes[1], epsilon);
+		*this = BVH(shapes[0], shapes[1]);
 	}
 
 	else
 	{
 		// Bounding Box calculation
 		BBox boxAccumulator;
-		shapes[0]->boundingBox(time0, time1, boxAccumulator, epsilon);
+		shapes[0]->boundingBox(time0, time1, boxAccumulator);
 		for(int i = 1; i < n; i++)
 		{
 			BBox temp;
-			shapes[i]->boundingBox(time0, time1, temp, epsilon);
+			shapes[i]->boundingBox(time0, time1, temp);
 			boxAccumulator = surrounding_box(boxAccumulator, temp);
 		}
 		box = boxAccumulator;
 		lastBranch = false;
 
-		int midpoint = partitionBySpace(shapes, n, axis, epsilon);
+		int midpoint = partitionBySpace(shapes, n, axis);
 
-		left  = new BVH(shapes, midpoint, (axis+1)%3, time0, time1, epsilon);
-		right = new BVH(&shapes[midpoint], n - midpoint, (axis+1)%3, time0, time1, epsilon);
+		left  = new BVH(shapes, midpoint, (axis+1)%3, time0, time1);
+		right = new BVH(&shapes[midpoint], n - midpoint, (axis+1)%3, time0, time1);
 	}
 }
 
@@ -96,7 +96,7 @@ bool BVH::shadowHit(const Ray& r, float tmin, float tmax, float time) const
 	return false;
 }
 
-int BVH::partitionBySpace(Shape** shapes, int n, int axis, float epsilon)
+int BVH::partitionBySpace(Shape** shapes, int n, int axis)
 {
 	BBox _box;
 	float shape_center;
@@ -105,7 +105,7 @@ int BVH::partitionBySpace(Shape** shapes, int n, int axis, float epsilon)
 
 	for(int i = 0; i < n; i++)
 	{
-		shapes[i]->boundingBox(0.0f, 0.0f, _box, epsilon);
+		shapes[i]->boundingBox(0.0f, 0.0f, _box);
 		shape_center = (_box.min()[axis] + _box.max()[axis]) / 2.0f;
 
 		if(shape_center < midpoint)
@@ -124,7 +124,7 @@ int BVH::partitionBySpace(Shape** shapes, int n, int axis, float epsilon)
 	return partition_idx;
 }
 
-inline bool BVH::boundingBox(float time0, float time1, BBox& _box, float epsilon) const
+inline bool BVH::boundingBox(float time0, float time1, BBox& _box) const
 {
 	_box = box;
 	return true;

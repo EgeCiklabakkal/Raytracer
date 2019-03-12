@@ -20,11 +20,9 @@ class Sphere : public Shape
 	Sphere(const Vec3& _center, float _radius, const Material& _material);
 	virtual ~Sphere() {}
 
-	// BBox boundingBox() const;
-
 	bool hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const;
 	bool shadowHit(const Ray& r, float tmin, float tmax, float time) const;	
-	bool boundingBox(float time0, float time1, BBox& _box, float epsilon) const;
+	bool boundingBox(float time0, float time1, BBox& _box) const;
 };
 
 #endif

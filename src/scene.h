@@ -34,7 +34,7 @@ class Scene
 	static void raytrace_singleSample(Scene* scene, const Camera* cam, FlatImage* img,
 			SafeStack<std::pair<float, float>>* pixels);
 
-	rgb rayColor(const Ray& r, int recursion_depth, bool isEntering=true) const;
+	rgb rayColor(const Ray& r, int recursion_depth, bool cullFace=true) const;
 	rgb ambientColor(const HitRecord& record) const;
 	rgb diffuseColor(const Ray& r, const HitRecord& record, const Light* light_ptr) const;
 	rgb specularColor(const Ray& r, const HitRecord& record, const Light* light_ptr) const;

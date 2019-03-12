@@ -92,7 +92,7 @@ void Scene::raytrace_singleSample(Scene* scene, const Camera* cam, FlatImage* im
 	}
 }
 
-rgb Scene::rayColor(const Ray& r, int recursion_depth, bool isEntering) const
+rgb Scene::rayColor(const Ray& r, int recursion_depth, bool cullFace) const
 {
 	rgb rcolor(0.0f, 0.0f, 0.0f);
 	float tmax = 100000.0f;		// Note: tmax, tmin, time can be made an argument
@@ -102,7 +102,7 @@ rgb Scene::rayColor(const Ray& r, int recursion_depth, bool isEntering) const
 
 	if(bvh->hit(r, tmin, tmax, time, record))
 	{
-		if(isEntering)
+		if(cullFace && (dot(r.direction(), record.normal) < 0))
 		{
 			rcolor = ambientColor(record);
 
@@ -213,21 +213,18 @@ rgb Scene::refractionColor(const Ray& r, const HitRecord& record, int recursion_
 		n1 = DEFAULT_AIR_REFRACTION_INDEX;
 		n2 = record.material.refraction_index;
 		HitRecord nrecord(record);
-		bool isEntering;
 
 		if(dot(r.direction(), record.normal) < 0)
 		{
 			r.refract(record, std::pair<float, float>(n1, n2), transmissionDirection);
 			c = -dot(r.direction(), record.normal);
 			k = Vec3(1.0f, 1.0f, 1.0f);
-			isEntering = true;
 		}
 
 		else
 		{
 			Vec3 a(transparency);
 			k = Vec3(pow(a.x(), record.t), pow(a.y(), record.t), pow(a.z(), record.t));
-			isEntering = false;
 			
 			nrecord.normal = -nrecord.normal;
 			if(r.refract(nrecord, std::pair<float, float>(n2, n1), 
@@ -238,7 +235,7 @@ rgb Scene::refractionColor(const Ray& r, const HitRecord& record, int recursion_
 
 			else
 			{
-				return rgb(k) * rayColor(reflectionRay, recursion_depth - 1, isEntering);
+				return rgb(k) * rayColor(reflectionRay, recursion_depth - 1);
 			}
 		}
 		
@@ -248,8 +245,8 @@ rgb Scene::refractionColor(const Ray& r, const HitRecord& record, int recursion_
 		Ray transmissionRay(r.transmissionRay(nrecord, transmissionDirection, 
 					intersection_test_epsilon));
 
-		return rgb(k) * (R * rayColor(reflectionRay, recursion_depth - 1, isEntering)
-					+ (1 - R) * rayColor(transmissionRay, recursion_depth - 1, !isEntering));
+		return rgb(k) * (R * rayColor(reflectionRay, recursion_depth - 1)
+					+ (1 - R) * rayColor(transmissionRay, recursion_depth - 1));
 	}
 
 	return rgb();
