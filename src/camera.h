@@ -19,8 +19,11 @@ class Camera
 	Vec3 up;
 	std::array<float, 4> near_plane;	// l, r , b, t
 	float near_distance;
+	float focus_distance;
+	float aperture_size;
 	int image_width, image_height;
 	std::string image_name;
+	int num_samples;
 
 	ONB uvw;
 	float pw, ph;				// pixel width/height
@@ -29,10 +32,12 @@ class Camera
 	// Constructors
 	Camera() {}
 	Camera(Vec3 _position, Vec3 _gaze, Vec3 _up, std::array<float, 4> _near_plane, 
-		float _near_distance, int _image_width, int _image_height, std::string _image_name) :
+		float _near_distance, float _focus_distance, float _aperture_size, int _image_width, int _image_height, std::string _image_name,
+		int _num_samples) :
 	position(_position), gaze(_gaze), up(_up), near_plane(_near_plane), 
-	near_distance(_near_distance), image_width(_image_width), 
-	image_height(_image_height), image_name(_image_name)
+	near_distance(_near_distance), focus_distance(_focus_distance), 
+	aperture_size(_aperture_size), image_width(_image_width), 
+	image_height(_image_height), image_name(_image_name), num_samples(_num_samples)
 	{
 		uvw.initFromWV(-gaze, up);
 		across =  uvw.u();

@@ -1,13 +1,20 @@
 #include "utils.h"
 
+// Helper Declerations
 bool getChildTextWithDefault(tinyxml2::XMLElement* element, std::stringstream& ss, 
 				std::string name, std::string _default);
+int getCameraType(tinyxml2::XMLElement* element);
+void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,
+			std::vector<Camera>& cameras);
+void pushCameraSimple(tinyxml2::XMLElement* element, std::stringstream& ss,
+			std::vector<Camera>& cameras);
 
 // Parse XML
 void Scene::loadFromXML(const std::string& fname)
 {
 	tinyxml2::XMLDocument doc;
 	std::stringstream ss;
+	tinyxml2::XMLElement *child;
 
 	auto load_failed = doc.LoadFile(fname.c_str());
 	if(load_failed)
@@ -83,44 +90,28 @@ void Scene::loadFromXML(const std::string& fname)
 	element = element->FirstChildElement("Camera");
 	while(element)
 	{
-		auto child = element->FirstChildElement("Position");
-		ss << child->GetText() << std::endl;
-		child = element->FirstChildElement("Gaze");
-		ss << child->GetText() << std::endl;
-		child = element->FirstChildElement("Up");
-		ss << child->GetText() << std::endl;
-		child = element->FirstChildElement("NearPlane");
-		ss << child->GetText() << std::endl;
-		child = element->FirstChildElement("NearDistance");
-		ss << child->GetText() << std::endl;
-		child = element->FirstChildElement("ImageResolution");
-		ss << child->GetText() << std::endl;
-		child = element->FirstChildElement("ImageName");
-		ss << child->GetText() << std::endl;
+		int cam_type = getCameraType(element);
 
-		std::array<float, 4> near_plane;
-		Vec3 pos, gaze, up;
-		float near_distance;
-		int w, h;
-		std::string img_name;
-		ss >> pos[0] >> pos[1] >> pos[2];
-		ss >> gaze[0] >> gaze[1] >> gaze[2];
-		ss >> up[0] >> up[1] >> up[2];
-		ss >> near_plane[0] >> near_plane[1] 
-			>> near_plane[2] >> near_plane[3];
-		ss >> near_distance;
-		ss >> w >> h;
-		ss >> img_name;
+		if(cam_type == CAM_SIMPLE)
+		{
+			pushCameraSimple(element, ss, cameras);
+		}
 
-		cameras.push_back(Camera(pos, gaze, up, near_plane, near_distance, w, h, img_name));
+		else if(cam_type == CAM_LOOKAT)
+		{
+			pushCameraLookAt(element, ss, cameras);
+		}
+
 		element = element->NextSiblingElement("Camera");
 	}
 
 	// Lights
 	element = scene_element->FirstChildElement("Lights");
-	auto child = element->FirstChildElement("AmbientLight");
+	child = element->FirstChildElement("AmbientLight");
 	ss << child->GetText() << std::endl;
 	ss >> ambient_light.intensity[0] >> ambient_light.intensity[1] >> ambient_light.intensity[2];
+
+	// PointLights
 	element = element->FirstChildElement("PointLight");
 	while(element)
 	{
@@ -139,6 +130,33 @@ void Scene::loadFromXML(const std::string& fname)
 		element = element->NextSiblingElement("PointLight");
 	}
 
+	// AreaLights
+	element = scene_element->FirstChildElement("Lights");
+	element = element->FirstChildElement("AreaLight");
+	while(element)
+	{
+		AreaLight *area_light = new AreaLight();
+		child = element->FirstChildElement("Position");
+		ss << child->GetText() << std::endl;
+		child = element->FirstChildElement("Normal");
+		ss << child->GetText() << std::endl;
+		child = element->FirstChildElement("Size");
+		ss << child->GetText() << std::endl;
+		child = element->FirstChildElement("Intensity");
+		ss << child->GetText() << std::endl;
+
+		ss >> area_light->position[0] >> area_light->position[1]
+			>> area_light->position[2];
+		ss >> area_light->normal[0] >> area_light->normal[1]
+			>> area_light->normal[2];
+		ss >> area_light->size;
+		ss >> area_light->intensity[0] >> area_light->intensity[1]
+			>> area_light->intensity[2];
+
+		lights.push_back(area_light);
+		element = element->NextSiblingElement("AreaLight");
+	}
+
 	// Materials
 	element = scene_element->FirstChildElement("Materials");
 	element = element->FirstChildElement("Material");
@@ -155,6 +173,7 @@ void Scene::loadFromXML(const std::string& fname)
 		getChildTextWithDefault(element, ss, "PhongExponent", "1");
 		getChildTextWithDefault(element, ss, "Transparency", "0 0 0");
 		getChildTextWithDefault(element, ss, "RefractionIndex", "1");
+		getChildTextWithDefault(element, ss, "Roughness", "0");
 
 		ss >> material.ambient[0] >> material.ambient[1] >> material.ambient[2];
 		ss >> material.diffuse[0] >> material.diffuse[1] >> material.diffuse[2];
@@ -164,6 +183,7 @@ void Scene::loadFromXML(const std::string& fname)
 		ss >> material.transparency[0] >> material.transparency[1] 
 			>> material.transparency[2];
 		ss >> material.refraction_index;
+		ss >> material.roughness;
 
 		materials.push_back(material);
 		element = element->NextSiblingElement("Material");
@@ -172,14 +192,17 @@ void Scene::loadFromXML(const std::string& fname)
 
 	// VertexData
 	element = scene_element->FirstChildElement("VertexData");
-	ss << element->GetText() << std::endl;
-	Vec3 vertex;
-	while(!(ss >> vertex[0]).eof())
+	if(element)
 	{
-		ss >> vertex[1] >> vertex[2];
-		vertex_data.push_back(vertex);
+		ss << element->GetText() << std::endl;
+		Vec3 vertex;
+		while(!(ss >> vertex[0]).eof())
+		{
+			ss >> vertex[1] >> vertex[2];
+			vertex_data.push_back(vertex);
+		}
+		ss.clear();
 	}
-	ss.clear();
 
 	// Objects
 	element = scene_element->FirstChildElement("Objects");
@@ -297,3 +320,119 @@ bool getChildTextWithDefault(tinyxml2::XMLElement* element, std::stringstream& s
 		return false;
 	}
 }
+
+int getCameraType(tinyxml2::XMLElement* element)
+{
+	const char *type = element->Attribute("type");
+	if(type)
+	{
+		std::string stype(type);
+		if(stype == "lookAt")
+		{
+			return CAM_LOOKAT;
+		}
+	}
+
+	return CAM_SIMPLE;
+}
+
+void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,
+			std::vector<Camera>& cameras)
+{
+	tinyxml2::XMLElement *child = element->FirstChildElement("Position");
+	ss << child->GetText() << std::endl;
+	child = element->FirstChildElement("GazePoint");
+	ss << child->GetText() << std::endl;
+	child = element->FirstChildElement("Up");
+	ss << child->GetText() << std::endl;
+	child = element->FirstChildElement("FovY");
+	ss << child->GetText() << std::endl;
+	child = element->FirstChildElement("NearDistance");
+	ss << child->GetText() << std::endl;
+	getChildTextWithDefault(element, ss, "FocusDistance", "0");
+	getChildTextWithDefault(element, ss, "ApertureSize", "0");
+	child = element->FirstChildElement("ImageResolution");
+	ss << child->GetText() << std::endl;
+	child = element->FirstChildElement("ImageName");
+	ss << child->GetText() << std::endl;
+	getChildTextWithDefault(element, ss, "NumSamples", "1");
+
+	// LookAt vars.
+	Vec3 gazepoint;
+	float fovy;
+
+	Vec3 pos, up;
+	float near_distance;
+	float focus_distance;
+	float aperture_size;
+	int w, h;
+	std::string img_name;
+	int num_samples;
+	ss >> pos[0] >> pos[1] >> pos[2];
+	ss >> gazepoint[0] >> gazepoint[1] >> gazepoint[2];
+	ss >> up[0] >> up[1] >> up[2];
+	ss >> fovy;
+	ss >> near_distance;
+	ss >> focus_distance;
+	ss >> aperture_size;
+	ss >> w >> h;
+	ss >> img_name;
+	ss >> num_samples; 
+
+	// LookAt to Simple calculations
+	float _t = tan((fovy * M_PI) / (2 * 180.0f)) * near_distance;
+	float _r = (w / h) * _t;
+	float _l = -_r;
+	float _b = -_t;
+	std::array<float, 4> near_plane = {_l, _r, _b, _t};
+	Vec3 gaze(gazepoint - pos);
+
+	cameras.push_back(Camera(pos, gaze, up, near_plane, near_distance,
+		 focus_distance, aperture_size, w, h, img_name, num_samples));
+}
+
+void pushCameraSimple(tinyxml2::XMLElement* element, std::stringstream& ss,
+			std::vector<Camera>& cameras)
+{
+	tinyxml2::XMLElement *child = element->FirstChildElement("Position");
+	ss << child->GetText() << std::endl;
+	child = element->FirstChildElement("Gaze");
+	ss << child->GetText() << std::endl;
+	child = element->FirstChildElement("Up");
+	ss << child->GetText() << std::endl;
+	child = element->FirstChildElement("NearPlane");
+	ss << child->GetText() << std::endl;
+	child = element->FirstChildElement("NearDistance");
+	ss << child->GetText() << std::endl;
+	getChildTextWithDefault(element, ss, "FocusDistance", "0");
+	getChildTextWithDefault(element, ss, "ApertureSize", "0");
+	child = element->FirstChildElement("ImageResolution");
+	ss << child->GetText() << std::endl;
+	child = element->FirstChildElement("ImageName");
+	ss << child->GetText() << std::endl;
+	getChildTextWithDefault(element, ss, "NumSamples", "1");
+
+	std::array<float, 4> near_plane;
+	Vec3 pos, gaze, up;
+	float near_distance;
+	float focus_distance;
+	float aperture_size;
+	int w, h;
+	std::string img_name;
+	int num_samples;
+	ss >> pos[0] >> pos[1] >> pos[2];
+	ss >> gaze[0] >> gaze[1] >> gaze[2];
+	ss >> up[0] >> up[1] >> up[2];
+	ss >> near_plane[0] >> near_plane[1] 
+		>> near_plane[2] >> near_plane[3];
+	ss >> near_distance;
+	ss >> focus_distance;
+	ss >> aperture_size;
+	ss >> w >> h;
+	ss >> img_name;
+	ss >> num_samples; 
+
+	cameras.push_back(Camera(pos, gaze, up, near_plane, near_distance,
+		 focus_distance, aperture_size, w, h, img_name, num_samples));
+}
+

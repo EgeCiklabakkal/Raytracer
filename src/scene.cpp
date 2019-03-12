@@ -27,12 +27,17 @@ void Scene::raytraceImages(int threadCount)
 
 		for(int i = 0; i < threadCount; i++)
 		{
-			threads.push_back(std::thread(raytrace_routine, 
-						this, &cam, &img, &pixels, DEFAULT_NUM_SAMPLES));
+			if(cam.num_samples == 1)	// Single Sample
+			{
+				threads.push_back(std::thread(raytrace_singleSample, 
+						this, &cam, &img, &pixels));
+			}
 
-			// Use the following for single sample
-			//threads.push_back(std::thread(raytrace_singleSample, 
-			//			this, &cam, &img, &pixels));
+			else
+			{
+				threads.push_back(std::thread(raytrace_routine, 
+						this, &cam, &img, &pixels, cam.num_samples));
+			}
 
 		}
 

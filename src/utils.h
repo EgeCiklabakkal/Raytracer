@@ -4,9 +4,11 @@
 // Macros
 #define DEFAULT_THREAD_COUNT 8
 #define DEFAULT_AIR_REFRACTION_INDEX 1.0f
-#define DEFAULT_NUM_SAMPLES 100
+#define CAM_SIMPLE 0
+#define CAM_LOOKAT 1
 
 #include <iostream>
+#include <math.h>
 #include <sstream>
 #include <stdexcept>
 #include <thread>

@@ -13,6 +13,7 @@ class Material
 	Vec3 transparency;
 	float phong_exponent;
 	float refraction_index;
+	float roughness;
 };
 
 #endif

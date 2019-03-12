@@ -23,4 +23,12 @@ class AmbientLight : public Light
 
 };
 
+class AreaLight : public Light
+{
+	public:
+
+	float size;
+	Vec3 normal;
+};
+
 #endif
