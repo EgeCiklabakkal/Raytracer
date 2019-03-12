@@ -4,8 +4,13 @@
 // Macros
 #define DEFAULT_THREAD_COUNT 8
 #define DEFAULT_AIR_REFRACTION_INDEX 1.0f
+
+// Cameras
 #define CAM_SIMPLE 0
 #define CAM_LOOKAT 1
+// Meshes
+#define MESH_SIMPLE 0
+#define MESH_PLY 1
 
 #include <iostream>
 #include <math.h>
@@ -35,5 +40,7 @@
 #include "triangle.h"
 #include "vector3.h"
 #include "vertex.h"
+
+#include "util/happly.h"
 
 #endif
