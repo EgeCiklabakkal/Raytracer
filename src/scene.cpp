@@ -62,7 +62,14 @@ void Scene::raytrace_routine(Scene* scene, const Camera* cam, FlatImage* img,
 		j = currPixel.second;
 	
 		std::vector<Ray> sampledRays(num_samples);
-		cam->sampleRays(i, j, sampledRays, num_samples);
+		if(cam->isDOF())
+		{
+			cam->sampleDOFRays(i, j, sampledRays, num_samples);
+		}
+		else
+		{
+			cam->sampleRays(i, j, sampledRays, num_samples);
+		}
 
 		rgb pixel_color(0.0f, 0.0f, 0.0f);
 		float weightsum = 0.0f;

@@ -57,8 +57,11 @@ class Camera
 		return Ray(position, unitVector(s - position));
 	}
 
+	bool isDOF() const { return (int)aperture_size; }
+
 	// num_samples should be perfect square(even if it isn't it is "cast" to lower ps)
 	void sampleRays(float x, float y, std::vector<Ray>& rays, int num_samples=64) const;
+	void sampleDOFRays(float x, float y, std::vector<Ray>& rays, int num_samples=64) const;
 };
 
 #endif
