@@ -41,7 +41,11 @@ bool MeshTriangle::hit(const Ray& r, float tmin, float tmax, float time, HitReco
 
 		if(shadingMode == MESH_SHADING_SMOOTH)
 		{
-			record.normal = normal;
+			Vec3 na = va().normal;
+			Vec3 nb = vb().normal;
+			Vec3 nc = vc().normal;
+
+			record.normal = na + beta*(nb - na) + gamma*(nc - na);
 		}
 		
 		else	// MESH_SHADING_FLAT

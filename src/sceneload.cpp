@@ -11,10 +11,10 @@ void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,
 void pushCameraSimple(tinyxml2::XMLElement* element, std::stringstream& ss,
 			std::vector<Camera>& cameras);
 void pushFacesOfPlyMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Vertex>& vertex_data, 
-			tinyxml2::XMLElement* element, const std::string& fname, 
+			int shadingMode, const std::string& fname, 
 			const std::string& plyname);
-void pushFacesOfMesh(std::vector<Shape*>& shapes, Mesh* mesh, const std::vector<Vertex>& vertex_data,
-			tinyxml2::XMLElement* element, std::stringstream& ss);
+void pushFacesOfMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Vertex>& vertex_data,
+			int shadingMode, std::stringstream& ss);
 
 // Parse XML
 void Scene::loadFromXML(const std::string& fname)
@@ -232,7 +232,8 @@ void Scene::loadFromXML(const std::string& fname)
 
 			child = element->FirstChildElement("Faces");
 			ss << child->GetText() << std::endl;	
-			pushFacesOfMesh(shapes, mesh, vertex_data, element, ss);
+			int shadingMode = getMeshShadingMode(element);
+			pushFacesOfMesh(shapes, mesh, vertex_data, shadingMode, ss);
 		}
 
 		else if(mesh_type == MESH_PLY)
@@ -245,8 +246,9 @@ void Scene::loadFromXML(const std::string& fname)
 			meshMaterial = materials[itemp - 1];
 			Mesh *mesh = new Mesh(&vertex_data, meshMaterial);
 			meshes.push_back(mesh);
+			int shadingMode = getMeshShadingMode(element);
 
-			pushFacesOfPlyMesh(shapes, mesh, vertex_data, element, fname, plyname);
+			pushFacesOfPlyMesh(shapes, mesh, vertex_data, shadingMode, fname, plyname);
 		}
 
 		ss.clear();
@@ -307,6 +309,16 @@ void Scene::loadFromXML(const std::string& fname)
 		shapes.push_back(sphere_ptr);
 
 		element = element->NextSiblingElement("Sphere");
+	}
+
+	// Pre-compute vertex normals if Smooth Shading
+	for(Vertex& v : vertex_data)
+	{
+		if(v.hasSmoothShading())
+		{
+			v.averageNormal();
+			v.makeUnitNormal();
+		}
 	}
 
 	// BVH
@@ -474,9 +486,8 @@ int getMeshShadingMode(tinyxml2::XMLElement* element)
 	return MESH_SHADING_FLAT;
 }
 
-
 void pushFacesOfPlyMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Vertex>& vertex_data, 
-			tinyxml2::XMLElement* element, const std::string& fname, 
+			int shadingMode, const std::string& fname, 
 			const std::string& plyname)
 {
 	std::size_t pos = fname.find_last_of("/");
@@ -495,7 +506,6 @@ void pushFacesOfPlyMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Ver
 		vertex_data.push_back(Vertex(Vec3(v[0], v[1], v[2])));
 	}
 	
-	int shadingMode = getMeshShadingMode(element);
 	for(auto& f : fInd)
 	{
 		if(f.size() == 3)	// Triangle
@@ -509,6 +519,15 @@ void pushFacesOfPlyMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Ver
 			Vec3 n(unitVector(cross(b - a, c - a)));
 			Shape *mt = new MeshTriangle(facedata, mesh, n, shadingMode);
 			shapes.push_back(mt);
+
+			if(shadingMode == MESH_SHADING_SMOOTH)
+			{
+				// Add the found normal to each vertex
+				for(int i = 0; i < 3; i++)
+				{
+					vertex_data[facedata[i]].addToNormal(n);
+				}
+			}
 		}
 
 		else if(f.size() == 4)	// Quad
@@ -530,15 +549,23 @@ void pushFacesOfPlyMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Ver
 			Shape *mt1 = new MeshTriangle(facedata1, mesh, n1, shadingMode);
 			shapes.push_back(mt0);
 			shapes.push_back(mt1);
+
+			if(shadingMode == MESH_SHADING_SMOOTH)
+			{
+				// Add the found normal to each vertex
+				for(int i = 0; i < 3; i++)
+				{
+					vertex_data[facedata0[i]].addToNormal(n0);
+					vertex_data[facedata1[i]].addToNormal(n1);
+				}
+			}
 		}
 	}
 }
 
-void pushFacesOfMesh(std::vector<Shape*>& shapes, Mesh* mesh, const std::vector<Vertex>& vertex_data,
-			tinyxml2::XMLElement* element, std::stringstream& ss)
+void pushFacesOfMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Vertex>& vertex_data,
+			int shadingMode, std::stringstream& ss)
 {
-	int shadingMode = getMeshShadingMode(element);
-
 	std::array<int, 3> ptemp;
 
 	while(!(ss >> ptemp[0]).eof())
@@ -557,6 +584,15 @@ void pushFacesOfMesh(std::vector<Shape*>& shapes, Mesh* mesh, const std::vector<
 		Vec3 n(unitVector(cross(b - a, c - a)));
 		Shape *mt = new MeshTriangle(ptemp, mesh, n, shadingMode);
 		shapes.push_back(mt);
+
+		if(shadingMode == MESH_SHADING_SMOOTH)
+		{
+			// Add the found normal to each vertex
+			for(int i = 0; i < 3; i++)
+			{
+				vertex_data[ptemp[i]].addToNormal(n);
+			}
+		}
 	}
 }
 

@@ -56,6 +56,10 @@ class MeshTriangle : public Shape
 	Vec3 b() const { return (*parent_mesh->scene_vertex_data)[p[1]].position; }
 	Vec3 c() const { return (*parent_mesh->scene_vertex_data)[p[2]].position; }
 
+	Vertex va() const { return (*parent_mesh->scene_vertex_data)[p[0]]; }
+	Vertex vb() const { return (*parent_mesh->scene_vertex_data)[p[1]]; }
+	Vertex vc() const { return (*parent_mesh->scene_vertex_data)[p[2]]; }
+
 	int ia() const { return p[0]; }
 	int ib() const { return p[1]; }
 	int ic() const { return p[2]; }

@@ -20,6 +20,7 @@ class Vertex
 	void addToNormal(const Vec3& v);
 	void averageNormal();
 	void makeUnitNormal();
+	bool hasSmoothShading() const;
 };
 
 inline void Vertex::addToNormal(const Vec3& v)
@@ -36,6 +37,11 @@ inline void Vertex::averageNormal()
 inline void Vertex::makeUnitNormal()
 {
 	normal.makeUnitVector();
+}
+
+inline bool Vertex::hasSmoothShading() const
+{
+	return (bool)incidentTriangleCount;
 }
 
 #endif
