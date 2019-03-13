@@ -1,0 +1,75 @@
+<Scene>
+    <MaxRecursionDepth>3</MaxRecursionDepth>
+
+    <BackgroundColor>0 0 0</BackgroundColor>
+
+    <Cameras>
+        <Camera id="1" type="lookAt">
+            <Position>100 100 400</Position>
+            <GazePoint>900 700 100</GazePoint>
+            <Up>1 1 1</Up>
+            <FovY>90</FovY>
+            <NearDistance>100</NearDistance>
+            <ImageResolution>800 800</ImageResolution>
+            <ImageName>myply.png</ImageName>
+            <NumSamples>1</NumSamples>
+        </Camera>
+    </Cameras>
+
+    <Lights>
+        <AmbientLight>20 20 20</AmbientLight>
+        <PointLight id="1">
+            <Position>700 1200 100</Position>
+            <Intensity>3500000 3500000 3500000</Intensity>
+        </PointLight>
+	<PointLight id="2">
+            <Position>700 700 400</Position>
+            <Intensity>3500000 3500000 3500000</Intensity>
+        </PointLight>
+	<PointLight id="3">
+            <Position>900 700 100</Position>
+            <Intensity>3500000 3500000 3500000</Intensity>
+        </PointLight>
+    </Lights>
+
+    <Materials>
+        <Material id="1">
+            <AmbientReflectance>1 1 1</AmbientReflectance>
+            <DiffuseReflectance>0.3 0.5 0.7</DiffuseReflectance>
+            <SpecularReflectance>0.3 0.5 0.7</SpecularReflectance>
+        </Material>
+	<Material id="2">
+            <AmbientReflectance>1 1 1</AmbientReflectance>
+            <DiffuseReflectance>1 0.3 0.3</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+        </Material>
+	<Material id="3">
+            <AmbientReflectance>0 0 0</AmbientReflectance>
+            <DiffuseReflectance>0 0 0</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <Transparency>0.99 0.99 0.99</Transparency>
+            <RefractionIndex>2.0</RefractionIndex>
+        </Material>
+    </Materials>
+
+    <VertexData>
+	0 1300 0
+	1700 1300 0
+	0 1300 200
+	1700 1300 200
+    </VertexData>
+
+    <Objects>
+	<Mesh id="1">
+	    <Material>2</Material>
+	    <Faces>
+		1 2 3
+		2 4 3
+	    </Faces>
+	</Mesh>
+        <Mesh id="2">
+            <Material>1</Material>
+            <Faces plyFile="ply/airplane.ply" />
+        </Mesh>
+    </Objects>
+</Scene>
