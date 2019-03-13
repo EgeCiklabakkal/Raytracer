@@ -5,7 +5,9 @@
 #include <string>
 #include <math.h>
 #include "vector3.h"
+#include "vertex.h"
 #include "rgb.h"
+#include "mesh.h"
 #include "BVH.h"
 
 class Scene
@@ -20,7 +22,7 @@ class Scene
 	AmbientLight ambient_light;
 	std::vector<Light*> lights;
 	std::vector<Material> materials;
-	std::vector<Vec3> vertex_data;
+	std::vector<Vertex> vertex_data;
 	std::vector<Shape*> shapes;
 	std::vector<Mesh*> meshes;
 	BVH *bvh;

@@ -5,12 +5,16 @@ bool getChildTextWithDefault(tinyxml2::XMLElement* element, std::stringstream& s
 				std::string name, std::string _default);
 int getCameraType(tinyxml2::XMLElement* element);
 int getMeshType(tinyxml2::XMLElement* element, std::string& ply_path);
+int getMeshShadingMode(tinyxml2::XMLElement* element);
 void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,
 			std::vector<Camera>& cameras);
 void pushCameraSimple(tinyxml2::XMLElement* element, std::stringstream& ss,
 			std::vector<Camera>& cameras);
-void pushFacesOfMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Vec3>& vertex_data, 
-			const std::string& fname, const std::string& plyname);
+void pushFacesOfPlyMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Vertex>& vertex_data, 
+			tinyxml2::XMLElement* element, const std::string& fname, 
+			const std::string& plyname);
+void pushFacesOfMesh(std::vector<Shape*>& shapes, Mesh* mesh, const std::vector<Vertex>& vertex_data,
+			tinyxml2::XMLElement* element, std::stringstream& ss);
 
 // Parse XML
 void Scene::loadFromXML(const std::string& fname)
@@ -198,10 +202,10 @@ void Scene::loadFromXML(const std::string& fname)
 	if(element)
 	{
 		ss << element->GetText() << std::endl;
-		Vec3 vertex;
-		while(!(ss >> vertex[0]).eof())
+		Vertex vertex;
+		while(!(ss >> vertex.position[0]).eof())
 		{
-			ss >> vertex[1] >> vertex[2];
+			ss >> vertex.position[1] >> vertex.position[2];
 			vertex_data.push_back(vertex);
 		}
 		ss.clear();
@@ -218,7 +222,6 @@ void Scene::loadFromXML(const std::string& fname)
 		if(mesh_type == MESH_SIMPLE)
 		{
 			int itemp;
-			std::array<int, 3> ptemp;
 			Material meshMaterial;
 			child = element->FirstChildElement("Material");
 			ss << child->GetText() << std::endl;
@@ -228,25 +231,8 @@ void Scene::loadFromXML(const std::string& fname)
 			meshes.push_back(mesh);
 
 			child = element->FirstChildElement("Faces");
-			ss << child->GetText() << std::endl;
-			while(!(ss >> ptemp[0]).eof())
-			{
-				ss >> ptemp[1] >> ptemp[2];
-				
-				// 1 based to 0 based
-				ptemp[0] = ptemp[0] - 1;
-				ptemp[1] = ptemp[1] - 1;
-				ptemp[2] = ptemp[2] - 1;
-
-				// Precompute normal
-				Vec3 a(vertex_data[ptemp[0]]);
-				Vec3 b(vertex_data[ptemp[1]]);
-				Vec3 c(vertex_data[ptemp[2]]);
-				Vec3 n(unitVector(cross(b - a, c - a)));
-				Shape *mt = new MeshTriangle(ptemp, mesh, n);
-				shapes.push_back(mt);
-			}
-			ss.clear();
+			ss << child->GetText() << std::endl;	
+			pushFacesOfMesh(shapes, mesh, vertex_data, element, ss);
 		}
 
 		else if(mesh_type == MESH_PLY)
@@ -260,9 +246,10 @@ void Scene::loadFromXML(const std::string& fname)
 			Mesh *mesh = new Mesh(&vertex_data, meshMaterial);
 			meshes.push_back(mesh);
 
-			pushFacesOfMesh(shapes, mesh, vertex_data, fname, plyname);
+			pushFacesOfPlyMesh(shapes, mesh, vertex_data, element, fname, plyname);
 		}
 
+		ss.clear();
 		element = element->NextSiblingElement("Mesh");
 	}
 	ss.clear();
@@ -284,9 +271,9 @@ void Scene::loadFromXML(const std::string& fname)
 		ss >> vitemp.e[0] >> vitemp.e[1] >> vitemp.e[2];
 
 		// Precompute normal
-		Vec3 a(vertex_data[vitemp.e[0] - 1]);
-		Vec3 b(vertex_data[vitemp.e[1] - 1]);
-		Vec3 c(vertex_data[vitemp.e[2] - 1]);
+		Vec3 a(vertex_data[vitemp.e[0] - 1].position);
+		Vec3 b(vertex_data[vitemp.e[1] - 1].position);
+		Vec3 c(vertex_data[vitemp.e[2] - 1].position);
 		Vec3 n(unitVector(cross(b - a, c - a)));
 		Shape *triangle_ptr = new Triangle(a, b, c, n, triangleMaterial);
 
@@ -310,7 +297,7 @@ void Scene::loadFromXML(const std::string& fname)
 		child = element->FirstChildElement("Center");
 		ss << child->GetText() << std::endl;
 		ss >> itemp;
-		center = vertex_data[itemp - 1];
+		center = vertex_data[itemp - 1].position;
 
 		child = element->FirstChildElement("Radius");
 		ss << child->GetText() << std::endl;
@@ -472,8 +459,25 @@ int getMeshType(tinyxml2::XMLElement* element, std::string& ply_path)
 	return MESH_SIMPLE;
 }
 
-void pushFacesOfMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Vec3>& vertex_data, 
-			const std::string& fname, const std::string& plyname)
+int getMeshShadingMode(tinyxml2::XMLElement* element)
+{
+	const char *shadingMode = element->Attribute("shadingMode");
+	if(shadingMode)
+	{
+		std::string sshadingMode(shadingMode);
+		if(sshadingMode == "smooth")
+		{
+			return MESH_SHADING_SMOOTH;
+		}
+	}
+
+	return MESH_SHADING_FLAT;
+}
+
+
+void pushFacesOfPlyMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Vertex>& vertex_data, 
+			tinyxml2::XMLElement* element, const std::string& fname, 
+			const std::string& plyname)
 {
 	std::size_t pos = fname.find_last_of("/");
 	std::string plydir(fname.substr(0, pos+1));
@@ -488,9 +492,10 @@ void pushFacesOfMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Vec3>&
 	// push vertex_data
 	for(auto& v : vPos)
 	{
-		vertex_data.push_back(Vec3(v[0], v[1], v[2]));
+		vertex_data.push_back(Vertex(Vec3(v[0], v[1], v[2])));
 	}
 	
+	int shadingMode = getMeshShadingMode(element);
 	for(auto& f : fInd)
 	{
 		if(f.size() == 3)	// Triangle
@@ -498,11 +503,11 @@ void pushFacesOfMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Vec3>&
 			std::array<int, 3> facedata = {offset+(int)f[0], 
 							offset+(int)f[1], 
 							offset+(int)f[2]};
-			Vec3 a(vertex_data[facedata[0]]);
-			Vec3 b(vertex_data[facedata[1]]);
-			Vec3 c(vertex_data[facedata[2]]);
+			Vec3 a(vertex_data[facedata[0]].position);
+			Vec3 b(vertex_data[facedata[1]].position);
+			Vec3 c(vertex_data[facedata[2]].position);
 			Vec3 n(unitVector(cross(b - a, c - a)));
-			Shape *mt = new MeshTriangle(facedata, mesh, n);
+			Shape *mt = new MeshTriangle(facedata, mesh, n, shadingMode);
 			shapes.push_back(mt);
 		}
 
@@ -514,17 +519,44 @@ void pushFacesOfMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Vec3>&
 			std::array<int, 3> facedata1 = {offset+(int)f[0], 
 							offset+(int)f[2], 
 							offset+(int)f[3]};
-			Vec3 a(vertex_data[facedata0[0]]);
-			Vec3 b(vertex_data[facedata0[1]]);
-			Vec3 c(vertex_data[facedata0[2]]);
-			Vec3 d(vertex_data[facedata1[2]]);
+			Vec3 a(vertex_data[facedata0[0]].position);
+			Vec3 b(vertex_data[facedata0[1]].position);
+			Vec3 c(vertex_data[facedata0[2]].position);
+			Vec3 d(vertex_data[facedata1[2]].position);
 
 			Vec3 n0(unitVector(cross(b - a, c - a)));
 			Vec3 n1(unitVector(cross(c - a, d - a)));
-			Shape *mt0 = new MeshTriangle(facedata0, mesh, n0);
-			Shape *mt1 = new MeshTriangle(facedata1, mesh, n1);
+			Shape *mt0 = new MeshTriangle(facedata0, mesh, n0, shadingMode);
+			Shape *mt1 = new MeshTriangle(facedata1, mesh, n1, shadingMode);
 			shapes.push_back(mt0);
 			shapes.push_back(mt1);
 		}
 	}
 }
+
+void pushFacesOfMesh(std::vector<Shape*>& shapes, Mesh* mesh, const std::vector<Vertex>& vertex_data,
+			tinyxml2::XMLElement* element, std::stringstream& ss)
+{
+	int shadingMode = getMeshShadingMode(element);
+
+	std::array<int, 3> ptemp;
+
+	while(!(ss >> ptemp[0]).eof())
+	{
+		ss >> ptemp[1] >> ptemp[2];
+		
+		// 1 based to 0 based
+		ptemp[0] = ptemp[0] - 1;
+		ptemp[1] = ptemp[1] - 1;
+		ptemp[2] = ptemp[2] - 1;
+
+		// Precompute normal
+		Vec3 a(vertex_data[ptemp[0]].position);
+		Vec3 b(vertex_data[ptemp[1]].position);
+		Vec3 c(vertex_data[ptemp[2]].position);
+		Vec3 n(unitVector(cross(b - a, c - a)));
+		Shape *mt = new MeshTriangle(ptemp, mesh, n, shadingMode);
+		shapes.push_back(mt);
+	}
+}
+

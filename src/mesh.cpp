@@ -38,7 +38,17 @@ bool MeshTriangle::hit(const Ray& r, float tmin, float tmax, float time, HitReco
         if(_t >= tmin && _t <= tmax)
         {
                 record.t      = _t;
-		record.normal = normal;
+
+		if(shadingMode == MESH_SHADING_SMOOTH)
+		{
+			record.normal = normal;
+		}
+		
+		else	// MESH_SHADING_FLAT
+		{
+			record.normal = normal;
+		}
+
                 record.color  = color;
                 record.material  = parent_mesh->material;
                 return true;
