@@ -7,6 +7,7 @@
 #include "light.h"
 
 class HitRecord;
+class SampleLight;
 
 class Ray
 {
@@ -35,7 +36,7 @@ class Ray
 	{ return data[0] + t*data[1]; }
 
 	Ray reflectionRay(const HitRecord& record, float epsilon) const;
-	Ray shadowRay(const HitRecord& record, const Light* light_ptr, float epsilon) const;
+	Ray shadowRay(const HitRecord& record, const SampleLight& slight, float epsilon) const;
 	Ray transmissionRay(const HitRecord& record, const Vec3& d, float epsilon) const;
 	float parameterAtPoint(const Vec3& point) const;
 	bool refract(const HitRecord& record, std::pair<float, float> refractionIndexes,

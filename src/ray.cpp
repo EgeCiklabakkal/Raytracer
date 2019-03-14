@@ -14,10 +14,10 @@ Ray Ray::reflectionRay(const HitRecord& record, float epsilon) const
 	return reflection_ray;
 }
 
-Ray Ray::shadowRay(const HitRecord& record, const Light* light_ptr, float epsilon) const
+Ray Ray::shadowRay(const HitRecord& record, const SampleLight& slight, float epsilon) const
 {
 	Vec3 x  = pointAtParameter(record.t);
-	Vec3 wi = light_ptr->position - x;
+	Vec3 wi = slight.position - x;
 	wi.makeUnitVector();
 
 	return Ray(x + wi * epsilon, wi);

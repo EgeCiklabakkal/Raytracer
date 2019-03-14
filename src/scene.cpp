@@ -121,13 +121,14 @@ rgb Scene::rayColor(const Ray& r, int recursion_depth, bool cullFace) const
 			// Loop over lights
 			for(const Light* light_ptr : this->lights)
 			{
-				Ray shadow_ray(r.shadowRay(record, light_ptr, shadow_ray_epsilon));
-				float tlight = shadow_ray.parameterAtPoint(light_ptr->position);
+				SampleLight slight(light_ptr->sampleLight(r, record));
+				Ray shadow_ray(r.shadowRay(record, slight, shadow_ray_epsilon));
+				float tlight = shadow_ray.parameterAtPoint(slight.position);
 
 				if(!bvh->shadowHit(shadow_ray, 0.0f, tlight, time))
 				{
-					rcolor += diffuseColor(r, record, light_ptr) +
-							specularColor(r, record, light_ptr);
+					rcolor += diffuseColor(r, record, slight) +
+							specularColor(r, record, slight);
 				}
 			}
 
@@ -153,13 +154,13 @@ rgb Scene::ambientColor(const HitRecord& record) const
 	return ka * Ia;
 }
 
-rgb Scene::diffuseColor(const Ray& r, const HitRecord& record, const Light* light_ptr) const
+rgb Scene::diffuseColor(const Ray& r, const HitRecord& record, const SampleLight& slight) const
 {
-	rgb I(light_ptr->intensity);
+	rgb I(slight.intensity);
 	rgb kd(record.material.diffuse);
 
 	Vec3 x = r.pointAtParameter(record.t);
-	Vec3 wi(light_ptr->position - x);
+	Vec3 wi(slight.position - x);
 	float r2 = wi.squaredLength();
 	wi.makeUnitVector();
 
@@ -168,14 +169,14 @@ rgb Scene::diffuseColor(const Ray& r, const HitRecord& record, const Light* ligh
 	return (kd * costheta * I) / r2;
 }
 
-rgb Scene::specularColor(const Ray& r, const HitRecord& record, const Light* light_ptr) const
+rgb Scene::specularColor(const Ray& r, const HitRecord& record, const SampleLight& slight) const
 {
-	rgb I(light_ptr->intensity);
+	rgb I(slight.intensity);
 	rgb ks(record.material.specular);
 	float phong_exp = record.material.phong_exponent;
 
 	Vec3 x = r.pointAtParameter(record.t);
-	Vec3 wi(light_ptr->position - x);
+	Vec3 wi(slight.position - x);
 	Vec3 wo(r.origin() - x);
 	float r2 = wi.squaredLength();
 	wi.makeUnitVector();

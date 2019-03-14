@@ -160,6 +160,7 @@ void Scene::loadFromXML(const std::string& fname)
 		ss >> area_light->intensity[0] >> area_light->intensity[1]
 			>> area_light->intensity[2];
 
+		area_light->normal.makeUnitVector();
 		lights.push_back(area_light);
 		element = element->NextSiblingElement("AreaLight");
 	}

@@ -4,8 +4,8 @@
 // Because of the static variables
 float rtmath::randf(float start, float end)
 {
-        static std::default_random_engine e;
-        static std::uniform_real_distribution<> dis(start, end);
+        thread_local static std::default_random_engine e;
+        thread_local static std::uniform_real_distribution<> dis(start, end);
         return dis(e);
 }
 

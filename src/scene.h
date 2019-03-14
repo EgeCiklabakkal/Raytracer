@@ -38,8 +38,8 @@ class Scene
 
 	rgb rayColor(const Ray& r, int recursion_depth, bool cullFace=true) const;
 	rgb ambientColor(const HitRecord& record) const;
-	rgb diffuseColor(const Ray& r, const HitRecord& record, const Light* light_ptr) const;
-	rgb specularColor(const Ray& r, const HitRecord& record, const Light* light_ptr) const;
+	rgb diffuseColor(const Ray& r, const HitRecord& record, const SampleLight& slight) const;
+	rgb specularColor(const Ray& r, const HitRecord& record, const SampleLight& slight) const;
 	rgb reflectionColor(const Ray& r, const HitRecord& record, int recursion_depth) const;
 	rgb refractionColor(const Ray& r, const HitRecord& record, int recursion_depth) const;
 };
