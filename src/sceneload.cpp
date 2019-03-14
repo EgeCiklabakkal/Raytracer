@@ -403,7 +403,7 @@ void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,
 
 	// LookAt to Simple calculations
 	float _t = tan((fovy * M_PI) / (2 * 180.0f)) * near_distance;
-	float _r = (w / h) * _t;
+	float _r = (float(w) / float(h)) * _t;
 	float _l = -_r;
 	float _b = -_t;
 	std::array<float, 4> near_plane = {_l, _r, _b, _t};

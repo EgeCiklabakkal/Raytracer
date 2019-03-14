@@ -33,10 +33,7 @@ Ray Ray::transmissionRay(const HitRecord& record, const Vec3& d, float epsilon) 
 // When using this method, make sure point is on the ray
 float Ray::parameterAtPoint(const Vec3& point) const
 {
-	Vec3 wi(point - origin());
-	Vec3 d(direction());
-	
-	return wi.length() / d.length();
+	return dot(point - origin(), unitVector(direction()));
 }
 
 bool Ray::refract(const HitRecord& record, std::pair<float, float> refractionIndexes, 
