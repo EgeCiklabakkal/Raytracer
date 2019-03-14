@@ -10,15 +10,15 @@ void Camera::sampleRays(float x, float y, std::vector<Ray>& rays, int num_sample
 	{
 		for(int j = 0; j < nboxes; j++)
 		{
-			rx = rtmath::randf(0.0f, 1.0f);
-			ry = rtmath::randf(0.0f, 1.0f);
+			rx = rtmath::randf();
+			ry = rtmath::randf();
 
 			dx = (float(i) + rx) / float(nboxes);
 			dy = (float(j) + ry) / float(nboxes);
 
 			Vec3 s = q + pw*(x+dx)*across + ph*(y+dy)*up;
 			rays.push_back(Ray(position, unitVector(s - position), 
-					rtmath::gaussian2D(rx-0.5f, ry-0.5f)));
+					rtmath::gaussian2D(dx-0.5f, dy-0.5f, STD_DEV)));
 		}
 	}
 }
@@ -33,8 +33,8 @@ void Camera::sampleDOFRays(float x, float y, std::vector<Ray>& rays, int num_sam
 	{
 		for(int j = 0; j < nboxes; j++)
 		{
-			rx = rtmath::randf(0.0f, 1.0f);
-			ry = rtmath::randf(0.0f, 1.0f);
+			rx = rtmath::randf();
+			ry = rtmath::randf();
 
 			dx = (float(i) + rx) / float(nboxes);
 			dy = (float(j) + ry) / float(nboxes);
@@ -42,12 +42,12 @@ void Camera::sampleDOFRays(float x, float y, std::vector<Ray>& rays, int num_sam
 			Vec3 s = q + pw*(x+dx)*across + ph*(y+dy)*up;
 			float t = (-focus_distance) / dot(-gaze, s - position);
 			Vec3 p = position + (s - position) * t;
-			e1 = rtmath::randf(-0.5f, 0.5f);
-			e2 = rtmath::randf(-0.5f, 0.5f);
+			e1 = rtmath::randf() - 0.5f;
+			e2 = rtmath::randf() - 0.5f;
 			Vec3 ls = position + aperture_size*(e1*across + e2*up);
 
 			rays.push_back(Ray(ls, unitVector(p - ls), 
-					rtmath::gaussian2D(rx-0.5f, ry-0.5f)));
+					rtmath::gaussian2D(dx-0.5f, dy-0.5f, STD_DEV)));
 		}
 	}
 }
