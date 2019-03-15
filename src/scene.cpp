@@ -76,12 +76,12 @@ void Scene::raytrace_routine(Scene* scene, const Camera* cam, FlatImage* img,
 		for(const Ray& r : sampledRays)
 		{
 			rgb raycolor = scene->rayColor(r, scene->max_recursion_depth);
-			raycolor.clamp256();
 
 			weightsum += r.weight;
 			pixel_color += raycolor * r.weight;
 		}
 		pixel_color /= weightsum;
+		pixel_color.clamp256();
 
 		img->set(i, j, pixel_color);
 	}
