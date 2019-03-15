@@ -3,7 +3,7 @@
 
 // for gaussian calculation
 #define INV_SQRT_2PI 0.3989422804014327
-#define INV_2PI 1.570796326794896619231
+#define INV_2PI 0.159154943091895335768
 #define STD_DEV 0.16666666666
 
 #include <random>

@@ -61,7 +61,7 @@ void Scene::raytrace_routine(Scene* scene, const Camera* cam, FlatImage* img,
 		i = currPixel.first;
 		j = currPixel.second;
 	
-		std::vector<Ray> sampledRays(num_samples);
+		std::vector<Ray> sampledRays;
 		if(cam->isDOF())
 		{
 			cam->sampleDOFRays(i, j, sampledRays, num_samples);

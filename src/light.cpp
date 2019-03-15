@@ -13,7 +13,7 @@ SampleLight AreaLight::sampleLight(const Ray& r, const HitRecord& record) const
 	Vec3 l(unitVector(from - ls));
 	float declination = dot(l, normal);
 	declination = (declination >= 0.0f) ? declination : -declination;
-	Vec3 _I(intensity * declination);
+	Vec3 _I(intensity * declination * size * size);
 
 	return SampleLight(ls, _I, from);
 }
