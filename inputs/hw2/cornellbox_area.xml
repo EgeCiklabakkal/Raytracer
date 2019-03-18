@@ -22,7 +22,7 @@
             <Position>0 9.8 2</Position>
             <Normal>0 -1 0</Normal>
             <Size>3</Size>
-            <Intensity>150000 150000 150000</Intensity>
+            <Radiance>150000 150000 150000</Radiance>
         </AreaLight>
     </Lights>
 

@@ -149,7 +149,7 @@ void Scene::loadFromXML(const std::string& fname)
 		ss << child->GetText() << std::endl;
 		child = element->FirstChildElement("Size");
 		ss << child->GetText() << std::endl;
-		child = element->FirstChildElement("Intensity");
+		child = element->FirstChildElement("Radiance");
 		ss << child->GetText() << std::endl;
 
 		ss >> area_light->position[0] >> area_light->position[1]
