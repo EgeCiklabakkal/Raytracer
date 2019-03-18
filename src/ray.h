@@ -5,6 +5,8 @@
 #include "vector3.h"
 #include "shape.h"
 #include "light.h"
+#include "rtmath.h"
+#include "ONB.h"
 
 class HitRecord;
 class SampleLight;

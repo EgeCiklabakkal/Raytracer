@@ -10,6 +10,17 @@ Ray Ray::reflectionRay(const HitRecord& record, float epsilon) const
 	Vec3 wr = -wo + 2 * n * (dot(n, wo));
 	wr.makeUnitVector();
 	Ray reflection_ray(x + n * epsilon, wr);
+
+	if(record.material.roughness)	// Glossy
+	{
+		float e1 = rtmath::randf() - 0.5;
+		float e2 = rtmath::randf() - 0.5;
+
+		ONB onb;
+		onb.initFromW(reflection_ray.direction());
+
+		reflection_ray.data[1] += record.material.roughness*(e1*onb.u() + e2*onb.v());
+	}
 	
 	return reflection_ray;
 }

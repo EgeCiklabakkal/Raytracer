@@ -18,7 +18,8 @@ void Camera::sampleRays(float x, float y, std::vector<Ray>& rays, int num_sample
 
 			Vec3 s = q + pw*(x+dx)*across + ph*(y+dy)*up;
 			rays.push_back(Ray(position, unitVector(s - position), 
-					rtmath::gaussian2D(dx-0.5f, dy-0.5f, STD_DEV)));
+			//		rtmath::gaussian2D(dx-0.5f, dy-0.5f, STD_DEV)));
+			1.0f));
 		}
 	}
 }
@@ -47,7 +48,8 @@ void Camera::sampleDOFRays(float x, float y, std::vector<Ray>& rays, int num_sam
 			Vec3 ls = position + aperture_size*(e1*across + e2*up);
 
 			rays.push_back(Ray(ls, unitVector(p - ls), 
-					rtmath::gaussian2D(dx-0.5f, dy-0.5f, STD_DEV)));
+			//		rtmath::gaussian2D(dx-0.5f, dy-0.5f, STD_DEV)));
+			1.0f));
 		}
 	}
 }
