@@ -121,19 +121,35 @@ rgb Scene::rayColor(const Ray& r, int recursion_depth, bool cullFace) const
 			// Loop over lights
 			for(const Light* light_ptr : this->lights)
 			{
-				SampleLight slight(light_ptr->sampleLight(r, record));
-				Ray shadow_ray(r.shadowRay(record, slight, shadow_ray_epsilon));
-				float tlight = shadow_ray.parameterAtPoint(slight.position);
+				std::vector<SampleLight> lightSamples;
+				light_ptr->sampleLight(r, record, lightSamples);
 
-				if(!bvh->shadowHit(shadow_ray, 0.0f, tlight, time))
+				for(const SampleLight& sampledLight : lightSamples)
 				{
-					rcolor += diffuseColor(r, record, slight) +
-							specularColor(r, record, slight);
+					Ray shadow_ray(r.shadowRay(record, sampledLight, 
+							shadow_ray_epsilon));
+					float tlight = shadow_ray.parameterAtPoint
+								(sampledLight.position);
+
+					if(!bvh->shadowHit(shadow_ray, 0.0f, tlight, time))
+					{
+						rcolor += diffuseColor(r, record, sampledLight) +
+							specularColor(r, record, sampledLight);
+					}
 				}
 			}
 
 			// Add color from reflections
-			rcolor += reflectionColor(r, record, recursion_depth);
+			if(record.material.roughness) // Glossy
+			{
+				rcolor += glossyReflectionColor(r, record, 
+						recursion_depth, DEFAULT_GLOSSY_RAYS_COUNT);
+			}
+
+			else
+			{
+				rcolor += reflectionColor(r, record, recursion_depth);
+			}
 		}
 
 		// Add color from refractions
@@ -265,6 +281,57 @@ rgb Scene::refractionColor(const Ray& r, const HitRecord& record, int recursion_
 	return rgb();
 }
 
+rgb Scene::glossyReflectionColor(const Ray& r, const HitRecord& record, 
+					int recursion_depth, int num_samples) const
+{
+	if(!recursion_depth)
+	{
+		return rgb();
+	}
+
+	if(!record.material.mirror.length() && !record.material.roughness)
+	{
+		return rgb();
+	}
+
+        float rx, ry, e1, e2;
+        ONB onb;
+	rgb km(record.material.mirror);
+
+        Vec3 x  = r.pointAtParameter(record.t);
+        Vec3 wo = r.origin() - x;
+        Vec3 n  = record.normal;
+        wo.makeUnitVector();
+
+        Vec3 wr = -wo + 2 * n * (dot(n, wo));
+        wr.makeUnitVector();
+        Ray reflection_ray(x + n * shadow_ray_epsilon, wr);
+        onb.initFromW(reflection_ray.direction());
+	rgb grcolor = rgb();
+
+        // Jittered Sampling
+        int nboxes = sqrt(num_samples);
+        for(int i = 0; i < nboxes; i++)
+        {
+                for(int j = 0; j < nboxes; j++)
+                {
+                        rx = rtmath::randf();
+                        ry = rtmath::randf();
+
+                        e1 = (float(i) + rx) / nboxes - 0.5f;
+                        e2 = (float(j) + ry) / nboxes - 0.5f;
+
+                        Vec3 deviation = record.material.roughness*(e1*onb.u() + e2*onb.v());
+                        Ray reflection_deviated = Ray(reflection_ray.origin(),
+                                                        reflection_ray.direction() + deviation);
+			grcolor += km * rayColor(reflection_deviated, recursion_depth - 1);
+                }
+        }
+
+	grcolor /= nboxes * nboxes;
+	return grcolor;
+}
+ 
 Scene::~Scene()
 {
 	// Free lights

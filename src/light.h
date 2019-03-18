@@ -4,6 +4,7 @@
 #include "shape.h"
 #include "ONB.h"
 #include "rtmath.h"
+#include <vector>
 
 class Ray;
 class HitRecord;
@@ -27,7 +28,8 @@ class Light
 
 	virtual ~Light() {};
 
-	virtual SampleLight sampleLight(const Ray& r, const HitRecord& record) const=0;
+	virtual void sampleLight(const Ray& r, const HitRecord& record, 
+		std::vector<SampleLight>& samples) const=0;
 };
 
 class PointLight : public Light
@@ -42,9 +44,10 @@ class PointLight : public Light
 	virtual ~PointLight() {}
 	PointLight(const PointLight& pl) { *this = pl; }
 
-	virtual SampleLight sampleLight(const Ray& r, const HitRecord& record) const
+	virtual void sampleLight(const Ray& r, const HitRecord& record, 
+		std::vector<SampleLight>& samples) const
 	{ 
-		return SampleLight(position, intensity);
+		samples.push_back(SampleLight(position, intensity));
 	}
 };
 
@@ -54,8 +57,9 @@ class AmbientLight : public Light
 
 	Vec3 intensity;
 
-	virtual SampleLight sampleLight(const Ray& r, const HitRecord& record) const
-	{ return SampleLight(); } // No use
+	virtual void sampleLight(const Ray& r, const HitRecord& record, 
+		std::vector<SampleLight>& samples) const
+	{ return; } // No use
 };
 
 class AreaLight : public Light
@@ -63,14 +67,15 @@ class AreaLight : public Light
 	public:
 
 	Vec3 position;
-	Vec3 intensity;
+	Vec3 intensity;	// Radiance
 	float size;
 	Vec3 normal;
 	
 	AreaLight() {}
 	virtual ~AreaLight() {}
 
-	virtual SampleLight sampleLight(const Ray& r, const HitRecord& record) const;
+	virtual void sampleLight(const Ray& r, const HitRecord& record, 
+		std::vector<SampleLight>& samples) const;
 };
 
 #endif

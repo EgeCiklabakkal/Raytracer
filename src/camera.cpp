@@ -26,7 +26,7 @@ void Camera::sampleRays(float x, float y, std::vector<Ray>& rays, int num_sample
 
 void Camera::sampleDOFRays(float x, float y, std::vector<Ray>& rays, int num_samples) const
 {
-	float rx, ry, dx, dy;
+	float rx, ry, dx, dy, rx_cam, ry_cam;
 	float e1, e2;
 
 	int nboxes = sqrt(num_samples);
@@ -43,13 +43,25 @@ void Camera::sampleDOFRays(float x, float y, std::vector<Ray>& rays, int num_sam
 			Vec3 s = q + pw*(x+dx)*across + ph*(y+dy)*up;
 			float t = (-focus_distance) / dot(-gaze, s - position);
 			Vec3 p = position + (s - position) * t;
-			e1 = rtmath::randf() - 0.5f;
-			e2 = rtmath::randf() - 0.5f;
-			Vec3 ls = position + aperture_size*(e1*across + e2*up);
 
-			rays.push_back(Ray(ls, unitVector(p - ls), 
-			//		rtmath::gaussian2D(dx-0.5f, dy-0.5f, STD_DEV)));
-			1.0f));
+			// Jittered multisampling on camera
+			int size = (int)std::ceil(aperture_size);
+			for(int k = 0; k < size; k++)
+			{
+				for(int m = 0; m < size; m++)
+				{
+					rx_cam = rtmath::randf();
+					ry_cam = rtmath::randf();
+
+					e1 = (float(k) + rx_cam) / size - 0.5f;
+					e2 = (float(m) + ry_cam) / size - 0.5f;
+
+					Vec3 ls = position + aperture_size*(e1*across + e2*up);
+					rays.push_back(Ray(ls, unitVector(p - ls), 
+				//		rtmath::gaussian2D(dx-0.5f, dy-0.5f, STD_DEV)));
+				1.0f));
+				}
+			}
 		}
 	}
 }
