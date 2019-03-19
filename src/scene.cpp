@@ -114,7 +114,7 @@ rgb Scene::rayColor(const Ray& r, int recursion_depth, bool cullFace) const
 
 	if(bvh->hit(r, tmin, tmax, time, record))
 	{
-		if(cullFace && (dot(r.direction(), record.normal) < 0))
+		if(!r.primary || (cullFace && (dot(r.direction(), record.normal) < 0)))
 		{
 			rcolor = ambientColor(record);
 
@@ -140,16 +140,7 @@ rgb Scene::rayColor(const Ray& r, int recursion_depth, bool cullFace) const
 			}
 
 			// Add color from reflections
-			if(record.material.roughness) // Glossy
-			{
-				rcolor += glossyReflectionColor(r, record, 
-						recursion_depth, DEFAULT_GLOSSY_RAYS_COUNT);
-			}
-
-			else
-			{
-				rcolor += reflectionColor(r, record, recursion_depth);
-			}
+			rcolor += reflectionColor(r, record, recursion_depth);
 		}
 
 		// Add color from refractions
@@ -220,6 +211,11 @@ rgb Scene::reflectionColor(const Ray& r, const HitRecord& record, int recursion_
 		return rgb();
 	}
 
+	if(record.material.roughness)
+	{
+		return glossyReflectionColor(r, record, recursion_depth, DEFAULT_GLOSSY_RAYS_COUNT);
+	}
+
 	return km * rayColor(r.reflectionRay(record, shadow_ray_epsilon), 	
 				recursion_depth - 1);
 }
@@ -284,16 +280,6 @@ rgb Scene::refractionColor(const Ray& r, const HitRecord& record, int recursion_
 rgb Scene::glossyReflectionColor(const Ray& r, const HitRecord& record, 
 					int recursion_depth, int num_samples) const
 {
-	if(!recursion_depth)
-	{
-		return rgb();
-	}
-
-	if(!record.material.mirror.length() && !record.material.roughness)
-	{
-		return rgb();
-	}
-
         float rx, ry, e1, e2;
         ONB onb;
 	rgb km(record.material.mirror);
