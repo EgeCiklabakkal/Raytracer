@@ -10,6 +10,7 @@
 #include <glm/mat4x4.hpp>			// mat4, dmat4
 #include <glm/ext/matrix_transform.hpp> 	// perspective, translate, rotate
 #include <glm/trigonometric.hpp>		// radians
+#include <glm/matrix.hpp>			// matrix functions: transpose, inverse, etc.
 
 #include <iostream>
 #include <math.h>

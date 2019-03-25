@@ -8,12 +8,20 @@
 
 #include <random>
 #include <utility>
+#include <glm/mat4x4.hpp>
+#include <glm/vec4.hpp>
+
+#include "vector3.h"
 
 namespace rtmath
 {
 	float randf(float start=0.0f, float end=1.0f);
 	float gaussianPDF(float x, float m=0.0f, float s=1.0f);
 	float gaussian2D(float x, float y, float s=1.0f);
+
+	// Transform helpers
+	Vec3 transformLoc(const glm::mat4& left_op, const Vec3& right_op);
+	Vec3 transformVec(const glm::mat4& left_op, const Vec3& right_op);
 }
 
 #endif

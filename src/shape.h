@@ -2,10 +2,13 @@
 #define _SHAPE_H_
 
 #include "ray.h"
+#include "ONB.h"
 #include "vector3.h"
 #include "rgb.h"
 #include "material.h"
 #include "BBox.h"
+#include "rtmath.h"
+#include <glm/mat4x4.hpp>
 
 class Ray;
 class rgb;
@@ -15,8 +18,10 @@ class HitRecord
 {
 	public:
 
-	float t;
+	float t;	// Ray hits at p = Ray.origin() t*Ray.direction
+	Vec3 p;		// point of intersection
 	Vec3 normal;
+	ONB uvw;	// w is the outward normal
 	rgb color;
 	Material material;
 
@@ -44,11 +49,18 @@ class Shape
 {
 	public:
 
+	bool transformed;	// Does the object have any transforms applied to it
+	glm::mat4 M;		// Transformation matrix
+	glm::mat4 N;		// Inv. Transformation matrix
+
 	virtual ~Shape() = 0;
 
 	virtual bool hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const=0;
 	virtual bool shadowHit(const Ray& r, float tmin, float tmax, float time) const=0;
 	virtual bool boundingBox(float time0, float time1, BBox& _box) const=0;
+
+	Ray transformRayToLocal(const Ray& r) const;
+	HitRecord transformRecordToWorld(const HitRecord& record) const;
 };
 
 inline Shape::~Shape() {}

@@ -26,3 +26,19 @@ float rtmath::gaussian2D(float x, float y, float s)
 
 	return (inv_2pi) * exp(-a) / s*s;
 }
+
+Vec3 rtmath::transformLoc(const glm::mat4& right_op, const Vec3& left_op)
+{
+	glm::vec4 v(left_op.x(), left_op.y(), left_op.z(), 1.0f);
+	glm::vec4 res4 = right_op * v;
+
+	return Vec3(res4[0], res4[1], res4[2]);	// No need for perspective divide
+}
+
+Vec3 rtmath::transformVec(const glm::mat4& right_op, const Vec3& left_op)
+{
+	glm::vec4 v(left_op.x(), left_op.y(), left_op.z(), 0.0f);
+	glm::vec4 res4 = right_op * v;
+
+	return Vec3(res4[0], res4[1], res4[2]);	// No need for perspective divide
+}
