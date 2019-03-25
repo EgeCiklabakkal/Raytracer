@@ -11,7 +11,7 @@ class Vertex
 	Vec3 normal;
 	int incidentTriangleCount;
 
-	Vertex() {}
+	Vertex() : incidentTriangleCount(0) {}
 	Vertex(const Vec3& _position) : 
 	position(_position), normal(Vec3(0.0f, 0.0f, 0.0f)), incidentTriangleCount(0) {}
 	Vertex(const Vec3& _position, const Vec3& _normal) : 

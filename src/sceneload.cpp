@@ -219,6 +219,7 @@ void Scene::loadFromXML(const std::string& fname)
 	{
 		std::string plyname;
 		int mesh_type = getMeshType(element, plyname);
+		std::vector<Shape*> meshTriangles;
 
 		if(mesh_type == MESH_SIMPLE)
 		{
@@ -234,7 +235,7 @@ void Scene::loadFromXML(const std::string& fname)
 			child = element->FirstChildElement("Faces");
 			ss << child->GetText() << std::endl;	
 			int shadingMode = getMeshShadingMode(element);
-			pushFacesOfMesh(shapes, mesh, vertex_data, shadingMode, ss);
+			pushFacesOfMesh(meshTriangles, mesh, vertex_data, shadingMode, ss);
 		}
 
 		else if(mesh_type == MESH_PLY)
@@ -249,10 +250,13 @@ void Scene::loadFromXML(const std::string& fname)
 			meshes.push_back(mesh);
 			int shadingMode = getMeshShadingMode(element);
 
-			pushFacesOfPlyMesh(shapes, mesh, vertex_data, shadingMode, fname, plyname);
+			pushFacesOfPlyMesh(meshTriangles, mesh, vertex_data, shadingMode, fname, plyname);
 		}
 
 		ss.clear();
+		BVH *meshBVH = new BVH(meshTriangles.data(), (int)meshTriangles.size(), 
+					0, 0.0f, 0.0f);
+		shapes.push_back(meshBVH);
 		element = element->NextSiblingElement("Mesh");
 	}
 	ss.clear();

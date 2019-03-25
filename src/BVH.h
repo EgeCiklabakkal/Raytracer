@@ -10,7 +10,6 @@ class BVH : public Shape
 	Shape *left;
 	Shape *right;
 	BBox box;
-	bool lastBranch;	// children are leaves
 	// axis is 0:x, 1:y, 2:z
 
 	BVH() {}
@@ -18,10 +17,8 @@ class BVH : public Shape
 	BVH(Shape** shapes, int n, int axis, float time0, float time1);
 	~BVH() 
 	{
-		if(!lastBranch)
-		{
-			delete left; delete right; 
-		}
+		if(left)  delete left; 
+		if(right) delete right; 
 	}
 
 	bool hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const;

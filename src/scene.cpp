@@ -309,13 +309,6 @@ Scene::~Scene()
 	}
 	lights.clear();
 
-	// Free shapes
-	for(Shape* shape : shapes)
-	{
-		delete shape;
-	}
-	shapes.clear();
-
 	for(Mesh* mesh : meshes)
 	{
 		delete mesh;

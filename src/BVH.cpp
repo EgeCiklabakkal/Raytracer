@@ -5,7 +5,6 @@ BVH::BVH(Shape* s0, Shape* s1)
 	BBox b0, b1;
 	left  = s0;
 	right = s1;
-	lastBranch = true;
 
 	s0->boundingBox(0.0f, 0.0f, b0);
 	s1->boundingBox(0.0f, 0.0f, b1);
@@ -14,14 +13,32 @@ BVH::BVH(Shape* s0, Shape* s1)
 
 BVH::BVH(Shape** shapes, int n, int axis, float time0, float time1)
 {
-	if(n == 1)
+	if(n == 0)	// No object in the scene
 	{
-		*this = BVH(shapes[0], shapes[0]);
+		left  = nullptr;
+		right = nullptr;
+		box   = BBox(Vec3(), Vec3());
 	}
 
-	else if(n == 2)
+	else if(n == 1)
 	{
-		*this = BVH(shapes[0], shapes[1]);
+		BBox b;
+		left  = shapes[0];
+		right = nullptr;
+		left->boundingBox(0.0f, 0.0f, b);
+
+		box = b;
+	}
+
+	else if(n == 2)		// No need to partition for 2 objects
+	{
+		BBox b0, b1;
+		left  = shapes[0];
+		right = shapes[1];
+
+		left->boundingBox(0.0f, 0.0f, b0);
+		right->boundingBox(0.0f, 0.0f, b1);
+		box = BBox(surrounding_box(b0, b1));
 	}
 
 	else
@@ -36,7 +53,6 @@ BVH::BVH(Shape** shapes, int n, int axis, float time0, float time1)
 			boxAccumulator = surrounding_box(boxAccumulator, temp);
 		}
 		box = boxAccumulator;
-		lastBranch = false;
 
 		int midpoint = partitionBySpace(shapes, n, axis);
 
@@ -51,8 +67,8 @@ bool BVH::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& recor
 	{
 		HitRecord leftRecord, rightRecord;
 
-		bool hitLeft  = left->hit(r, tmin, tmax, time, leftRecord);
-		bool hitRight = right->hit(r, tmin, tmax, time, rightRecord);
+		bool hitLeft  = left ? left->hit(r, tmin, tmax, time, leftRecord) : false;
+		bool hitRight = right ? right->hit(r, tmin, tmax, time, rightRecord) : false;
 
 		if(hitLeft && hitRight)		// Both hit, get closest
 		{
@@ -85,12 +101,12 @@ bool BVH::shadowHit(const Ray& r, float tmin, float tmax, float time) const
 {
 	if(box.hit(r, tmin, tmax))
 	{
-		if(left->shadowHit(r, tmin, tmax, time))
+		if(left && left->shadowHit(r, tmin, tmax, time))
 		{
 			return true;
 		}
 
-		return right->shadowHit(r, tmin, tmax, time);	
+		return right ? right->shadowHit(r, tmin, tmax, time) : false;	
 	}
 
 	return false;
