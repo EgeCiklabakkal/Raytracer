@@ -4,7 +4,8 @@
 CXX ?= g++
 
 # path #
-SRC_PATH = src
+SRC_PATH  = src
+UTIL_PATH = src/util
 
 # executable #
 BIN_NAME = raytracer
@@ -26,7 +27,7 @@ ARGS = ""
 .PHONY: all
 all: $(SOURCES) $(HEADERS)
 	@echo "Compiling sources and creating executable $(BIN_NAME)..."
-	$(CXX) $(SOURCES) $(COMPILE_FLAGS) -o $(BIN_NAME)
+	$(CXX) $(SOURCES) $(COMPILE_FLAGS) -o $(BIN_NAME) -I $(UTIL_PATH)
 	@echo "Done."
 
 .PHONY: clean
