@@ -21,7 +21,6 @@ class ObjectInstance : public Shape
 	bool shadowHit(const Ray& r, float tmin, float tmax, float time) const;
 	bool boundingBox(float time0, float time1, BBox& _box) const;
 
-
 	~ObjectInstance() {}
 };
 

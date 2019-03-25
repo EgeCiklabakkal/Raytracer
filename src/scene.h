@@ -25,6 +25,7 @@ class Scene
 	std::vector<Vertex> vertex_data;
 	std::vector<Shape*> shapes;
 	std::vector<Mesh*> meshes;
+	std::vector<Shape*> primMeshBVHs;
 	BVH *bvh;
 
 	~Scene();

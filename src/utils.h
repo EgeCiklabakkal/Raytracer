@@ -26,6 +26,7 @@
 #include "camera.h"
 #include "dynArray.h"
 #include "image.h"
+#include "instance.h"
 #include "light.h"
 #include "macros.h"
 #include "material.h"

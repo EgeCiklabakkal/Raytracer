@@ -256,7 +256,13 @@ void Scene::loadFromXML(const std::string& fname)
 		ss.clear();
 		BVH *meshBVH = new BVH(meshTriangles.data(), (int)meshTriangles.size(), 
 					0, 0.0f, 0.0f);
-		shapes.push_back(meshBVH);
+		primMeshBVHs.push_back(meshBVH);
+		
+		// Create instance
+		ObjectInstance *instance_ptr = new ObjectInstance(glm::mat4(1.0f), meshBVH);
+		instance_ptr->transformed = false;
+		shapes.push_back(instance_ptr);
+
 		element = element->NextSiblingElement("Mesh");
 	}
 	ss.clear();

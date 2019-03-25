@@ -315,5 +315,11 @@ Scene::~Scene()
 	}
 	meshes.clear();
 
+	for(Shape* primMeshBVH : primMeshBVHs)
+	{
+		delete primMeshBVH;
+	}
+	primMeshBVHs.clear();
+
 	delete bvh;
 }
