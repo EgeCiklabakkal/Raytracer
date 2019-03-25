@@ -28,8 +28,7 @@ class Light
 
 	virtual ~Light() {};
 
-	virtual void sampleLight(const Ray& r, const HitRecord& record, 
-		std::vector<SampleLight>& samples) const=0;
+	virtual SampleLight sampleLight(const Ray& r, const HitRecord& record) const=0;
 };
 
 class PointLight : public Light
@@ -44,10 +43,9 @@ class PointLight : public Light
 	virtual ~PointLight() {}
 	PointLight(const PointLight& pl) { *this = pl; }
 
-	virtual void sampleLight(const Ray& r, const HitRecord& record, 
-		std::vector<SampleLight>& samples) const
+	virtual SampleLight sampleLight(const Ray& r, const HitRecord& record) const
 	{ 
-		samples.push_back(SampleLight(position, intensity));
+		return SampleLight(position, intensity);
 	}
 };
 
@@ -57,9 +55,8 @@ class AmbientLight : public Light
 
 	Vec3 intensity;
 
-	virtual void sampleLight(const Ray& r, const HitRecord& record, 
-		std::vector<SampleLight>& samples) const
-	{ return; } // No use
+	virtual SampleLight sampleLight(const Ray& r, const HitRecord& record) const
+	{ return SampleLight(); } // No use
 };
 
 class AreaLight : public Light
@@ -74,8 +71,7 @@ class AreaLight : public Light
 	AreaLight() {}
 	virtual ~AreaLight() {}
 
-	virtual void sampleLight(const Ray& r, const HitRecord& record, 
-		std::vector<SampleLight>& samples) const;
+	virtual SampleLight sampleLight(const Ray& r, const HitRecord& record) const;
 };
 
 #endif

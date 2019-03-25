@@ -121,21 +121,16 @@ rgb Scene::rayColor(const Ray& r, int recursion_depth, bool cullFace) const
 			// Loop over lights
 			for(const Light* light_ptr : this->lights)
 			{
-				std::vector<SampleLight> lightSamples;
-				light_ptr->sampleLight(r, record, lightSamples);
+				SampleLight sampledLight = light_ptr->sampleLight(r, record);
+				Ray shadow_ray(r.shadowRay(record, sampledLight, 
+						shadow_ray_epsilon));
+				float tlight = shadow_ray.parameterAtPoint
+							(sampledLight.position);
 
-				for(const SampleLight& sampledLight : lightSamples)
+				if(!bvh->shadowHit(shadow_ray, 0.0f, tlight, time))
 				{
-					Ray shadow_ray(r.shadowRay(record, sampledLight, 
-							shadow_ray_epsilon));
-					float tlight = shadow_ray.parameterAtPoint
-								(sampledLight.position);
-
-					if(!bvh->shadowHit(shadow_ray, 0.0f, tlight, time))
-					{
-						rcolor += diffuseColor(r, record, sampledLight) +
-							specularColor(r, record, sampledLight);
-					}
+					rcolor += diffuseColor(r, record, sampledLight) +
+						specularColor(r, record, sampledLight);
 				}
 			}
 
@@ -213,7 +208,7 @@ rgb Scene::reflectionColor(const Ray& r, const HitRecord& record, int recursion_
 
 	if(record.material.roughness)
 	{
-		return glossyReflectionColor(r, record, recursion_depth, DEFAULT_GLOSSY_RAYS_COUNT);
+		return glossyReflectionColor(r, record, recursion_depth);
 	}
 
 	return km * rayColor(r.reflectionRay(record, shadow_ray_epsilon), 	
@@ -277,10 +272,9 @@ rgb Scene::refractionColor(const Ray& r, const HitRecord& record, int recursion_
 	return rgb();
 }
 
-rgb Scene::glossyReflectionColor(const Ray& r, const HitRecord& record, 
-					int recursion_depth, int num_samples) const
+rgb Scene::glossyReflectionColor(const Ray& r, const HitRecord& record, int recursion_depth) const
 {
-        float rx, ry, e1, e2;
+        float e1, e2;
         ONB onb;
 	rgb km(record.material.mirror);
 
@@ -295,26 +289,14 @@ rgb Scene::glossyReflectionColor(const Ray& r, const HitRecord& record,
         onb.initFromW(reflection_ray.direction());
 	rgb grcolor = rgb();
 
-        // Jittered Sampling
-        int nboxes = sqrt(num_samples);
-        for(int i = 0; i < nboxes; i++)
-        {
-                for(int j = 0; j < nboxes; j++)
-                {
-                        rx = rtmath::randf();
-                        ry = rtmath::randf();
+	e1 = rtmath::randf() - 0.5f;
+	e2 = rtmath::randf() - 0.5f;
 
-                        e1 = (float(i) + rx) / nboxes - 0.5f;
-                        e2 = (float(j) + ry) / nboxes - 0.5f;
+	Vec3 deviation = record.material.roughness*(e1*onb.u() + e2*onb.v());
+	Ray reflection_deviated = Ray(reflection_ray.origin(),
+					reflection_ray.direction() + deviation);
+	grcolor += km * rayColor(reflection_deviated, recursion_depth - 1);
 
-                        Vec3 deviation = record.material.roughness*(e1*onb.u() + e2*onb.v());
-                        Ray reflection_deviated = Ray(reflection_ray.origin(),
-                                                        reflection_ray.direction() + deviation);
-			grcolor += km * rayColor(reflection_deviated, recursion_depth - 1);
-                }
-        }
-
-	grcolor /= nboxes * nboxes;
 	return grcolor;
 }
  
