@@ -2,15 +2,11 @@
 
 Sphere::Sphere(const Vec3& _center, float _radius, const rgb& _color) :
 center(_center), radius(_radius), color(_color) 
-{
-	transformed = false;
-}
+{}
 
 Sphere::Sphere(const Vec3& _center, float _radius, const Material& _material) :
 center(_center), radius(_radius), material(_material) 
-{
-	transformed = false;
-}
+{}
 
 /*
 	At² + Bt + C = 0

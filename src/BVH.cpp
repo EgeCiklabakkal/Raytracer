@@ -13,7 +13,6 @@ BVH::BVH(Shape* s0, Shape* s1)
 
 BVH::BVH(Shape** shapes, int n, int axis, float time0, float time1)
 {
-	transformed = false;
 	if(n == 0)	// No object in the scene
 	{
 		left  = nullptr;

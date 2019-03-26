@@ -6,7 +6,6 @@ Triangle::Triangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2, const rgb&
 	vertices[1] = _p1;
 	vertices[2] = _p2;
 	color = _color;
-	transformed = false;
 }
 
 Triangle::Triangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2, 
@@ -17,7 +16,6 @@ Triangle::Triangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2,
 	vertices[2] = _p2;
 	normal = _normal;
 	material = _material;
-	transformed = false;
 }
 
 /*

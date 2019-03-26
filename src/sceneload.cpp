@@ -260,7 +260,6 @@ void Scene::loadFromXML(const std::string& fname)
 		
 		// Create instance
 		ObjectInstance *instance_ptr = new ObjectInstance(glm::mat4(1.0f), meshBVH);
-		instance_ptr->transformed = false;
 		shapes.push_back(instance_ptr);
 
 		element = element->NextSiblingElement("Mesh");
