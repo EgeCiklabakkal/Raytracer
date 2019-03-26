@@ -6,6 +6,7 @@ bool getChildTextWithDefault(tinyxml2::XMLElement* element, std::stringstream& s
 int getCameraType(tinyxml2::XMLElement* element);
 int getMeshType(tinyxml2::XMLElement* element, std::string& ply_path);
 int getMeshShadingMode(tinyxml2::XMLElement* element);
+int getVertexOffset(tinyxml2::XMLElement* element);
 void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,
 			std::vector<Camera>& cameras);
 void pushCameraSimple(tinyxml2::XMLElement* element, std::stringstream& ss,
@@ -14,7 +15,7 @@ void pushFacesOfPlyMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Ver
 			int shadingMode, const std::string& fname, 
 			const std::string& plyname);
 void pushFacesOfMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Vertex>& vertex_data,
-			int shadingMode, std::stringstream& ss);
+			int shadingMode, int vertexOffset, std::stringstream& ss);
 
 // Parse XML
 void Scene::loadFromXML(const std::string& fname)
@@ -234,8 +235,10 @@ void Scene::loadFromXML(const std::string& fname)
 
 			child = element->FirstChildElement("Faces");
 			ss << child->GetText() << std::endl;	
-			int shadingMode = getMeshShadingMode(element);
-			pushFacesOfMesh(meshTriangles, mesh, vertex_data, shadingMode, ss);
+			int shadingMode  = getMeshShadingMode(element);
+			int vertexOffset = getVertexOffset(child);
+			pushFacesOfMesh(meshTriangles, mesh, vertex_data, 
+						shadingMode, vertexOffset, ss);
 		}
 
 		else if(mesh_type == MESH_PLY)
@@ -250,7 +253,8 @@ void Scene::loadFromXML(const std::string& fname)
 			meshes.push_back(mesh);
 			int shadingMode = getMeshShadingMode(element);
 
-			pushFacesOfPlyMesh(meshTriangles, mesh, vertex_data, shadingMode, fname, plyname);
+			pushFacesOfPlyMesh(meshTriangles, mesh, vertex_data, 
+						shadingMode, fname, plyname);
 		}
 
 		ss.clear();
@@ -366,6 +370,17 @@ int getCameraType(tinyxml2::XMLElement* element)
 	}
 
 	return CAM_SIMPLE;
+}
+
+int getVertexOffset(tinyxml2::XMLElement* element)
+{
+	const char *sOffset = element->Attribute("vertexOffset");
+	if(sOffset)
+	{
+		return atoi(sOffset);
+	}
+
+	return 0;
 }
 
 void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,
@@ -574,7 +589,7 @@ void pushFacesOfPlyMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Ver
 }
 
 void pushFacesOfMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Vertex>& vertex_data,
-			int shadingMode, std::stringstream& ss)
+			int shadingMode, int vertexOffset, std::stringstream& ss)
 {
 	std::array<int, 3> ptemp;
 
@@ -583,9 +598,9 @@ void pushFacesOfMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Vertex
 		ss >> ptemp[1] >> ptemp[2];
 		
 		// 1 based to 0 based
-		ptemp[0] = ptemp[0] - 1;
-		ptemp[1] = ptemp[1] - 1;
-		ptemp[2] = ptemp[2] - 1;
+		ptemp[0] = ptemp[0] + vertexOffset - 1;
+		ptemp[1] = ptemp[1] + vertexOffset - 1;
+		ptemp[2] = ptemp[2] + vertexOffset - 1;
 
 		// Precompute normal
 		Vec3 a(vertex_data[ptemp[0]].position);
