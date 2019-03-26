@@ -60,8 +60,10 @@ class Shape
 	virtual bool shadowHit(const Ray& r, float tmin, float tmax, float time) const=0;
 	virtual bool boundingBox(float time0, float time1, BBox& _box) const=0;
 
+	// Transform Methods
 	Ray transformRayToLocal(const Ray& r) const;
 	HitRecord transformRecordToWorld(const HitRecord& record) const;
+	BBox transformBBoxToWorld(const BBox& bbox) const;
 };
 
 inline Shape::~Shape() {}

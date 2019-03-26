@@ -30,3 +30,12 @@ HitRecord Shape::transformRecordToWorld(const HitRecord& record) const
 	
 	return transformedRecord;
 }
+
+BBox Shape::transformBBoxToWorld(const BBox& bbox) const
+{
+	// Get 8 bounding vertices
+	std::vector<Vec3> vertices;
+	bbox.getVertices(vertices);
+
+	return BBox();
+}

@@ -1,5 +1,20 @@
 #include "BBox.h"
 
+bool BBox::getVertices(std::vector<Vec3>& vertices) const
+{
+	// Push all 8 bounding vertices
+	vertices.push_back(_min);
+	vertices.push_back(Vec3(_min[0], _min[1], _max[2]));
+	vertices.push_back(Vec3(_min[0], _max[1], _min[2]));
+	vertices.push_back(Vec3(_max[0], _min[1], _min[2]));
+	vertices.push_back(Vec3(_min[0], _max[1], _max[2]));
+	vertices.push_back(Vec3(_max[0], _max[1], _min[2]));
+	vertices.push_back(Vec3(_max[0], _min[1], _max[2]));
+	vertices.push_back(_max);
+
+	return true;
+}
+
 bool BBox::hit(const Ray& r, float tmin, float tmax) const
 {
 	for(int i = 0; i < 3; i++)

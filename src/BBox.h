@@ -2,6 +2,7 @@
 #define _BBOX_H_
 
 #include "ray.h"
+#include <vector>
 
 class Ray;
 
@@ -17,6 +18,7 @@ class BBox
 	BBox(const Vec3& v1, const Vec3& v2) { _min = v1; _max = v2; }
 	Vec3 min() const { return _min; } 
 	Vec3 max() const { return _max; }
+	bool getVertices(std::vector<Vec3>& vertices) const;
 
 	bool hit(const Ray& r, float tmin, float tmax) const;
 };
