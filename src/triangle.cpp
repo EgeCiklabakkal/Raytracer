@@ -6,6 +6,7 @@ Triangle::Triangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2, const rgb&
 	vertices[1] = _p1;
 	vertices[2] = _p2;
 	color = _color;
+	transformed = false;
 }
 
 Triangle::Triangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2, 
@@ -16,8 +17,8 @@ Triangle::Triangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2,
 	vertices[2] = _p2;
 	normal = _normal;
 	material = _material;
+	transformed = false;
 }
-
 
 /*
 	┌       ┐ ┌   ┐   ┌   ┐
@@ -28,18 +29,20 @@ Triangle::Triangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2,
 */
 bool Triangle::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const
 {
+	Ray tray = transformRayToLocal(r);
+
 	float _a = vertices[0].x() - vertices[1].x();
 	float _b = vertices[0].y() - vertices[1].y();
 	float _c = vertices[0].z() - vertices[1].z();
 	float _d = vertices[0].x() - vertices[2].x();
 	float _e = vertices[0].y() - vertices[2].y();
 	float _f = vertices[0].z() - vertices[2].z();
-	float _g = r.direction().x();
-	float _h = r.direction().y();
-	float _i = r.direction().z();
-	float _j = vertices[0].x() - r.origin().x();
-	float _k = vertices[0].y() - r.origin().y();
-	float _l = vertices[0].z() - r.origin().z();
+	float _g = tray.direction().x();
+	float _h = tray.direction().y();
+	float _i = tray.direction().z();
+	float _j = vertices[0].x() - tray.origin().x();
+	float _k = vertices[0].y() - tray.origin().y();
+	float _l = vertices[0].z() - tray.origin().z();
 
 	float eihf = (_e * _i) - (_h * _f);
 	float gfdi = (_g * _f) - (_d * _i);
@@ -63,10 +66,16 @@ bool Triangle::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& 
 
 	if(_t >= tmin && _t <= tmax)
 	{
-		record.t      = _t;
-		record.normal = normal;
-		record.color  = color;
+		record.t 	 = _t;
+		record.p	 = tray.origin() + _t*tray.direction();
+		record.normal 	 = normal;
+		ONB _uvw;
+		_uvw.initFromW(normal);
+		record.uvw	 = _uvw;
+		record.color 	 = color;
 		record.material  = material;
+
+		record = transformRecordToWorld(record);
 		return true;
 	}
 
@@ -75,18 +84,20 @@ bool Triangle::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& 
 
 bool Triangle::shadowHit(const Ray& r, float tmin, float tmax, float time) const
 {
+	Ray tray = transformRayToLocal(r);
+
 	float _a = vertices[0].x() - vertices[1].x();
 	float _b = vertices[0].y() - vertices[1].y();
 	float _c = vertices[0].z() - vertices[1].z();
 	float _d = vertices[0].x() - vertices[2].x();
 	float _e = vertices[0].y() - vertices[2].y();
 	float _f = vertices[0].z() - vertices[2].z();
-	float _g = r.direction().x();
-	float _h = r.direction().y();
-	float _i = r.direction().z();
-	float _j = vertices[0].x() - r.origin().x();
-	float _k = vertices[0].y() - r.origin().y();
-	float _l = vertices[0].z() - r.origin().z();
+	float _g = tray.direction().x();
+	float _h = tray.direction().y();
+	float _i = tray.direction().z();
+	float _j = vertices[0].x() - tray.origin().x();
+	float _k = vertices[0].y() - tray.origin().y();
+	float _l = vertices[0].z() - tray.origin().z();
 
 	float eihf = (_e * _i) - (_h * _f);
 	float gfdi = (_g * _f) - (_d * _i);

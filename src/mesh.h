@@ -41,7 +41,8 @@ class MeshTriangle : public Shape
 	// Constructors
 	MeshTriangle(const std::array<int, 3>& _p, Mesh* _parent_mesh, const Vec3& _normal, 
 			int _shadingMode=MESH_SHADING_FLAT) :
-	p(_p), parent_mesh(_parent_mesh), normal(_normal), shadingMode(_shadingMode) {}
+	p(_p), parent_mesh(_parent_mesh), normal(_normal), shadingMode(_shadingMode) 
+	{ transformed = false; }
 
 	// Destructor
 	virtual ~MeshTriangle() {}

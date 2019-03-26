@@ -50,6 +50,7 @@ class Shape
 	public:
 
 	bool transformed;	// Does the object have any transforms applied to it
+	Vec3 motionBlur;	// 0 vector has no motion blur
 	glm::mat4 M;		// Transformation matrix
 	glm::mat4 N;		// Inv. Transformation matrix
 

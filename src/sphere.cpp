@@ -1,18 +1,26 @@
 #include "sphere.h"
 
 Sphere::Sphere(const Vec3& _center, float _radius, const rgb& _color) :
-center(_center), radius(_radius), color(_color) {}
+center(_center), radius(_radius), color(_color) 
+{
+	transformed = false;
+}
 
 Sphere::Sphere(const Vec3& _center, float _radius, const Material& _material) :
-center(_center), radius(_radius), material(_material) {}
+center(_center), radius(_radius), material(_material) 
+{
+	transformed = false;
+}
 
 /*
 	At² + Bt + C = 0
 */
 bool Sphere::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const
 {
-	Vec3 d  = r.direction();
-	Vec3 o  = r.origin();
+	Ray tray = transformRayToLocal(r);
+
+	Vec3 d  = tray.direction();
+	Vec3 o  = tray.origin();
 	Vec3 oc = o - center;
 
 	double A = dot(d, d);
@@ -34,10 +42,16 @@ bool Sphere::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& re
 			return false;
 
 		// we have a valid hit
-		record.t      = _t;
-		record.normal = unitVector(o + _t*d - center);
-		record.color  = color;
+		record.t 	 = _t;
+		record.p	 = o + _t*d;
+		record.normal 	 = unitVector(record.p - center);
+		ONB _uvw;
+		_uvw.initFromW(record.normal);
+		record.uvw	 = _uvw;
+		record.color  	 = color;
 		record.material  = material;
+
+		record = transformRecordToWorld(record);
 		return true;
 	}
 
@@ -46,8 +60,10 @@ bool Sphere::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& re
 
 bool Sphere::shadowHit(const Ray& r, float tmin, float tmax, float time) const
 {
-	Vec3 d  = r.direction();
-	Vec3 o  = r.origin();
+	Ray tray = transformRayToLocal(r);
+
+	Vec3 d  = tray.direction();
+	Vec3 o  = tray.origin();
 	Vec3 oc = o - center;
 
 	double A = dot(d, d);

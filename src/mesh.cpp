@@ -2,18 +2,20 @@
 
 bool MeshTriangle::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const
 {
+	Ray tray = transformRayToLocal(r);
+
 	float _a = a().x() - b().x();
         float _b = a().y() - b().y();
         float _c = a().z() - b().z();
         float _d = a().x() - c().x();
         float _e = a().y() - c().y();
         float _f = a().z() - c().z();
-        float _g = r.direction().x();
-        float _h = r.direction().y();
-        float _i = r.direction().z();
-        float _j = a().x() - r.origin().x();
-        float _k = a().y() - r.origin().y();
-        float _l = a().z() - r.origin().z();
+        float _g = tray.direction().x();
+        float _h = tray.direction().y();
+        float _i = tray.direction().z();
+        float _j = a().x() - tray.origin().x();
+        float _k = a().y() - tray.origin().y();
+        float _l = a().z() - tray.origin().z();
 
         float eihf = (_e * _i) - (_h * _f);
         float gfdi = (_g * _f) - (_d * _i);
@@ -37,7 +39,8 @@ bool MeshTriangle::hit(const Ray& r, float tmin, float tmax, float time, HitReco
 
         if(_t >= tmin && _t <= tmax)
         {
-                record.t      = _t;
+                record.t = _t;
+		record.p = tray.origin() + _t*tray.direction();
 
 		if(shadingMode == MESH_SHADING_SMOOTH)
 		{
@@ -53,8 +56,12 @@ bool MeshTriangle::hit(const Ray& r, float tmin, float tmax, float time, HitReco
 			record.normal = normal;
 		}
 
-                record.color  = color;
-                record.material  = parent_mesh->material;
+		ONB _uvw;
+		_uvw.initFromW(record.normal);
+		record.uvw	= _uvw;
+                record.color 	= color;
+                record.material = parent_mesh->material;
+		record = transformRecordToWorld(record);
                 return true;
         }
 
@@ -63,18 +70,20 @@ bool MeshTriangle::hit(const Ray& r, float tmin, float tmax, float time, HitReco
 
 bool MeshTriangle::shadowHit(const Ray& r, float tmin, float tmax, float time) const
 {
+	Ray tray = transformRayToLocal(r);
+
         float _a = a().x() - b().x();
         float _b = a().y() - b().y();
         float _c = a().z() - b().z();
         float _d = a().x() - c().x();
         float _e = a().y() - c().y();
         float _f = a().z() - c().z();
-        float _g = r.direction().x();
-        float _h = r.direction().y();
-        float _i = r.direction().z();
-        float _j = a().x() - r.origin().x();
-        float _k = a().y() - r.origin().y();
-        float _l = a().z() - r.origin().z();
+        float _g = tray.direction().x();
+        float _h = tray.direction().y();
+        float _i = tray.direction().z();
+        float _j = a().x() - tray.origin().x();
+        float _k = a().y() - tray.origin().y();
+        float _l = a().z() - tray.origin().z();
 
         float eihf = (_e * _i) - (_h * _f);
         float gfdi = (_g * _f) - (_d * _i);
