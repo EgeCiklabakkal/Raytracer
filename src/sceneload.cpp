@@ -7,6 +7,10 @@ int getCameraType(tinyxml2::XMLElement* element);
 int getMeshType(tinyxml2::XMLElement* element, std::string& ply_path);
 int getMeshShadingMode(tinyxml2::XMLElement* element);
 int getVertexOffset(tinyxml2::XMLElement* element);
+int getTransformations(tinyxml2::XMLElement* element, std::stringstream& ss, 
+			std::vector<glm::mat4>& translations, 
+			std::vector<glm::mat4>& scalings, 
+			std::vector<glm::mat4>& rotations);
 void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,
 			std::vector<Camera>& cameras);
 void pushCameraSimple(tinyxml2::XMLElement* element, std::stringstream& ss,
@@ -165,6 +169,13 @@ void Scene::loadFromXML(const std::string& fname)
 		lights.push_back(area_light);
 		element = element->NextSiblingElement("AreaLight");
 	}
+
+	// Transformations
+	std::vector<glm::mat4> translations;
+	std::vector<glm::mat4> scalings;
+	std::vector<glm::mat4> rotations;
+	element = scene_element->FirstChildElement("Transformations");
+	getTransformations(element, ss, translations, scalings, rotations);
 
 	// Materials
 	element = scene_element->FirstChildElement("Materials");
@@ -382,6 +393,65 @@ int getVertexOffset(tinyxml2::XMLElement* element)
 
 	return 0;
 }
+
+int getTransformations(tinyxml2::XMLElement* element, std::stringstream& ss, 
+			std::vector<glm::mat4>& translations, 
+			std::vector<glm::mat4>& scalings, 
+			std::vector<glm::mat4>& rotations)
+{
+	if(!element)
+	{
+		return -1;
+	}
+
+	glm::mat4 transformation;	// Temp transformation variable
+	int count_trans = 0;
+
+	// Get Translations
+	tinyxml2::XMLElement *element_trans = element->FirstChildElement("Translation");
+	while(element_trans)
+	{
+		float t_x, t_y, t_z;
+		ss << element_trans->GetText() << std::endl;
+		ss >> t_x >> t_y >> t_z;
+		transformation = glm::translate(glm::mat4(1.0f), glm::vec3(t_x, t_y, t_z));
+		translations.push_back(transformation);
+		count_trans++;
+		element_trans = element_trans->NextSiblingElement("Translation");
+	}
+
+	// Get Scalings
+	element_trans = element->FirstChildElement("Scaling");
+	while(element_trans)
+	{
+		float s_x, s_y, s_z;
+		ss << element_trans->GetText() << std::endl;
+		ss >> s_x >> s_y >> s_z;
+		transformation = glm::scale(glm::mat4(1.0f), glm::vec3(s_x, s_y, s_z));
+		scalings.push_back(transformation);
+		count_trans++;
+		element_trans = element_trans->NextSiblingElement("Scaling");
+	}
+
+	// Get Rotations
+	element_trans = element->FirstChildElement("Rotation");
+	while(element_trans)
+	{
+		float r_deg, r_x, r_y, r_z;
+		ss << element_trans->GetText() << std::endl;
+		ss >> r_deg >> r_x >> r_y >> r_z;
+		transformation = glm::rotate(glm::mat4(1.0f), 
+						glm::radians(r_deg), 
+						glm::vec3(r_x, r_y, r_z));
+		rotations.push_back(transformation);
+		count_trans++;
+		element_trans = element_trans->NextSiblingElement("Rotation");
+	}
+
+	ss.clear();
+	return count_trans;
+}
+
 
 void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,
 			std::vector<Camera>& cameras)
