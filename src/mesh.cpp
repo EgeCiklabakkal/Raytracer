@@ -123,5 +123,6 @@ bool MeshTriangle::boundingBox(float time0, float time1, BBox& _box) const
         float zmax = vz.maxComponent();
 
         _box = BBox(Vec3(xmin, ymin, zmin), Vec3(xmax, ymax, zmax));
+	_box = transformBBoxToWorld(_box);
         return true;
 }

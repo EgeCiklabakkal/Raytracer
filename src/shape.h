@@ -33,12 +33,13 @@ class HitRecord
 	t(_t), normal(_normal), material(_material) {}
 	HitRecord(const HitRecord& rhs) { *this = rhs; }
 
-
 	HitRecord& operator=(const HitRecord& rhs)
 	{
-		t      = rhs.t;
-		normal = rhs.normal;
-		color  = rhs.color;
+		t 	 = rhs.t;
+		p	 = rhs.p;
+		normal 	 = rhs.normal;
+		color 	 = rhs.color;
+		uvw 	 = rhs.uvw;
 		material = rhs.material;
 
 		return *this;

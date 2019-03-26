@@ -11,6 +11,7 @@
 #include <glm/ext/matrix_transform.hpp> 	// perspective, translate, rotate
 #include <glm/trigonometric.hpp>		// radians
 #include <glm/matrix.hpp>			// matrix functions: transpose, inverse, etc.
+#include <glm/gtx/string_cast.hpp>		// glm::to_string(mat)
 
 #include <iostream>
 #include <math.h>

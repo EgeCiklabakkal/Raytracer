@@ -317,8 +317,8 @@ void Scene::loadFromXML(const std::string& fname)
 		ss >> radius;
 
 		Shape *sphere_ptr = new Sphere(center, radius, sphereMaterial);
-		shapes.push_back(sphere_ptr);
 
+		shapes.push_back(sphere_ptr);
 		element = element->NextSiblingElement("Sphere");
 	}
 

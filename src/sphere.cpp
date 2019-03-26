@@ -96,5 +96,6 @@ bool Sphere::boundingBox(float time0, float time1, BBox& _box) const
 	Vec3 radius3(radius, radius, radius);
 
 	_box = BBox(center - radius3, center + radius3);
+	_box = transformBBoxToWorld(_box);
 	return true;
 }

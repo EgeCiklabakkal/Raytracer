@@ -38,6 +38,7 @@ bool ObjectInstance::shadowHit(const Ray& r, float tmin, float tmax, float time)
 bool ObjectInstance::boundingBox(float time0, float time1, BBox& _box) const
 {
 	prim->boundingBox(time0, time1, _box);
+	_box = transformBBoxToWorld(_box);
 
 	return true;
 }
