@@ -14,6 +14,7 @@ class BVH : public Shape
 
 	BVH() {}
 	BVH(Shape* s0, Shape* s1);
+	BVH(Shape* s0, Shape* s1, const BBox& _bbox);
 	BVH(Shape** shapes, int n, int axis, float time0, float time1);
 	~BVH() 
 	{
@@ -21,6 +22,7 @@ class BVH : public Shape
 		if(right) delete right; 
 	}
 
+	Shape* buildBranch(Shape** shapes, int n, int axis, float time0, float time1);
 	bool hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const;
 	bool shadowHit(const Ray& r, float tmin, float tmax, float time) const;
 	bool boundingBox(float time0, float time1, BBox& _box) const;

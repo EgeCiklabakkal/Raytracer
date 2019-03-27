@@ -11,6 +11,13 @@ BVH::BVH(Shape* s0, Shape* s1)
 	box = BBox(surrounding_box(b0, b1));
 }
 
+BVH::BVH(Shape* s0, Shape* s1, const BBox& _bbox)
+{
+	box = _bbox;
+	left = s0;
+	right = s1;
+}
+
 BVH::BVH(Shape** shapes, int n, int axis, float time0, float time1)
 {
 	if(n == 0)	// No object in the scene
@@ -56,8 +63,46 @@ BVH::BVH(Shape** shapes, int n, int axis, float time0, float time1)
 
 		int midpoint = partitionBySpace(shapes, n, axis);
 
-		left  = new BVH(shapes, midpoint, (axis+1)%3, time0, time1);
-		right = new BVH(&shapes[midpoint], n - midpoint, (axis+1)%3, time0, time1);
+		left  = buildBranch(shapes, midpoint, (axis+1)%3, time0, time1);
+		right = buildBranch(&shapes[midpoint], n - midpoint, (axis+1)%3, time0, time1);
+	}
+}
+
+Shape* BVH::buildBranch(Shape** shapes, int n, int axis, float time0, float time1)
+{
+	if(n == 0)	// No object in the scene
+	{
+		return nullptr;
+	}
+
+	else if(n == 1)
+	{
+		return shapes[0];
+	}
+
+	else if(n == 2)		// No need to partition for 2 objects
+	{
+		return new BVH(shapes[0], shapes[1]);
+	}
+
+	else
+	{
+		// Bounding Box calculation
+		BBox boxAccumulator;
+		shapes[0]->boundingBox(time0, time1, boxAccumulator);
+		for(int i = 1; i < n; i++)
+		{
+			BBox temp;
+			shapes[i]->boundingBox(time0, time1, temp);
+			boxAccumulator = surrounding_box(boxAccumulator, temp);
+		}
+
+		int midpoint = partitionBySpace(shapes, n, axis);
+
+		Shape *left  = buildBranch(shapes, midpoint, (axis+1)%3, time0, time1);
+		Shape *right = buildBranch(&shapes[midpoint], n - midpoint, (axis+1)%3, time0, time1);
+
+		return new BVH(left, right, boxAccumulator);
 	}
 }
 
