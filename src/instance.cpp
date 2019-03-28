@@ -1,18 +1,21 @@
 #include "instance.h"
 
 ObjectInstance::ObjectInstance(const glm::mat4& trans, const glm::mat4& trans_inverse, 
-			Shape* _prim, bool _resetTransform) : 
+			Shape* _prim, bool _transformed, bool _resetTransform) : 
 				prim(_prim), resetTransform(_resetTransform)
 {
 	M = trans;
 	N = trans_inverse;
+	transformed = _transformed;
 }
 
-ObjectInstance::ObjectInstance(const glm::mat4& trans, Shape* _prim, bool _resetTransform) : 
-	prim(_prim), resetTransform(_resetTransform) 
+ObjectInstance::ObjectInstance(const glm::mat4& trans, Shape* _prim, 
+			bool _transformed, bool _resetTransform) : 
+prim(_prim), resetTransform(_resetTransform) 
 {
 	M = trans;
 	N = glm::inverse(M);
+	transformed = _transformed;
 }
 
 bool ObjectInstance::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const

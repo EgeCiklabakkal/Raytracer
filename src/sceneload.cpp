@@ -7,10 +7,19 @@ int getCameraType(tinyxml2::XMLElement* element);
 int getMeshType(tinyxml2::XMLElement* element, std::string& ply_path);
 int getMeshShadingMode(tinyxml2::XMLElement* element);
 int getVertexOffset(tinyxml2::XMLElement* element);
+
+// Read All transformations into appropriate vectors as Matrices
 int getTransformations(tinyxml2::XMLElement* element, std::stringstream& ss, 
 			std::vector<glm::mat4>& translations, 
 			std::vector<glm::mat4>& scalings, 
 			std::vector<glm::mat4>& rotations);
+
+// Apply specified transformations
+bool applyTransforms(tinyxml2::XMLElement* element, std::stringstream& ss, glm::mat4& transMat,
+			const std::vector<glm::mat4>& translations, 
+			const std::vector<glm::mat4>& scalings, 
+			const std::vector<glm::mat4>& rotations);
+
 void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,
 			std::vector<Camera>& cameras);
 void pushCameraSimple(tinyxml2::XMLElement* element, std::stringstream& ss,
@@ -232,6 +241,9 @@ void Scene::loadFromXML(const std::string& fname)
 		std::string plyname;
 		int mesh_type = getMeshType(element, plyname);
 		std::vector<Shape*> meshTriangles;
+		bool _transformed;
+		tinyxml2::XMLElement *trans_element;
+		glm::mat4 transMatInstance(1.0f);
 
 		if(mesh_type == MESH_SIMPLE)
 		{
@@ -273,8 +285,14 @@ void Scene::loadFromXML(const std::string& fname)
 					0, 0.0f, 0.0f);
 		primMeshBVHs.push_back(meshBVH);
 		
+		// Apply Mesh/Instance Transformations
+		trans_element = element->FirstChildElement("Transformations");
+		_transformed = applyTransforms(trans_element, ss, transMatInstance,
+					translations, scalings, rotations);
+
 		// Create instance
-		ObjectInstance *instance_ptr = new ObjectInstance(glm::mat4(1.0f), meshBVH);
+		ObjectInstance *instance_ptr = new ObjectInstance(transMatInstance, 
+									meshBVH, _transformed);
 		shapes.push_back(instance_ptr);
 
 		element = element->NextSiblingElement("Mesh");
@@ -450,6 +468,42 @@ int getTransformations(tinyxml2::XMLElement* element, std::stringstream& ss,
 
 	ss.clear();
 	return count_trans;
+}
+
+bool applyTransforms(tinyxml2::XMLElement* element, std::stringstream& ss, glm::mat4& transMat,
+			const std::vector<glm::mat4>& translations, 
+			const std::vector<glm::mat4>& scalings, 
+			const std::vector<glm::mat4>& rotations)
+{
+	if(!element)	// No transformations
+	{
+		return false;
+	}
+
+	char ttype;
+	int  tid;
+
+	ss << element->GetText() << std::endl;
+	while(ss >> ttype)
+	{
+		ss >> tid;
+		tid -= 1;	// 1 based to 0 conversion
+		switch(ttype)
+		{
+			case 't':
+				transMat = translations[tid] * transMat;
+				break;
+			case 's':
+				transMat = scalings[tid] * transMat;
+				break;
+			case 'r':
+				transMat = rotations[tid] * transMat;
+				break;
+		}
+	}
+
+	ss.clear();
+	return true;
 }
 
 
