@@ -6,7 +6,8 @@ bool getChildTextWithDefault(tinyxml2::XMLElement* element, std::stringstream& s
 int getCameraType(tinyxml2::XMLElement* element);
 int getMeshType(tinyxml2::XMLElement* element, std::string& ply_path);
 int getMeshShadingMode(tinyxml2::XMLElement* element);
-int getVertexOffset(tinyxml2::XMLElement* element);
+int getIntAttributeWithDefault(tinyxml2::XMLElement* element, std::string name, int _default);
+bool getBoolAttributeWithDefault(tinyxml2::XMLElement* element, std::string name, bool _default);
 
 // Read All transformations into appropriate vectors as Matrices
 int getTransformations(tinyxml2::XMLElement* element, std::stringstream& ss, 
@@ -234,6 +235,7 @@ void Scene::loadFromXML(const std::string& fname)
 	}
 
 	// Objects
+	std::vector<ObjectInstance*> baseMeshInstances;
 	element = scene_element->FirstChildElement("Objects");
 	element = element->FirstChildElement("Mesh");
 	while(element)
@@ -241,6 +243,7 @@ void Scene::loadFromXML(const std::string& fname)
 		std::string plyname;
 		int mesh_type = getMeshType(element, plyname);
 		std::vector<Shape*> meshTriangles;
+		Material meshMaterial;
 		bool _transformed;
 		tinyxml2::XMLElement *trans_element;
 		glm::mat4 transMatInstance(1.0f);
@@ -248,7 +251,6 @@ void Scene::loadFromXML(const std::string& fname)
 		if(mesh_type == MESH_SIMPLE)
 		{
 			int itemp;
-			Material meshMaterial;
 			child = element->FirstChildElement("Material");
 			ss << child->GetText() << std::endl;
 			ss >> itemp;
@@ -259,7 +261,7 @@ void Scene::loadFromXML(const std::string& fname)
 			child = element->FirstChildElement("Faces");
 			ss << child->GetText() << std::endl;	
 			int shadingMode  = getMeshShadingMode(element);
-			int vertexOffset = getVertexOffset(child);
+			int vertexOffset = getIntAttributeWithDefault(child, "vertexOffset", 0);
 			pushFacesOfMesh(meshTriangles, mesh, vertex_data, 
 						shadingMode, vertexOffset, ss);
 		}
@@ -267,7 +269,6 @@ void Scene::loadFromXML(const std::string& fname)
 		else if(mesh_type == MESH_PLY)
 		{
 			int itemp;
-			Material meshMaterial;
 			child = element->FirstChildElement("Material");
 			ss << child->GetText() << std::endl;
 			ss >> itemp;
@@ -291,11 +292,57 @@ void Scene::loadFromXML(const std::string& fname)
 					translations, scalings, rotations);
 
 		// Create instance
-		ObjectInstance *instance_ptr = new ObjectInstance(transMatInstance, 
-									meshBVH, _transformed);
+		ObjectInstance *instance_ptr = new ObjectInstance(transMatInstance, meshBVH, 
+								meshMaterial, _transformed);
 		shapes.push_back(instance_ptr);
+		baseMeshInstances.push_back(instance_ptr);
 
 		element = element->NextSiblingElement("Mesh");
+	}
+	ss.clear();
+
+	element = scene_element->FirstChildElement("Objects");
+	element = element->FirstChildElement("MeshInstance");
+	while(element)
+	{
+		bool _transformed;
+		tinyxml2::XMLElement *trans_element;
+		glm::mat4 transMatInstance(1.0f);
+		Shape *primBVH;
+
+		int baseMeshId = getIntAttributeWithDefault(element, "baseMeshId", 1);
+		bool resetTransform = getBoolAttributeWithDefault(element, "resetTransform", false); 
+		
+		Material instanceMaterial;
+		int itemp;
+		child = element->FirstChildElement("Material");
+		ss << child->GetText() << std::endl;
+		ss >> itemp;
+		instanceMaterial = materials[itemp - 1];
+
+		ObjectInstance *baseMeshInstance = baseMeshInstances[baseMeshId - 1];
+		primBVH = baseMeshInstance->prim;
+		trans_element = element->FirstChildElement("Transformations");
+		if(resetTransform)
+		{
+			_transformed = applyTransforms(trans_element, ss, transMatInstance,
+							translations, scalings, rotations);
+		}
+
+		else
+		{
+			transMatInstance = baseMeshInstance->M;
+			_transformed = applyTransforms(trans_element, ss, transMatInstance,
+							translations, scalings, rotations);
+			_transformed = _transformed || baseMeshInstance->transformed;
+		}
+
+		// Create instance
+		ObjectInstance *instance_ptr = new ObjectInstance(transMatInstance, primBVH, 
+								instanceMaterial, _transformed);
+		shapes.push_back(instance_ptr);
+
+		element = element->NextSiblingElement("MeshInstance");
 	}
 	ss.clear();
 
@@ -401,15 +448,32 @@ int getCameraType(tinyxml2::XMLElement* element)
 	return CAM_SIMPLE;
 }
 
-int getVertexOffset(tinyxml2::XMLElement* element)
+int getIntAttributeWithDefault(tinyxml2::XMLElement* element, std::string name, int _default)
 {
-	const char *sOffset = element->Attribute("vertexOffset");
-	if(sOffset)
+	const char *sattr = element->Attribute(name.data());
+	if(sattr)
 	{
-		return atoi(sOffset);
+		return atoi(sattr);
 	}
 
-	return 0;
+	return _default;
+}
+
+bool getBoolAttributeWithDefault(tinyxml2::XMLElement* element, std::string name, bool _default)
+{
+	const char *attr = element->Attribute(name.data());
+	if(attr)
+	{
+		std::string sattr(attr);
+		if(sattr == "true")
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	return _default;
 }
 
 int getTransformations(tinyxml2::XMLElement* element, std::stringstream& ss, 
@@ -505,7 +569,6 @@ bool applyTransforms(tinyxml2::XMLElement* element, std::stringstream& ss, glm::
 	ss.clear();
 	return true;
 }
-
 
 void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,
 			std::vector<Camera>& cameras)

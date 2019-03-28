@@ -1,17 +1,18 @@
 #include "instance.h"
 
 ObjectInstance::ObjectInstance(const glm::mat4& trans, const glm::mat4& trans_inverse, 
-			Shape* _prim, bool _transformed, bool _resetTransform) : 
-				prim(_prim), resetTransform(_resetTransform)
+				Shape* _prim, const Material& _material, 
+				bool _transformed, bool _resetTransform) : 
+prim(_prim), material(_material), resetTransform(_resetTransform)
 {
 	M = trans;
 	N = trans_inverse;
 	transformed = _transformed;
 }
 
-ObjectInstance::ObjectInstance(const glm::mat4& trans, Shape* _prim, 
+ObjectInstance::ObjectInstance(const glm::mat4& trans, Shape* _prim, const Material& _material,
 			bool _transformed, bool _resetTransform) : 
-prim(_prim), resetTransform(_resetTransform) 
+prim(_prim), material(_material), resetTransform(_resetTransform)
 {
 	M = trans;
 	N = glm::inverse(M);
@@ -25,6 +26,8 @@ bool ObjectInstance::hit(const Ray& r, float tmin, float tmax, float time, HitRe
 	if(prim->hit(tray, tmin, tmax, time, record))
 	{
 		record = transformRecordToWorld(record);
+		// Also update material
+		record.material = material;
 		return true;
 	}
 
