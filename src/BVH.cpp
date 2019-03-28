@@ -63,8 +63,8 @@ BVH::BVH(Shape** shapes, int n, int axis, float time0, float time1)
 
 		int midpoint = partitionBySpace(shapes, n, axis);
 
-		left  = buildBranch(shapes, midpoint, (axis+1)%3, time0, time1);
-		right = buildBranch(&shapes[midpoint], n - midpoint, (axis+1)%3, time0, time1);
+		left  = new BVH(shapes, midpoint, (axis+1)%3, time0, time1);
+		right = new BVH(&shapes[midpoint], n - midpoint, (axis+1)%3, time0, time1);
 	}
 }
 
