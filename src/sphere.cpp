@@ -46,6 +46,7 @@ bool Sphere::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& re
 		record.uvw	 = _uvw;
 		record.color  	 = color;
 		record.material  = material;
+		record.time      = r.time;
 
 		record = transformRecordToWorld(record);
 		return true;

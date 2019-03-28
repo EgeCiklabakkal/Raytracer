@@ -2,29 +2,85 @@
 
 Ray Shape::transformRayToLocal(const Ray& r) const
 {
-	if(!transformed)
+	Vec3 no, nd;
+
+	if(!transformed && !motionBlurred)
 	{
 		return r;
+	}	
+
+	else if(!transformed && motionBlurred)
+	{
+		Vec3 lastCol = velocity * r.time;
+		glm::mat4 currBlur = motionBlur;
+		currBlur[3] = glm::vec4(lastCol[0], lastCol[1], lastCol[2], 1.0f); 	// Col major
+		glm::mat4 invCurrBlur = glm::inverse(currBlur);
+
+		no = rtmath::transformLoc(invCurrBlur, r.origin());
+		nd = rtmath::transformVec(invCurrBlur, r.direction());
 	}
 
-	Vec3 no = rtmath::transformLoc(N, r.origin());
-	Vec3 nd = rtmath::transformVec(N, r.direction());
+	else if(transformed && !motionBlurred)
+	{
+		no = rtmath::transformLoc(N, r.origin());
+		nd = rtmath::transformVec(N, r.direction());
+	}
 
+	else
+	{
+		Vec3 lastCol = velocity * r.time;
+		glm::mat4 currBlur = motionBlur;
+		currBlur[3] = glm::vec4(lastCol[0], lastCol[1], lastCol[2], 1.0f); 	// Col major
+		glm::mat4 invCurrBlur = glm::inverse(currBlur);
+
+		no = rtmath::transformLoc(N * invCurrBlur, r.origin());
+		nd = rtmath::transformVec(N * invCurrBlur, r.direction());
+	}
+	
 	return Ray(no, nd);
 }
 
 HitRecord Shape::transformRecordToWorld(const HitRecord& record) const
 {
-	if(!transformed)
+	HitRecord transformedRecord(record);
+
+	if(!transformed && !motionBlurred)
 	{
 		return record;
 	}
 
-	HitRecord transformedRecord(record);
+	else if(!transformed && motionBlurred)
+	{
+		Vec3 lastCol = velocity * record.time;
+		glm::mat4 currBlur = motionBlur;
+		currBlur[3] = glm::vec4(lastCol[0], lastCol[1], lastCol[2], 1.0f); 	// Col major
+		glm::mat4 invCurrBlur = glm::inverse(currBlur);
+
+		transformedRecord.p      = rtmath::transformLoc(currBlur, record.p);
+		transformedRecord.normal = unitVector(rtmath::transformVec(
+							glm::transpose(invCurrBlur), record.normal));
+	}
+
+	else if(transformed && !motionBlurred)
+	{
+		transformedRecord.p      = rtmath::transformLoc(M, record.p);
+		transformedRecord.normal = unitVector(rtmath::transformVec(glm::transpose(N), 
+										record.normal));
+	}
+
+	else
+	{
+		Vec3 lastCol = velocity * record.time;
+		glm::mat4 currBlur = motionBlur;
+		currBlur[3] = glm::vec4(lastCol[0], lastCol[1], lastCol[2], 1.0f); 	// Col major
+		glm::mat4 invCurrBlur = glm::inverse(currBlur);
+
+		transformedRecord.p      = rtmath::transformLoc(currBlur * M, record.p);
+		transformedRecord.normal = unitVector(rtmath::transformVec(
+								glm::transpose(N * invCurrBlur), 
+								record.normal));
+	}
 	
-	transformedRecord.p      = rtmath::transformLoc(M, record.p);
-	transformedRecord.normal = unitVector(rtmath::transformVec(glm::transpose(N), 
-						record.normal));
 	ONB _uvw;
 	_uvw.initFromW(transformedRecord.normal);
 	transformedRecord.uvw = _uvw;
@@ -34,9 +90,15 @@ HitRecord Shape::transformRecordToWorld(const HitRecord& record) const
 
 BBox Shape::transformBBoxToWorld(const BBox& bbox) const
 {
-	if(!transformed)
+	if(!transformed && !motionBlurred)
 	{
 		return bbox;
+	}
+
+	else if(!transformed && motionBlurred)
+	{
+		BBox otherBox(bbox._min + velocity, bbox._max + velocity);
+		return surrounding_box(bbox, otherBox);
 	}
 
 	Vec3 _min, _max;
@@ -63,6 +125,30 @@ BBox Shape::transformBBoxToWorld(const BBox& bbox) const
 		_max.e[1] = vertices[i].y() > _max.y() ? vertices[i].y() : _max.y();
 		_max.e[2] = vertices[i].z() > _max.z() ? vertices[i].z() : _max.z();
 	}
+	
+	if(!motionBlurred)
+	{
+		return BBox(_min, _max);
+	}
 
-	return BBox(_min, _max);
+	else
+	{
+		BBox otherBox(_min + velocity, _max + velocity);
+		return surrounding_box(BBox(_min, _max), otherBox);
+	}
+}
+
+bool Shape::setMotionBlur(const Vec3& _velocity)
+{
+	if(_velocity.length())
+	{
+		motionBlurred = true;
+		velocity   = _velocity;
+		motionBlur = glm::translate(glm::mat4(1.0f), glm::vec3( velocity[0], 
+									velocity[1], 
+									velocity[2]));
+		return true;
+	}
+
+	return false;
 }

@@ -19,12 +19,13 @@ class Ray
 	Vec3 data[2];
 	float weight;
 	bool primary;
+	float time;	// Creation time for motion blur calculations
 
 	// Constructors
-	Ray() {}
+	Ray() { time = rtmath::randf(); }
 	Ray(const Vec3& origin, const Vec3& direction, float _weight=1.0f, bool _primary=false) 
 	: weight(_weight), primary(_primary)
-	{ data[0] = origin; data[1] = direction; }
+	{ data[0] = origin; data[1] = direction; time = rtmath::randf(); }
 	Ray(const Ray& r) { *this = r; }
 	
 	// Getters

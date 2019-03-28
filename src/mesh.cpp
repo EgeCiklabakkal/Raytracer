@@ -61,6 +61,8 @@ bool MeshTriangle::hit(const Ray& r, float tmin, float tmax, float time, HitReco
 		record.uvw	= _uvw;
                 record.color 	= color;
                 record.material = parent_mesh->material;
+		record.time 	= r.time;		
+
 		record = transformRecordToWorld(record);
                 return true;
         }

@@ -9,6 +9,7 @@
 #include "BBox.h"
 #include "rtmath.h"
 #include <glm/mat4x4.hpp>
+#include <glm/ext/matrix_transform.hpp>         // perspective, translate, rotate
 
 class Ray;
 class rgb;
@@ -24,6 +25,7 @@ class HitRecord
 	ONB uvw;	// w is the outward normal
 	rgb color;
 	Material material;
+	float time;
 
 	// Constructors
 	HitRecord() {}
@@ -41,6 +43,7 @@ class HitRecord
 		color 	 = rhs.color;
 		uvw 	 = rhs.uvw;
 		material = rhs.material;
+		time     = rhs.time;
 
 		return *this;
 	}
@@ -52,7 +55,8 @@ class Shape
 
 	bool transformed   = false;	// Does the object have any transforms applied to it
 	bool motionBlurred = false;	// Does the object have motion blur
-	Vec3 motionBlur;		// Motion Blur Vector
+	Vec3 velocity;			// Velocity vector causing the motion blur
+	glm::mat4 motionBlur;		// Motion Blur translation matrix
 	glm::mat4 M = glm::mat4(1.0f);	// Transformation matrix
 	glm::mat4 N = glm::mat4(1.0f);	// Inv. Transformation matrix
 
@@ -66,6 +70,7 @@ class Shape
 	Ray transformRayToLocal(const Ray& r) const;
 	HitRecord transformRecordToWorld(const HitRecord& record) const;
 	BBox transformBBoxToWorld(const BBox& bbox) const;
+	bool setMotionBlur(const Vec3& _velocity);
 };
 
 inline Shape::~Shape() {}

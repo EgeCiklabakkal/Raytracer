@@ -294,6 +294,15 @@ void Scene::loadFromXML(const std::string& fname)
 		// Create instance
 		ObjectInstance *instance_ptr = new ObjectInstance(transMatInstance, meshBVH, 
 								meshMaterial, _transformed);
+		// Set Motion Blur
+		Vec3 velocity;
+		bool motionBlurred = getChildTextWithDefault(element, ss, "MotionBlur", "0 0 0");
+		ss >> velocity[0] >> velocity[1] >> velocity[2];
+		if(motionBlurred)
+		{
+			instance_ptr->setMotionBlur(velocity);		
+		}
+
 		shapes.push_back(instance_ptr);
 		baseMeshInstances.push_back(instance_ptr);
 
@@ -340,6 +349,15 @@ void Scene::loadFromXML(const std::string& fname)
 		// Create instance
 		ObjectInstance *instance_ptr = new ObjectInstance(transMatInstance, primBVH, 
 								instanceMaterial, _transformed);
+		// Set Motion Blur
+		Vec3 velocity;
+		bool motionBlurred = getChildTextWithDefault(element, ss, "MotionBlur", "0 0 0");
+		ss >> velocity[0] >> velocity[1] >> velocity[2];
+		if(motionBlurred)
+		{
+			instance_ptr->setMotionBlur(velocity);		
+		}
+
 		shapes.push_back(instance_ptr);
 
 		element = element->NextSiblingElement("MeshInstance");
@@ -369,6 +387,15 @@ void Scene::loadFromXML(const std::string& fname)
 		Vec3 n(unitVector(cross(b - a, c - a)));
 		Shape *triangle_ptr = new Triangle(a, b, c, n, triangleMaterial);
 
+		// Set Motion Blur
+		Vec3 velocity;
+		bool motionBlurred = getChildTextWithDefault(element, ss, "MotionBlur", "0 0 0");
+		ss >> velocity[0] >> velocity[1] >> velocity[2];
+		if(motionBlurred)
+		{
+			triangle_ptr->setMotionBlur(velocity);		
+		}
+
 		shapes.push_back(triangle_ptr);
 		element = element->NextSiblingElement("Triangle");
 	}
@@ -396,6 +423,15 @@ void Scene::loadFromXML(const std::string& fname)
 		ss >> radius;
 
 		Shape *sphere_ptr = new Sphere(center, radius, sphereMaterial);
+
+		// Set Motion Blur
+		Vec3 velocity;
+		bool motionBlurred = getChildTextWithDefault(element, ss, "MotionBlur", "0 0 0");
+		ss >> velocity[0] >> velocity[1] >> velocity[2];
+		if(motionBlurred)
+		{
+			sphere_ptr->setMotionBlur(velocity);		
+		}
 
 		shapes.push_back(sphere_ptr);
 		element = element->NextSiblingElement("Sphere");
