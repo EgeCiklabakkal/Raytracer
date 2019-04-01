@@ -35,6 +35,7 @@ class Ray
 	// Setters
 	void setOrigin(const Vec3& v) { data[0] = v; }
 	void setDirection(const Vec3& v) { data[1] = v; }
+	void setTime(float _time) { time = _time; }
 	
 	// Methods
 	Vec3 pointAtParameter(float t) const

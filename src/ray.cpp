@@ -10,6 +10,7 @@ Ray Ray::reflectionRay(const HitRecord& record, float epsilon) const
 	Vec3 wr = -wo + 2 * n * (dot(n, wo));
 	wr.makeUnitVector();
 	Ray reflection_ray(x + n * epsilon, wr);	
+	reflection_ray.setTime(record.time);
 	
 	return reflection_ray;
 }
@@ -19,15 +20,19 @@ Ray Ray::shadowRay(const HitRecord& record, const SampleLight& slight, float eps
 	Vec3 x  = pointAtParameter(record.t);
 	Vec3 wi = slight.position - x;
 	wi.makeUnitVector();
+	Ray sray(x + wi * epsilon, wi);
+	sray.setTime(record.time);
 
-	return Ray(x + wi * epsilon, wi);
+	return sray;
 }
 
 Ray Ray::transmissionRay(const HitRecord& record, const Vec3& d, float epsilon) const
 {
 	Vec3 x = pointAtParameter(record.t);
+	Ray tray(x + -record.normal * epsilon, unitVector(d));
+	tray.setTime(record.time);
 
-	return Ray(x + -record.normal * epsilon, unitVector(d));
+	return tray;
 }
 
 // When using this method, make sure point is on the ray

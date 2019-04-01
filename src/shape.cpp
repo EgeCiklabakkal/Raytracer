@@ -3,6 +3,7 @@
 Ray Shape::transformRayToLocal(const Ray& r) const
 {
 	Vec3 no, nd;
+	Ray tray;
 
 	if(!transformed && !motionBlurred)
 	{
@@ -37,7 +38,9 @@ Ray Shape::transformRayToLocal(const Ray& r) const
 		nd = rtmath::transformVec(N * invCurrBlur, r.direction());
 	}
 	
-	return Ray(no, nd);
+	tray = Ray(no, nd);
+	tray.setTime(r.time);
+	return tray;
 }
 
 HitRecord Shape::transformRecordToWorld(const HitRecord& record) const
