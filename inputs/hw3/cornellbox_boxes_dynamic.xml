@@ -1,0 +1,142 @@
+<Scene>
+    <MaxRecursionDepth>4</MaxRecursionDepth>
+
+    <BackgroundColor>0 0 0</BackgroundColor>
+
+    <Cameras>
+        <Camera id="1">
+            <Position>0 0 20</Position>
+            <Gaze>0 0 -1</Gaze>
+            <Up>0 1 0</Up>
+            <NearPlane>-10 10 -10 6</NearPlane>
+            <NearDistance>10.01</NearDistance>
+            <ImageResolution>750 600</ImageResolution>
+            <NumSamples>900</NumSamples>
+            <ImageName>cornellbox_boxes_dynamic.png</ImageName>
+        </Camera>
+    </Cameras>
+
+    <Lights>
+        <AmbientLight>20 20 20</AmbientLight>
+        <PointLight id="1">
+            <Position>0 5.9 6</Position>
+            <Intensity>250000 250000 250000</Intensity>
+        </PointLight>
+    </Lights>
+
+
+    <Materials>
+        <Material id="1">
+            <AmbientReflectance>0 0 0</AmbientReflectance>
+            <DiffuseReflectance>0.1 0.1 0.1</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+        </Material>
+        <Material id="2">
+            <AmbientReflectance>0 0 0</AmbientReflectance>
+            <DiffuseReflectance>0.146 0.020 0.018</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+        </Material>
+        <Material id="3">
+            <AmbientReflectance>0 0 0</AmbientReflectance>
+            <DiffuseReflectance>0.054 0.096 0.136</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+        </Material>
+        <Material id="4">
+            <AmbientReflectance>1 1 1</AmbientReflectance>
+            <DiffuseReflectance>1 1 1</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+        </Material>
+        <Material id="5">
+            <AmbientReflectance>1 1 1</AmbientReflectance>
+            <DiffuseReflectance>0.160 0.146 0.02</DiffuseReflectance>
+            <SpecularReflectance>1 1 1</SpecularReflectance>
+            <PhongExponent>300</PhongExponent>
+        </Material>
+        <Material id="6">
+            <AmbientReflectance>1 1 1</AmbientReflectance>
+            <DiffuseReflectance>0.083 0.079 0.075</DiffuseReflectance>
+            <SpecularReflectance>0.0 0.0 0.0</SpecularReflectance>
+            <MirrorReflectance>1 1 1</MirrorReflectance>
+        </Material>
+    </Materials>
+
+    <Transformations>
+        <Translation id="1">0 -6 0</Translation>
+        <Translation id="2">0 6 0</Translation>
+        <Translation id="3">0 -6 0</Translation>
+        <Translation id="4">0 5.999 -1</Translation>
+        <Translation id="5">1 -10 -5</Translation>
+        <Translation id="6">-9 -10 -5</Translation>
+        <Translation id="7">-0.5 -0.5 -0.5</Translation>
+        <Translation id="8">0.5 0.5 0.5</Translation>
+        <Scaling id="1">3 0.1 0.1</Scaling>
+        <Scaling id="2">0.2 0.2 0.2</Scaling>
+        <Scaling id="3">7 13 7</Scaling>
+        <Scaling id="4">7 7 7</Scaling>
+        <Rotation id="1">45 0 1 0</Rotation>
+        <Rotation id="2">0 0 1 0</Rotation>
+    </Transformations>
+
+    <VertexData>
+        -10 -10 10
+        10 -10 10
+        10 6 10
+        -10 6 10
+        -10 -10 -10
+        10 -10 -10
+        10 6 -10
+        -10 6 -10
+        5 -6 1
+        -5 -6 -5
+        0 6 0
+    </VertexData>
+
+    <Objects>
+        <Mesh id="1">
+            <Material>1</Material>
+            <Faces>
+                1 2 6
+                6 5 1
+            </Faces>
+        </Mesh>
+        <Mesh id="2">
+            <Material>1</Material>
+            <Faces>
+                5 6 7
+                7 8 5
+            </Faces>
+        </Mesh>
+        <Mesh id="3">
+            <Material>1</Material>
+            <Faces>
+                7 3 4
+                4 8 7
+            </Faces>
+        </Mesh>
+        <Mesh id="4">
+            <Material>2</Material>
+            <Faces>
+                8 4 1
+                8 1 5		
+            </Faces>
+        </Mesh>
+        <Mesh id="5">
+            <Material>3</Material>
+            <Faces>
+                2 3 7
+                2 7 6
+            </Faces>
+        </Mesh>
+        <Mesh id="6">
+            <Material>6</Material>
+            <Faces plyFile="ply/cube.ply" />
+            <Transformations>t7 r1 t8 s3 t5</Transformations>
+        </Mesh>
+        <Mesh id="7">
+            <Material>5</Material>
+            <Faces plyFile="ply/cube.ply" />
+            <Transformations>t7 r2 t8 s4 t6</Transformations>
+            <MotionBlur>0 0 4</MotionBlur>
+        </Mesh>
+    </Objects>
+</Scene>

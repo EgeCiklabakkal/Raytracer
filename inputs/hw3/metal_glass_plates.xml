@@ -1,0 +1,162 @@
+<Scene>
+    <MaxRecursionDepth>6</MaxRecursionDepth>
+
+    <BackgroundColor>0 0 0</BackgroundColor>
+
+    <Cameras>
+        <Camera id="1">
+            <Position>0 10 -5</Position>
+            <Gaze>0.35 -0.7 -0.5</Gaze>
+            <Up>0 1 0</Up>
+            <NearPlane>-1 1 -1 1</NearPlane>
+            <NearDistance>1</NearDistance>
+            <ImageResolution>800 800</ImageResolution>
+            <NumSamples>36</NumSamples>
+            <ImageName>metal_glass_plates.png</ImageName>
+        </Camera>
+    </Cameras>
+
+    <Lights>
+        <AmbientLight>25 25 25</AmbientLight>
+        <AreaLight id="1">
+            <Position>-150 150 50</Position>
+            <Normal>0 -1 0</Normal>
+            <Size>5</Size>
+            <Radiance>740000 740000 740000</Radiance>
+        </AreaLight>
+    </Lights>
+
+    <Materials>
+        <Material id="1">
+            <AmbientReflectance>1 1 1</AmbientReflectance>
+            <DiffuseReflectance>0.63 0.73 0.83</DiffuseReflectance>
+            <SpecularReflectance>1 1 1</SpecularReflectance>
+            <PhongExponent>5</PhongExponent>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+            <Roughness>0</Roughness>
+            <Transparency>0 0 0</Transparency>
+            <RefractionIndex>1</RefractionIndex>
+        </Material>
+        <Material id="2">
+            <AmbientReflectance>1 1 1</AmbientReflectance>
+            <DiffuseReflectance>0.82 0.32 0.02</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <PhongExponent>1</PhongExponent>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+            <Roughness>0</Roughness>
+            <Transparency>0 0 0</Transparency>
+            <RefractionIndex>1</RefractionIndex>
+        </Material>
+        <Material id="3">
+            <AmbientReflectance>0 0 0</AmbientReflectance>
+            <DiffuseReflectance>0 0 0</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <PhongExponent>1</PhongExponent>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+            <Roughness>0</Roughness>
+            <Transparency>0.75 1 0.75</Transparency>
+            <RefractionIndex>1.3</RefractionIndex>
+        </Material>
+        <Material id="4">
+            <AmbientReflectance>0 0 0</AmbientReflectance>
+            <DiffuseReflectance>0.23 0.22 0.22</DiffuseReflectance>
+            <SpecularReflectance>0.23 0.22 0.22</SpecularReflectance>
+            <PhongExponent>1</PhongExponent>
+            <MirrorReflectance>0.77 0.78 0.78</MirrorReflectance>
+            <Roughness>0.1</Roughness>
+            <Transparency>0 0 0</Transparency>
+            <RefractionIndex>1</RefractionIndex>
+        </Material>
+        <Material id="5">
+            <AmbientReflectance>0 0 0</AmbientReflectance>
+            <DiffuseReflectance>0.7372 0.7764 0.8</DiffuseReflectance>
+            <SpecularReflectance>1 1 1</SpecularReflectance>
+            <PhongExponent>1</PhongExponent>
+            <MirrorReflectance>0.8 0.8 0.8</MirrorReflectance>
+            <Roughness>0</Roughness>
+            <Transparency>0 0 0</Transparency>
+            <RefractionIndex>1</RefractionIndex>
+        </Material>
+    </Materials>
+
+    <Transformations>
+        <Translation id="1">1.0 5.001 -14.0</Translation>
+        <Translation id="2">20.0 5.001 -14.0</Translation>
+        <Scaling id="1">100 1 100</Scaling>
+        <Scaling id="2">10 10 10</Scaling>
+        <Scaling id="3">1 1 0.1</Scaling>
+        <Rotation id="1">20 0.0 1.0 0.0</Rotation>
+        <Rotation id="2">90 0.0 1.0 0.0</Rotation>
+    </Transformations>
+
+    <VertexData>
+        -1 0 1
+        1 0 1
+        1 0 -1
+        -1 0 -1
+        -0.5 -0.5 0.5
+        0.5 -0.5 0.5
+        0.5 0.5 0.5
+        -0.5 0.5 0.5
+        -0.5 -0.5 -0.5
+        0.5 -0.5 -0.5
+        0.5 0.5 -0.5
+        -0.5 0.5 -0.5
+        8 5 -24
+    </VertexData>
+
+    <Objects>
+        <Mesh id="1">
+            <Material>1</Material>
+            <Transformations>s1</Transformations>
+            <Faces>
+                3 1 2
+                1 3 4
+            </Faces>
+        </Mesh>
+
+        <Sphere id="1">
+            <Material>2</Material>
+            <Radius>5</Radius>
+            <Center>13</Center>
+        </Sphere>
+
+        <Mesh id="2">
+            <Material>3</Material>
+            <Transformations>s2 s3 r1 t1</Transformations>
+            <Faces>
+                7 5 6
+                5 7 8
+                8 9 5
+                9 8 12
+                10 7 6
+                7 10 11
+                9 11 10
+                11 9 12
+                9 6 5
+                6 9 10
+                7 12 8
+                12 7 11
+            </Faces>
+        </Mesh>
+
+        <Mesh id="3">
+            <Material>4</Material>
+            <Transformations>s2 s3 r2 t2</Transformations>
+            <Faces>
+                7 5 6
+                5 7 8
+                8 9 5
+                9 8 12
+                10 7 6
+                7 10 11
+                9 11 10
+                11 9 12
+                9 6 5
+                6 9 10
+                7 12 8
+                12 7 11
+            </Faces>
+        </Mesh>
+    </Objects>
+</Scene>
