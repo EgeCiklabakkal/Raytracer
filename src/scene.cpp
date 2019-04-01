@@ -206,11 +206,6 @@ rgb Scene::reflectionColor(const Ray& r, const HitRecord& record, int recursion_
 		return rgb();
 	}
 
-	if(record.material.roughness)
-	{
-		return glossyReflectionColor(r, record, recursion_depth);
-	}
-
 	return km * rayColor(r.reflectionRay(record, shadow_ray_epsilon), 	
 				recursion_depth - 1);
 }
@@ -272,34 +267,6 @@ rgb Scene::refractionColor(const Ray& r, const HitRecord& record, int recursion_
 	return rgb();
 }
 
-rgb Scene::glossyReflectionColor(const Ray& r, const HitRecord& record, int recursion_depth) const
-{
-        float e1, e2;
-        ONB onb;
-	rgb km(record.material.mirror);
-
-        Vec3 x  = r.pointAtParameter(record.t);
-        Vec3 wo = r.origin() - x;
-        Vec3 n  = record.normal;
-        wo.makeUnitVector();
-
-        Vec3 wr = -wo + 2 * n * (dot(n, wo));
-        wr.makeUnitVector();
-        Ray reflection_ray(x + n * shadow_ray_epsilon, wr);
-        onb.initFromW(reflection_ray.direction());
-	rgb grcolor = rgb();
-
-	e1 = rtmath::randf() - 0.5f;
-	e2 = rtmath::randf() - 0.5f;
-
-	Vec3 deviation = record.material.roughness*(e1*onb.u() + e2*onb.v());
-	Ray reflection_deviated = Ray(reflection_ray.origin(),
-					reflection_ray.direction() + deviation);
-	grcolor += km * rayColor(reflection_deviated, recursion_depth - 1);
-
-	return grcolor;
-}
- 
 Scene::~Scene()
 {
 	// Free lights

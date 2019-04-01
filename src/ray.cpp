@@ -2,6 +2,9 @@
 
 Ray Ray::reflectionRay(const HitRecord& record, float epsilon) const
 {
+	float e1, e2, roughness;
+	ONB onb;
+
 	Vec3 x  = pointAtParameter(record.t);
 	Vec3 wo = origin() - x;
 	Vec3 n  = record.normal;
@@ -9,6 +12,18 @@ Ray Ray::reflectionRay(const HitRecord& record, float epsilon) const
 
 	Vec3 wr = -wo + 2 * n * (dot(n, wo));
 	wr.makeUnitVector();
+
+	roughness = record.material.roughness;
+	if(record.material.roughness)
+	{
+		onb.initFromW(wr);
+		
+		e1 = rtmath::randf() - 0.5f;
+		e2 = rtmath::randf() - 0.5f;
+
+		wr += roughness*(e1*onb.u() + e2*onb.v());
+	}
+
 	Ray reflection_ray(x + n * epsilon, wr);	
 	reflection_ray.setTime(record.time);
 	

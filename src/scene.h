@@ -43,7 +43,6 @@ class Scene
 	rgb specularColor(const Ray& r, const HitRecord& record, const SampleLight& slight) const;
 	rgb reflectionColor(const Ray& r, const HitRecord& record, int recursion_depth) const;
 	rgb refractionColor(const Ray& r, const HitRecord& record, int recursion_depth) const;
-	rgb glossyReflectionColor(const Ray& r, const HitRecord& record, int recursion_depth) const;
 };
 
 #endif

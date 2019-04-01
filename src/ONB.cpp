@@ -12,6 +12,9 @@ void ONB::initFromU(const Vec3& u)
 	if(V.length() < ONB_EPSILON)
 		V = cross(U, m);
 	W = cross(U, V);
+
+	V.makeUnitVector();
+	W.makeUnitVector();
 }
 
 void ONB::initFromV(const Vec3& v)
@@ -24,6 +27,9 @@ void ONB::initFromV(const Vec3& v)
 	if(U.length() < ONB_EPSILON)
 		U = cross(V, m);
 	W = cross(U, V);
+
+	U.makeUnitVector();
+	W.makeUnitVector();
 }
 
 void ONB::initFromW(const Vec3& w)
@@ -36,6 +42,9 @@ void ONB::initFromW(const Vec3& w)
 	if(U.length() < ONB_EPSILON)
 		U = cross(W, m);
 	V = cross(W, U);
+
+	U.makeUnitVector();
+	V.makeUnitVector();
 }
 
 void ONB::initFromUV(const Vec3& u, const Vec3& v)
@@ -43,6 +52,7 @@ void ONB::initFromUV(const Vec3& u, const Vec3& v)
 	U = unitVector(u);
 	W = unitVector(cross(u, v));
 	V = cross(W, U);
+	V.makeUnitVector();
 }
 
 void ONB::initFromVU(const Vec3& v, const Vec3& u)
@@ -50,6 +60,7 @@ void ONB::initFromVU(const Vec3& v, const Vec3& u)
 	V = unitVector(v);
 	W = unitVector(cross(u, v));
 	U = cross(V, W);
+	U.makeUnitVector();
 }
 
 void ONB::initFromUW(const Vec3& u, const Vec3& w)
@@ -57,6 +68,7 @@ void ONB::initFromUW(const Vec3& u, const Vec3& w)
 	U = unitVector(u);
 	V = unitVector(cross(w, u));
 	W = cross(U, V);
+	W.makeUnitVector();
 }
 
 void ONB::initFromWU(const Vec3& w, const Vec3& u)
@@ -64,6 +76,7 @@ void ONB::initFromWU(const Vec3& w, const Vec3& u)
 	W = unitVector(w);
 	V = unitVector(cross(w, u));
 	U = cross(V, W);
+	U.makeUnitVector();
 }
 
 void ONB::initFromVW(const Vec3& v, const Vec3& w)
@@ -71,6 +84,7 @@ void ONB::initFromVW(const Vec3& v, const Vec3& w)
 	V = unitVector(v);
 	U = unitVector(cross(v, w));
 	W = cross(U, V);
+	W.makeUnitVector();
 }
 
 void ONB::initFromWV(const Vec3& w, const Vec3& v)
@@ -78,6 +92,7 @@ void ONB::initFromWV(const Vec3& w, const Vec3& v)
 	W = unitVector(w);
 	U = unitVector(cross(v, w));
 	V = cross(W, U);
+	V.makeUnitVector();
 }
 
 bool operator==(const ONB& b1, const ONB& b2)
