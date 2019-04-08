@@ -70,6 +70,7 @@ class Shape
 	HitRecord transformRecordToWorld(const HitRecord& record) const;
 	BBox transformBBoxToWorld(const BBox& bbox) const;
 	bool setMotionBlur(const Vec3& _velocity);
+	bool setTransform(const glm::mat4& transformMatrix);
 };
 
 inline Shape::~Shape() {}

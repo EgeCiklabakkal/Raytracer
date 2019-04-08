@@ -156,3 +156,12 @@ bool Shape::setMotionBlur(const Vec3& _velocity)
 
 	return false;
 }
+
+bool Shape::setTransform(const glm::mat4& transformMatrix)
+{
+	M = transformMatrix;
+	N = glm::inverse(M);
+	transformed = true;
+
+	return true;
+}

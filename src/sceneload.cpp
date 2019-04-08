@@ -387,6 +387,16 @@ void Scene::loadFromXML(const std::string& fname)
 		Vec3 n(unitVector(cross(b - a, c - a)));
 		Shape *triangle_ptr = new Triangle(a, b, c, n, triangleMaterial);
 
+		// Set Transformations
+		glm::mat4 transMatTriangle(1.0f);
+		tinyxml2::XMLElement *trans_element = element->FirstChildElement("Transformations");
+		bool _transformed = applyTransforms(trans_element, ss, transMatTriangle,
+							translations, scalings, rotations);
+		if(_transformed)
+		{
+			triangle_ptr->setTransform(transMatTriangle);
+		}
+
 		// Set Motion Blur
 		Vec3 velocity;
 		bool motionBlurred = getChildTextWithDefault(element, ss, "MotionBlur", "0 0 0");
@@ -408,6 +418,7 @@ void Scene::loadFromXML(const std::string& fname)
 		Vec3 center;
 		float radius;
 		int itemp;
+
 		child = element->FirstChildElement("Material");
 		ss << child->GetText() << std::endl;
 		ss >> itemp;
@@ -421,8 +432,18 @@ void Scene::loadFromXML(const std::string& fname)
 		child = element->FirstChildElement("Radius");
 		ss << child->GetText() << std::endl;
 		ss >> radius;
-
+	
 		Shape *sphere_ptr = new Sphere(center, radius, sphereMaterial);
+
+		// Set Transformations
+		glm::mat4 transMatSphere(1.0f);
+		tinyxml2::XMLElement *trans_element = element->FirstChildElement("Transformations");
+		bool _transformed = applyTransforms(trans_element, ss, transMatSphere,
+							translations, scalings, rotations);
+		if(_transformed)
+		{
+			sphere_ptr->setTransform(transMatSphere);
+		}
 
 		// Set Motion Blur
 		Vec3 velocity;
