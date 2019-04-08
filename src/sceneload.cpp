@@ -31,6 +31,9 @@ void pushFacesOfPlyMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Ver
 void pushFacesOfMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Vertex>& vertex_data,
 			int shadingMode, int vertexOffset, std::stringstream& ss);
 
+// Specific to spheres, make the original sphere unit and apply transformations on it
+bool makeUnitSphere(Sphere* sphere_ptr);
+
 // Parse XML
 void Scene::loadFromXML(const std::string& fname)
 {
@@ -435,6 +438,8 @@ void Scene::loadFromXML(const std::string& fname)
 	
 		Shape *sphere_ptr = new Sphere(center, radius, sphereMaterial);
 
+		makeUnitSphere((Sphere*) sphere_ptr);
+
 		// Set Transformations
 		glm::mat4 transMatSphere(1.0f);
 		tinyxml2::XMLElement *trans_element = element->FirstChildElement("Transformations");
@@ -442,7 +447,7 @@ void Scene::loadFromXML(const std::string& fname)
 							translations, scalings, rotations);
 		if(_transformed)
 		{
-			sphere_ptr->setTransform(transMatSphere);
+			sphere_ptr->setTransform(transMatSphere, false);
 		}
 
 		// Set Motion Blur
@@ -865,3 +870,19 @@ void pushFacesOfMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Vertex
 	}
 }
 
+bool makeUnitSphere(Sphere* sphere_ptr)
+{
+	Vec3 origCenter = sphere_ptr->center;
+	float origRad   = sphere_ptr->radius;
+
+	glm::mat4 toOrigCenter = glm::translate(glm::mat4(1.0f), glm::vec3(origCenter[0], 
+										origCenter[1], 
+										origCenter[2]));
+	glm::mat4 toOrigRad = glm::scale(glm::mat4(1.0f), glm::vec3(origRad));
+
+	sphere_ptr->setTransform(toOrigCenter * toOrigRad);
+	sphere_ptr->center = Vec3(0.0f);
+	sphere_ptr->radius = 1.0f;
+
+	return true;
+}
