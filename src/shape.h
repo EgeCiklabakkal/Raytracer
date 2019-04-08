@@ -56,7 +56,6 @@ class Shape
 	bool transformed   = false;	// Does the object have any transforms applied to it
 	bool motionBlurred = false;	// Does the object have motion blur
 	Vec3 velocity;			// Velocity vector causing the motion blur
-	glm::mat4 motionBlur;		// Motion Blur translation matrix
 	glm::mat4 M = glm::mat4(1.0f);	// Transformation matrix
 	glm::mat4 N = glm::mat4(1.0f);	// Inv. Transformation matrix
 

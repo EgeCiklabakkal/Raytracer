@@ -12,9 +12,10 @@ Ray Shape::transformRayToLocal(const Ray& r) const
 
 	else if(!transformed && motionBlurred)
 	{
-		Vec3 lastCol = velocity * r.time;
-		glm::mat4 currBlur = motionBlur;
-		currBlur[3] = glm::vec4(lastCol[0], lastCol[1], lastCol[2], 1.0f); 	// Col major
+		Vec3 blurDistance = velocity * r.time;
+		glm::mat4 currBlur = glm::translate(glm::mat4(1.0f), glm::vec3(blurDistance[0],
+										blurDistance[1],
+										blurDistance[2])); 
 		glm::mat4 invCurrBlur = glm::inverse(currBlur);
 
 		no = rtmath::transformLoc(invCurrBlur, r.origin());
@@ -29,9 +30,10 @@ Ray Shape::transformRayToLocal(const Ray& r) const
 
 	else
 	{
-		Vec3 lastCol = velocity * r.time;
-		glm::mat4 currBlur = motionBlur;
-		currBlur[3] = glm::vec4(lastCol[0], lastCol[1], lastCol[2], 1.0f); 	// Col major
+		Vec3 blurDistance = velocity * r.time;
+		glm::mat4 currBlur = glm::translate(glm::mat4(1.0f), glm::vec3(blurDistance[0],
+										blurDistance[1],
+										blurDistance[2])); 
 		glm::mat4 invCurrBlur = glm::inverse(currBlur);
 
 		no = rtmath::transformLoc(N * invCurrBlur, r.origin());
@@ -54,9 +56,10 @@ HitRecord Shape::transformRecordToWorld(const HitRecord& record) const
 
 	else if(!transformed && motionBlurred)
 	{
-		Vec3 lastCol = velocity * record.time;
-		glm::mat4 currBlur = motionBlur;
-		currBlur[3] = glm::vec4(lastCol[0], lastCol[1], lastCol[2], 1.0f); 	// Col major
+		Vec3 blurDistance = velocity * record.time;
+		glm::mat4 currBlur = glm::translate(glm::mat4(1.0f), glm::vec3(blurDistance[0],
+										blurDistance[1],
+										blurDistance[2]));
 		glm::mat4 invCurrBlur = glm::inverse(currBlur);
 
 		transformedRecord.p      = rtmath::transformLoc(currBlur, record.p);
@@ -73,9 +76,10 @@ HitRecord Shape::transformRecordToWorld(const HitRecord& record) const
 
 	else
 	{
-		Vec3 lastCol = velocity * record.time;
-		glm::mat4 currBlur = motionBlur;
-		currBlur[3] = glm::vec4(lastCol[0], lastCol[1], lastCol[2], 1.0f); 	// Col major
+		Vec3 blurDistance = velocity * record.time;
+		glm::mat4 currBlur = glm::translate(glm::mat4(1.0f), glm::vec3(blurDistance[0],
+										blurDistance[1],
+										blurDistance[2]));
 		glm::mat4 invCurrBlur = glm::inverse(currBlur);
 
 		transformedRecord.p      = rtmath::transformLoc(currBlur * M, record.p);
@@ -147,9 +151,6 @@ bool Shape::setMotionBlur(const Vec3& _velocity)
 	{
 		motionBlurred = true;
 		velocity   = _velocity;
-		motionBlur = glm::translate(glm::mat4(1.0f), glm::vec3( velocity[0], 
-									velocity[1], 
-									velocity[2]));
 		return true;
 	}
 
