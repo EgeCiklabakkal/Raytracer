@@ -39,13 +39,13 @@ class FlatImage
 	int ny;
 
 	FlatImage();
+	FlatImage(std::string fname);
 	FlatImage(int w, int h);
 	FlatImage(int w, int h, rgb background);
+	bool get(int x, int y, rgb& color);
 	bool set(int x, int y, const rgb& color);
 	void gammaCorrect(float gamma);
-	void writePPM(std::ostream& out);
-	void writePPM3(std::ostream& out);
-	void readPPM(std::string fname);
+	void readPNG(std::string fname);
 	void writePNG(std::string fname);
 };
 

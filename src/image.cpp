@@ -245,9 +245,29 @@ void Image::writePNG(std::string fname)
 // Constructors
 FlatImage::FlatImage() {}
 
+FlatImage::FlatImage(std::string fname)
+{
+	readPNG(fname);
+}
+
 FlatImage::FlatImage(int w, int h) : raster(w * h * 4, 0), nx(w), ny(h) {}
 
 // Methods
+bool FlatImage::get(int x, int y, rgb& color)
+{
+	if(0 > x || x > this->nx) return false;
+	if(0 > y || y > this->ny) return false;
+
+	unsigned char cr, cg, cb;
+
+	cr = raster[(((ny-1) - y)*nx + x)*4];
+	cg = raster[(((ny-1) - y)*nx + x)*4 + 1];
+	cb = raster[(((ny-1) - y)*nx + x)*4 + 2];
+
+	color = rgb(cr, cg, cb);
+	return true;
+}
+
 bool FlatImage::set(int x, int y, const rgb& color)
 {
 	if(0 > x || x > this->nx) return false;
@@ -287,4 +307,21 @@ void FlatImage::writePNG(std::string fname)
 		std::cerr << "encoder error " << error << ": " 
 			<< lodepng_error_text(error) << std::endl;
 	}
+}
+
+void FlatImage::readPNG(std::string fname)
+{
+	unsigned int w, h;
+	unsigned error = lodepng::decode(raster, w, h, fname);
+	nx = w;
+	ny = h;
+
+	//if there's an error, display it
+  	if(error) 
+	{
+		std::cerr << "decoder error " << error << ": " 
+			<< lodepng_error_text(error) << std::endl;
+	}
+
+	// https://raw.githubusercontent.com/lvandeve/lodepng/master/examples/example_decode.cpp
 }
