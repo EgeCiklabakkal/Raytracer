@@ -7,6 +7,8 @@ void Scene::raytraceImages(int threadCount, bool showProgress)
 
 	for(const Camera& cam: cameras)
         {
+		auto const prior = std::chrono::system_clock::now();
+
                 width  = cam.image_width;
                 height = cam.image_height;
 
@@ -53,6 +55,10 @@ void Scene::raytraceImages(int threadCount, bool showProgress)
 		}
 
                 img.writePNG(cam.image_name);
+
+		// Time Duration Print
+		auto const latter = std::chrono::system_clock::now();
+		utils::printTimingInfo(cam.image_name, prior, latter);
         }
 }
 
