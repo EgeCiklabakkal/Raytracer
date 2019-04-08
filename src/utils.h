@@ -4,6 +4,9 @@
 // Macros
 #define DEFAULT_THREAD_COUNT 8
 #define DEFAULT_AIR_REFRACTION_INDEX 1.0f
+#define PROGRESS_BAR_WIDTH 80
+#define PROGRESS_BAR_UPDATE_WAIT 10 		// In miliseconds
+#define SHOW_PROGRESS_BAR true
 
 // glm
 #include <glm/vec4.hpp>				// vec4, bvec4, dvec4, ivec4 and uvec4
@@ -13,6 +16,7 @@
 #include <glm/matrix.hpp>			// matrix functions: transpose, inverse, etc.
 #include <glm/gtx/string_cast.hpp>		// glm::to_string(mat)
 
+#include <chrono>
 #include <iostream>
 #include <math.h>
 #include <sstream>
@@ -45,5 +49,11 @@
 #include "triangle.h"
 #include "vector3.h"
 #include "vertex.h"
+
+// util helper functions
+namespace utils
+{
+	void displayProgressBar(SafeStack<std::pair<float, float>>& pixels);
+}
 
 #endif

@@ -13,11 +13,13 @@ template<class T> class SafeStack
 	
 	std::vector<T> sstack;
 	std::mutex sslock;
+	int size;
+	int progress = 0;
 
 	SafeStack(const std::vector<T>& _sstack) : sstack(_sstack) {}
-	SafeStack(int size)
+	SafeStack(int _size) : size(_size)
 	{
-		sstack.reserve(size);
+		sstack.reserve(_size);
 	}
 
 	bool pop(T &item);
@@ -36,6 +38,7 @@ template<class T> bool SafeStack<T>::pop(T &item)
         item = sstack.back();
         sstack.pop_back();
 
+	progress++;
         return true;
 }
 

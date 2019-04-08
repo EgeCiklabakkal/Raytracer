@@ -1,6 +1,6 @@
 #include "utils.h"
 
-void Scene::raytraceImages(int threadCount)
+void Scene::raytraceImages(int threadCount, bool showProgress)
 {
 	int width, height;
 	HitRecord record;
@@ -39,6 +39,11 @@ void Scene::raytraceImages(int threadCount)
 						this, &cam, &img, &pixels, cam.num_samples));
 			}
 
+		}
+
+		if(showProgress)
+		{
+			utils::displayProgressBar(pixels);
 		}
 
 		// Wait for them to complete

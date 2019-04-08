@@ -31,7 +31,7 @@ class Scene
 	~Scene();
 	// Methods
 	void loadFromXML(const std::string& fname);
-	void raytraceImages(int threadCount);
+	void raytraceImages(int threadCount, bool showProgress=true);
 	static void raytrace_routine(Scene* scene, const Camera* cam, FlatImage* img, 
 			SafeStack<std::pair<float, float>>* pixels, int num_samples);
 	static void raytrace_singleSample(Scene* scene, const Camera* cam, FlatImage* img,
