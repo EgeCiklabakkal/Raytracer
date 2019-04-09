@@ -30,6 +30,7 @@
 #include "util/tinyxml2.h"
 #include "BVH.h"
 #include "camera.h"
+#include "cbTexture.h"
 #include "dynArray.h"
 #include "image.h"
 #include "instance.h"
