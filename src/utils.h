@@ -46,7 +46,9 @@
 #include "scene.h"
 #include "shape.h"
 #include "sphere.h"
+#include "texture.h"
 #include "triangle.h"
+#include "vector2.h"
 #include "vector3.h"
 #include "vertex.h"
 

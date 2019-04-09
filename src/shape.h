@@ -3,9 +3,11 @@
 
 #include "ray.h"
 #include "ONB.h"
+#include "vector2.h"
 #include "vector3.h"
 #include "rgb.h"
 #include "material.h"
+#include "texture.h"
 #include "BBox.h"
 #include "rtmath.h"
 #include <glm/mat4x4.hpp>
@@ -21,10 +23,12 @@ class HitRecord
 
 	float t;	// Ray hits at p = Ray.origin() t*Ray.direction
 	Vec3 p;		// point of intersection
+	Vec2 uv;	// uv coordinates of texture
 	Vec3 normal;
 	ONB uvw;	// w is the outward normal
 	rgb color;
 	Material material;
+	Texture *texture;
 	float time;
 
 	// Constructors

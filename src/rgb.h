@@ -12,7 +12,9 @@ class rgb
 	float _r, _g, _b;
 
 	// Constructors
-	rgb(float r=0, float g=0, float b=0);
+	rgb();
+	rgb(float value);
+	rgb(float r, float g, float b);
 	rgb(const rgb& original) { *this = original; }
 	rgb(const Vec3& v);
 
@@ -59,7 +61,11 @@ class rgb
 	void initFromBytes(const Vec3& color_in_bytes);
 };
 
-// Constructor
+// Constructors
+inline rgb::rgb() : _r(0), _g(0), _b(0) {}
+
+inline rgb::rgb(float value) : _r(value), _g(value), _b(value) {}
+
 inline rgb::rgb(float r, float g, float b) : _r(r), _g(g), _b(b) {}
 
 inline rgb::rgb(const Vec3& v) : _r(v.e[0]), _g(v.e[1]), _b(v.e[2]) {}
