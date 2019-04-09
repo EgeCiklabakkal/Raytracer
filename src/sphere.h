@@ -15,9 +15,11 @@ class Sphere : public Shape
 	float radius;
 	rgb color;
 	Material material;
+	Texture *texture;
 
 	Sphere(const Vec3& _center, float _radius, const rgb& _color=rgb());
-	Sphere(const Vec3& _center, float _radius, const Material& _material);
+	Sphere(const Vec3& _center, float _radius, 
+		const Material& _material, Texture* _texture=nullptr);
 	virtual ~Sphere() {}
 
 	bool hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const;

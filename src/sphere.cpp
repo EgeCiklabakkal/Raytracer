@@ -4,8 +4,9 @@ Sphere::Sphere(const Vec3& _center, float _radius, const rgb& _color) :
 center(_center), radius(_radius), color(_color) 
 {}
 
-Sphere::Sphere(const Vec3& _center, float _radius, const Material& _material) :
-center(_center), radius(_radius), material(_material) 
+Sphere::Sphere(const Vec3& _center, float _radius, 
+		const Material& _material, Texture* _texture) :
+center(_center), radius(_radius), material(_material), texture(_texture) 
 {}
 
 /*
@@ -47,6 +48,7 @@ bool Sphere::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& re
 		record.color  	 = color;
 		record.material  = material;
 		record.time      = r.time;
+		record.texture   = texture;
 
 		record = transformRecordToWorld(record);
 		return true;

@@ -18,11 +18,13 @@ class Mesh
 	// Member variables
 	std::vector<Vertex>* scene_vertex_data;
 	Material material;
+	Texture *texture;
 
 	// Constructors
 	Mesh() {}
-	Mesh(std::vector<Vertex>* _scene_vertex_data, const Material& _material) :
-	scene_vertex_data(_scene_vertex_data), material(_material) {}
+	Mesh(std::vector<Vertex>* _scene_vertex_data, 
+		const Material& _material, Texture* _texture=nullptr) :
+	scene_vertex_data(_scene_vertex_data), material(_material), texture(_texture) {}
 	virtual ~Mesh() {}
 };
 

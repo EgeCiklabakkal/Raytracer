@@ -12,14 +12,14 @@ class ObjectInstance : public Shape
 
 	Shape *prim;		// Primary object pointer (primMeshBVH)
 	Material material;	// Instances may change material
-	bool resetTransform;	// Base Mesh Transforms are inherited or not
+	Texture *texture;
 
-	ObjectInstance() : resetTransform(false) {}
+	ObjectInstance() {}
 	ObjectInstance(const glm::mat4& trans, const glm::mat4& trans_inverse, Shape* _prim, 
 				const Material& _material, bool _transformed=false, 
-				bool _resetTransform=false);
+				Texture* _texture=nullptr);
 	ObjectInstance(const glm::mat4& trans, Shape* _prim, const Material& _material,
-			bool _transformed=false, bool _resetTransform=false);
+			bool _transformed=false, Texture* _texture=nullptr);
 	bool hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const;
 	bool shadowHit(const Ray& r, float tmin, float tmax, float time) const;
 	bool boundingBox(float time0, float time1, BBox& _box) const;

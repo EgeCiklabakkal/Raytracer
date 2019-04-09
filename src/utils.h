@@ -45,6 +45,7 @@
 #include "safeStack.h"
 #include "scene.h"
 #include "shape.h"
+#include "simpleTexture.h"
 #include "sphere.h"
 #include "texture.h"
 #include "triangle.h"

@@ -15,12 +15,13 @@ class Triangle : public Shape
 	Vec3 vertices[3];	// are in ccw order
 	Vec3 normal;
 	Material material;
+	Texture *texture;
 	rgb color;
 
 	// Constructors
 	Triangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2, const rgb& _color=rgb());
 	Triangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2,
-			 const Vec3& _normal, const Material& _material);
+			const Vec3& _normal, const Material& _material, Texture* _texture=nullptr);
 
 	// Destructor
 	~Triangle() {}

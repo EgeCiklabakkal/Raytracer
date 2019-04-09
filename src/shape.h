@@ -28,7 +28,7 @@ class HitRecord
 	ONB uvw;	// w is the outward normal
 	rgb color;
 	Material material;
-	Texture *texture;
+	Texture *texture = nullptr;
 	float time;
 
 	// Constructors
@@ -43,11 +43,13 @@ class HitRecord
 	{
 		t 	 = rhs.t;
 		p	 = rhs.p;
+		uv	 = rhs.uv;
 		normal 	 = rhs.normal;
 		color 	 = rhs.color;
 		uvw 	 = rhs.uvw;
 		material = rhs.material;
 		time     = rhs.time;
+		texture  = rhs.texture;
 
 		return *this;
 	}

@@ -2,8 +2,8 @@
 
 ObjectInstance::ObjectInstance(const glm::mat4& trans, const glm::mat4& trans_inverse, 
 				Shape* _prim, const Material& _material, 
-				bool _transformed, bool _resetTransform) : 
-prim(_prim), material(_material), resetTransform(_resetTransform)
+				bool _transformed, Texture* _texture) : 
+prim(_prim), material(_material), texture(_texture)
 {
 	M = trans;
 	N = trans_inverse;
@@ -11,8 +11,8 @@ prim(_prim), material(_material), resetTransform(_resetTransform)
 }
 
 ObjectInstance::ObjectInstance(const glm::mat4& trans, Shape* _prim, const Material& _material,
-			bool _transformed, bool _resetTransform) : 
-prim(_prim), material(_material), resetTransform(_resetTransform)
+			bool _transformed, Texture* _texture) : 
+prim(_prim), material(_material), texture(_texture)
 {
 	M = trans;
 	N = glm::inverse(M);
@@ -26,8 +26,9 @@ bool ObjectInstance::hit(const Ray& r, float tmin, float tmax, float time, HitRe
 	if(prim->hit(tray, tmin, tmax, time, record))
 	{
 		record = transformRecordToWorld(record);
-		// Also update material
+		// Also update material and texture
 		record.material = material;
+		record.texture  = texture;
 		return true;
 	}
 

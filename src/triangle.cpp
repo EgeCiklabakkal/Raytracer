@@ -9,13 +9,14 @@ Triangle::Triangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2, const rgb&
 }
 
 Triangle::Triangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2, 
-			const Vec3& _normal, const Material& _material)
+			const Vec3& _normal, const Material& _material, Texture* _texture)
 {
 	vertices[0] = _p0;
 	vertices[1] = _p1;
 	vertices[2] = _p2;
 	normal = _normal;
 	material = _material;
+	texture = _texture;
 }
 
 /*
@@ -73,6 +74,7 @@ bool Triangle::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& 
 		record.color 	 = color;
 		record.material  = material;
 		record.time	 = r.time;
+		record.texture   = texture;
 
 		record = transformRecordToWorld(record);
 		return true;

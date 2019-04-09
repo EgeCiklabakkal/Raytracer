@@ -294,7 +294,7 @@ void Scene::loadFromXML(const std::string& fname)
 		child = element->FirstChildElement("Radius");
 		ss << child->GetText() << std::endl;
 		ss >> radius;
-	
+
 		Shape *sphere_ptr = new Sphere(center, radius, sphereMaterial);
 
 		makeUnitSphere((Sphere*) sphere_ptr);
