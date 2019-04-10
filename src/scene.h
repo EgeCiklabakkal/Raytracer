@@ -43,6 +43,7 @@ class Scene
 	rgb specularColor(const Ray& r, const HitRecord& record, const SampleLight& slight) const;
 	rgb reflectionColor(const Ray& r, const HitRecord& record, int recursion_depth) const;
 	rgb refractionColor(const Ray& r, const HitRecord& record, int recursion_depth) const;
+	bool handleTexture(HitRecord& record, DecalMode& decal_mode, rgb& color) const;
 };
 
 #endif

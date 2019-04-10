@@ -250,7 +250,7 @@ FlatImage::FlatImage() {}
 
 FlatImage::FlatImage(std::string fname)
 {
-	readPNG(fname);
+	imread(fname);
 }
 
 FlatImage::FlatImage(int w, int h) : raster(w * h * 4, 0), nx(w), ny(h) {}

@@ -122,11 +122,22 @@ rgb Scene::rayColor(const Ray& r, int recursion_depth, bool cullFace) const
 	float tmin = shadow_ray_epsilon;		
 	float time = 0.0f;
 	HitRecord record;
+	DecalMode decal_mode;
+	bool textured;
 
 	if(bvh->hit(r, tmin, tmax, time, record))
 	{
 		if(!r.primary || (cullFace && (dot(r.direction(), record.normal) < 0)))
 		{
+			// Handle texture
+			textured = handleTexture(record, decal_mode, rcolor);
+			if(textured && decal_mode == DecalMode::REPLACEALL)
+			{
+				// no shading
+				return rcolor;
+
+			}// else, kd modified, continue shading
+
 			rcolor = ambientColor(record);
 
 			// Loop over lights
@@ -276,6 +287,36 @@ rgb Scene::refractionColor(const Ray& r, const HitRecord& record, int recursion_
 	}
 
 	return rgb();
+}
+
+bool Scene::handleTexture(HitRecord& record, DecalMode& decal_mode, rgb& color) const
+{
+	if(!record.texture)
+	{
+		// has no texture
+		return false;
+	}
+
+	Texture *texture = record.texture;
+	decal_mode = texture->decalmode();
+
+	if(decal_mode == DecalMode::REPLACEKD)
+	{
+		record.material.diffuse = texture->value(record.uv, record.p).asVec3();
+	}
+
+	else if(decal_mode == DecalMode::BLENDKD)
+	{
+		record.material.diffuse += texture->value(record.uv, record.p).asVec3();
+		record.material.diffuse /= 2.0f;
+	}
+
+	else
+	{
+		color = texture->value(record.uv, record.p);
+	}
+
+	return true;
 }
 
 Scene::~Scene()

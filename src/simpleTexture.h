@@ -10,7 +10,8 @@ class SimpleTexture : public Texture
 	
 	rgb color;
 
-	SimpleTexture(rgb _color) : color(_color) {}
+	SimpleTexture(rgb _color, DecalMode _decal_mode=DecalMode::REPLACEKD) :
+	color(_color) { decal_mode = _decal_mode; }
 	rgb value(const Vec2& uv, const Vec3& p) const
 	{
 		return color;

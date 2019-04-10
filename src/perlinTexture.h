@@ -13,17 +13,24 @@ class PerlinTexture : public Texture
 
 	rgb c0, c1;
 	float scale;
+	float normalizer;
 	PerlinNoise perlin_noise;
 	PerlinPattern perlin_pattern;
 
-	PerlinTexture(float _scale=1.0f) : scale(_scale), perlin_pattern(PerlinPattern::PATCHY)
+	PerlinTexture(float _scale=1.0f, float _normalizer=1.0f,
+			DecalMode _decal_mode=DecalMode::REPLACEKD)
+	: scale(_scale), normalizer(_normalizer), perlin_pattern(PerlinPattern::PATCHY)
 	{
 		c0 = rgb(1.0f);
 		c1 = rgb(0.0f);
+		decal_mode = _decal_mode;
 	}
 
-	PerlinTexture(const rgb& _c0, const rgb& _c1, float _scale, PerlinPattern _perlin_pattern) :
-	c0(_c0), c1(_c1), scale(_scale), perlin_pattern(_perlin_pattern) {}
+	PerlinTexture(const rgb& _c0, const rgb& _c1, float _scale, float _normalizer=1.0f,
+			DecalMode _decal_mode=DecalMode::REPLACEKD,
+			PerlinPattern _perlin_pattern=PerlinPattern::PATCHY) :
+	c0(_c0), c1(_c1), scale(_scale), normalizer(_normalizer), perlin_pattern(_perlin_pattern)
+	{ decal_mode = _decal_mode; }
 
 	rgb value(const Vec2& uv, const Vec3& p) const
 	{
@@ -44,7 +51,7 @@ class PerlinTexture : public Texture
 			val = perlin_noise.turbulance(p * scale, 5.0f);
 		}
 
-		return val*c0 + (1.0f - val)*c1;
+		return (val*c0 + (1.0f - val)*c1) / normalizer;
 	}
 };
 

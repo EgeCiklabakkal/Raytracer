@@ -33,6 +33,7 @@
 #include "cbTexture.h"
 #include "dynArray.h"
 #include "image.h"
+#include "imageTexture.h"
 #include "instance.h"
 #include "light.h"
 #include "macros.h"
