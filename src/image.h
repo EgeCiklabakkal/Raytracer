@@ -45,6 +45,7 @@ class FlatImage
 	bool get(int x, int y, rgb& color);
 	bool set(int x, int y, const rgb& color);
 	void gammaCorrect(float gamma);
+	int imread(std::string fname, int channels=4);
 	void readPNG(std::string fname);
 	void writePNG(std::string fname);
 };

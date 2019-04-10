@@ -1,6 +1,9 @@
 #include "image.h"
 #include <iostream>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "util/stb_image.h"
+
 // Class: Image
 
 // Constructors
@@ -324,4 +327,16 @@ void FlatImage::readPNG(std::string fname)
 	}
 
 	// https://raw.githubusercontent.com/lvandeve/lodepng/master/examples/example_decode.cpp
+}
+
+int FlatImage::imread(std::string fname, int channels)
+{
+	int n;
+	unsigned char *data = stbi_load(fname.c_str(), &nx, &ny, &n, channels);
+
+	// Convert pointer to vector
+	raster = std::vector<unsigned char>(data, data + nx*ny*channels);
+
+	stbi_image_free(data);
+	return channels;
 }
