@@ -9,6 +9,9 @@
 # input files
 *.xml
 
+# build directory
+build
+
 # executable
 raytracer
 
