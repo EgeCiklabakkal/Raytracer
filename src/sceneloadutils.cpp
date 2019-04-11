@@ -427,6 +427,28 @@ bool makeUnitSphere(Sphere* sphere_ptr)
 	return true;
 }
 
+bool setAlignmentOfSphere(Sphere* sphere_ptr)
+{
+	Vec3 xaxis = Vec3(1.0f, 0.0f, 0.0f);
+	Vec3 yaxis = Vec3(0.0f, 1.0f, 0.0f);
+	Vec3 zaxis = Vec3(0.0f, 0.0f, 1.0f);
+
+	if(!sphere_ptr->transformed)
+	{
+		sphere_ptr->alignmentBasis.set(xaxis, yaxis, zaxis);
+		return false;
+	}
+
+	// else, calculate alignment
+	glm::mat4 trans_mat = sphere_ptr->M;
+	Vec3 abU = unitVector(rtmath::transformVec(trans_mat, xaxis));
+	Vec3 abV = unitVector(rtmath::transformVec(trans_mat, yaxis));
+	Vec3 abW = unitVector(rtmath::transformVec(trans_mat, zaxis));
+	sphere_ptr->alignmentBasis.set(abU, abV, abW);
+
+	return true;
+}
+
 bool setTransformOfShape(Shape* shape_ptr, tinyxml2::XMLElement* element, std::stringstream& ss, 
 			glm::mat4& transMat,
 			const std::vector<glm::mat4>& translations, 

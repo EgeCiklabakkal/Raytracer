@@ -46,8 +46,11 @@ void pushFacesOfPlyMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Ver
 void pushFacesOfMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Vertex>& vertex_data,
                         int shadingMode, int vertexOffset, std::stringstream& ss);
 
-// Specific to spheres, make the original sphere unit and apply transformations on it
+// Specific to spheres 
+// make the original sphere unit and apply transformations on it
 bool makeUnitSphere(Sphere* sphere_ptr);
+// calculate alignment of the sphere, used in texture mapping
+bool setAlignmentOfSphere(Sphere* sphere_ptr);
 
 // Parse methods
 void parseAmbientLight(AmbientLight& light, tinyxml2::XMLElement* element, std::stringstream& ss);

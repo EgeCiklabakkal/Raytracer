@@ -2,10 +2,6 @@
 #define _SPHERE_H_
 
 #include "shape.h"
-#include "vector3.h"
-#include "ray.h"
-#include "rgb.h"
-#include "material.h"
 
 class Sphere : public Shape
 {
@@ -16,6 +12,7 @@ class Sphere : public Shape
 	rgb color;
 	Material material;
 	Texture *texture;
+	ONB alignmentBasis;
 
 	Sphere(const Vec3& _center, float _radius, const rgb& _color=rgb());
 	Sphere(const Vec3& _center, float _radius, 
@@ -25,6 +22,8 @@ class Sphere : public Shape
 	bool hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const;
 	bool shadowHit(const Ray& r, float tmin, float tmax, float time) const;	
 	bool boundingBox(float time0, float time1, BBox& _box) const;
+
+	Vec2 textureUV(const Vec3& p) const;
 };
 
 #endif

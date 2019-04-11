@@ -49,6 +49,7 @@ bool Sphere::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& re
 		record.material  = material;
 		record.time      = r.time;
 		record.texture   = texture;
+		record.uv	 = textureUV(record.p);
 
 		record = transformRecordToWorld(record);
 		return true;
@@ -97,4 +98,21 @@ bool Sphere::boundingBox(float time0, float time1, BBox& _box) const
 	_box = BBox(center - radius3, center + radius3);
 	_box = transformBBoxToWorld(_box);
 	return true;
+}
+
+Vec2 Sphere::textureUV(const Vec3& p) const
+{
+	if(!texture)
+	{
+		return Vec2();	// dummy
+	}
+
+	// sphere is always unit at origin, no need to translate or divide by r
+	float theta = acos (dot(alignmentBasis.V, p));
+	float phi   = atan2(dot(alignmentBasis.W, p), dot(alignmentBasis.U, p));
+
+	float u = (-phi + M_PI) * INV_2PI;
+	float v = theta * INV_PI;
+
+	return Vec2(u, v);
 }

@@ -6,6 +6,8 @@
 #define INV_2PI 0.159154943091895335768
 #define STD_DEV 0.16666666666
 
+#define INV_PI 0.3183098861837906715377
+
 #include <random>
 #include <utility>
 #include <glm/mat4x4.hpp>
