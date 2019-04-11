@@ -8,6 +8,10 @@ bool getChildTextWithDefault(tinyxml2::XMLElement* element, std::stringstream& s
                                 std::string name, std::string _default);
 bool getChildTextWithDefaultFromNode(tinyxml2::XMLNode* node, std::stringstream& ss,
                                 std::string name, std::string _default);
+bool getIntChildWithDefault(tinyxml2::XMLElement* element, std::stringstream& ss,
+				std::string name, int _default, int& val);
+bool getFloatChildWithDefault(tinyxml2::XMLElement* element, std::stringstream& ss,
+				std::string name, float _default, float& val);
 int getCameraType(tinyxml2::XMLElement* element);
 int getMeshType(tinyxml2::XMLElement* element, std::string& ply_path);
 int getMeshShadingMode(tinyxml2::XMLElement* element);
@@ -19,6 +23,12 @@ int getTransformations(tinyxml2::XMLElement* element, std::stringstream& ss,
                         std::vector<glm::mat4>& translations,
                         std::vector<glm::mat4>& scalings,
                         std::vector<glm::mat4>& rotations);
+
+// Read all texture images, create texture objects
+int getTextures(tinyxml2::XMLElement* element, std::stringstream& ss, const std::string& fname,
+			std::vector<Image*>& textureImages, std::vector<Texture*>& textures);
+InterpolationMode getInterpolationMode(tinyxml2::XMLElement* element);
+DecalMode getDecalMode(tinyxml2::XMLElement* element);
 
 // Apply specified transformations
 bool applyTransforms(tinyxml2::XMLElement* element, std::stringstream& ss, glm::mat4& transMat,

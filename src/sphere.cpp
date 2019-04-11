@@ -112,7 +112,7 @@ Vec2 Sphere::textureUV(const Vec3& p) const
 	float phi   = atan2(dot(alignmentBasis.W, p), dot(alignmentBasis.U, p));
 
 	float u = (-phi + M_PI) * INV_2PI;
-	float v = theta * INV_PI;
+	float v = (M_PI - theta) * INV_PI;
 
 	return Vec2(u, v);
 }

@@ -1,6 +1,6 @@
 #include "imageTexture.h"
 
-ImageTexture::ImageTexture(Image *_image, float normalizer,
+ImageTexture::ImageTexture(Image* _image, float normalizer,
 				InterpolationMode _interpolation_mode,
 				DecalMode _decal_mode,
 				TextureMode _texture_mode) :
@@ -9,6 +9,8 @@ texture_mode(_texture_mode)
 {
 	decal_mode = _decal_mode;
 }
+
+ImageTexture::~ImageTexture() {}
 
 rgb ImageTexture::value(const Vec2& uv, const Vec3& p) const
 {

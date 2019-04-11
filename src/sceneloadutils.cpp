@@ -35,6 +35,43 @@ bool getChildTextWithDefaultFromNode(tinyxml2::XMLNode* node, std::stringstream&
 	}
 }
 
+bool getIntChildWithDefault(tinyxml2::XMLElement* element, std::stringstream& ss,
+				std::string name, int _default, int& val)
+{
+	tinyxml2::XMLElement *child = element->FirstChildElement(name.data());
+
+	if(child)
+	{
+		ss << child->GetText() << std::endl;
+		ss >> val;
+		return true;
+	}
+
+	else
+	{
+		val = _default;
+		return false;
+	}
+}
+
+bool getFloatChildWithDefault(tinyxml2::XMLElement* element, std::stringstream& ss,
+				std::string name, float _default, float& val)
+{
+	tinyxml2::XMLElement *child = element->FirstChildElement(name.data());
+	if(child)
+	{
+		ss << child->GetText() << std::endl;
+		ss >> val;
+		return true;
+	}
+
+	else
+	{
+		val = _default;
+		return false;
+	}
+}
+
 int getCameraType(tinyxml2::XMLElement* element)
 {
 	const char *type = element->Attribute("type");
@@ -85,7 +122,7 @@ int getTransformations(tinyxml2::XMLElement* element, std::stringstream& ss,
 {
 	if(!element)
 	{
-		return -1;
+		return 0;
 	}
 
 	glm::mat4 transformation;	// Temp transformation variable
@@ -134,6 +171,118 @@ int getTransformations(tinyxml2::XMLElement* element, std::stringstream& ss,
 
 	ss.clear();
 	return count_trans;
+}
+
+int getTextures(tinyxml2::XMLElement* element, std::stringstream& ss, const std::string& fname,
+			std::vector<Image*>& textureImages, std::vector<Texture*>& textures)
+{
+	if(!element)
+	{
+		return 0;
+	}
+
+	std::size_t pos = fname.find_last_of("/");
+	std::string fpath(fname.substr(0, pos+1));
+
+	tinyxml2::XMLElement *child;
+	std::set<std::string> uniqueImageNames;
+	std::map<std::string, int> mapImageNameToIndex;
+	int idx = 0;
+
+	tinyxml2::XMLElement *element_texture = element->FirstChildElement("Texture");
+	while(element_texture)
+	{
+		child = element_texture->FirstChildElement("ImageName");
+		std::string textureName(child->GetText());
+
+		if(textureName == "perlin")	// Perlin Texture
+		{
+
+		}
+
+		else if(textureName == "checkerboard")	// Checkerboard Texture
+		{
+
+		}
+
+		else	// Image Texture
+		{
+			Image* textureImage;
+			InterpolationMode interpolation_mode;
+			DecalMode decal_mode;
+			float normalizer;
+
+			// Image instancing
+			if(uniqueImageNames.find(textureName) != uniqueImageNames.end())
+			{
+				// This image has previously been read
+				textureImage = textureImages[mapImageNameToIndex[textureName]];
+			}
+
+			else
+			{
+				textureImage = new Image(fpath + textureName);
+				textureImages.push_back(textureImage);	// to idx
+				mapImageNameToIndex[textureName] = idx;
+				idx++;
+			}
+
+			interpolation_mode = getInterpolationMode(element_texture);
+			decal_mode = getDecalMode(element_texture);
+			getFloatChildWithDefault(element_texture, ss, "Normalizer",
+							255.0f, normalizer);
+
+			ImageTexture *imageTexture = new ImageTexture(textureImage,
+									normalizer,
+									interpolation_mode,
+									decal_mode);
+			textures.push_back(imageTexture);
+		}
+
+		element_texture = element_texture->NextSiblingElement("Texture");
+	}
+
+	ss.clear();
+	return textures.size();
+}
+
+InterpolationMode getInterpolationMode(tinyxml2::XMLElement* element)
+{
+	tinyxml2::XMLElement *child = element->FirstChildElement("Interpolation");
+
+	std::string stext(child->GetText());
+
+	if(stext == "nearest")
+	{
+		return InterpolationMode::NEAREST;
+	}
+
+	else	// "bilinear"
+	{
+		return InterpolationMode::BILINEAR;
+	}
+}
+
+DecalMode getDecalMode(tinyxml2::XMLElement* element)
+{
+	tinyxml2::XMLElement *child = element->FirstChildElement("DecalMode");
+
+	std::string stext(child->GetText());
+
+	if(stext == "replace_kd")
+	{
+		return DecalMode::REPLACEKD;
+	}
+
+	else if(stext == "blend_kd")
+	{
+		return DecalMode::BLENDKD;
+	}
+
+	else	// "replace_all"
+	{
+		return DecalMode::REPLACEALL;
+	}
 }
 
 bool applyTransforms(tinyxml2::XMLElement* element, std::stringstream& ss, glm::mat4& transMat,

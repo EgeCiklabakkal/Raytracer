@@ -18,10 +18,12 @@ class ImageTexture : public Texture
 	InterpolationMode interpolation_mode;
 	TextureMode texture_mode;
 
-	ImageTexture(Image *_image, float normalizer=255.0f, 
+	ImageTexture(Image* _image, float normalizer=255.0f,
 			InterpolationMode _interpolation_mode=InterpolationMode::NEAREST,
 			DecalMode _decal_mode=DecalMode::REPLACEKD,
 			TextureMode _texture_mode=TextureMode::CLAMP);
+
+	virtual ~ImageTexture();
 
 	rgb value(const Vec2& uv, const Vec3& p) const;
 	rgb fetch(int i, int j) const;

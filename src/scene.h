@@ -22,6 +22,8 @@ class Scene
 	AmbientLight ambient_light;
 	std::vector<Light*> lights;
 	std::vector<Material> materials;
+	std::vector<Image*> textureImages;
+	std::vector<Texture*> textures;
 	std::vector<Vertex> vertex_data;
 	std::vector<Shape*> shapes;
 	std::vector<Mesh*> meshes;

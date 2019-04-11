@@ -92,6 +92,10 @@ void Scene::loadFromXML(const std::string& fname)
 	element = scene_element->FirstChildElement("Transformations");
 	getTransformations(element, ss, translations, scalings, rotations);
 
+	// Textures
+	element = scene_element->FirstChildElement("Textures");
+	getTextures(element, ss, fname, textureImages, textures);
+
 	// Materials
 	element = scene_element->FirstChildElement("Materials");
 	element = element->FirstChildElement("Material");
@@ -277,6 +281,7 @@ void Scene::loadFromXML(const std::string& fname)
 	while(element)
 	{
 		Material sphereMaterial;
+		Texture *sphereTexture = nullptr;
 		Vec3 center;
 		float radius;
 		int itemp;
@@ -295,7 +300,12 @@ void Scene::loadFromXML(const std::string& fname)
 		ss << child->GetText() << std::endl;
 		ss >> radius;
 
-		Shape *sphere_ptr = new Sphere(center, radius, sphereMaterial);
+		if(getIntChildWithDefault(element, ss, "Texture", 0, itemp))	// has texture
+		{
+			sphereTexture = textures[itemp - 1];
+		}
+
+		Shape *sphere_ptr = new Sphere(center, radius, sphereMaterial, sphereTexture);
 
 		makeUnitSphere((Sphere*) sphere_ptr);
 

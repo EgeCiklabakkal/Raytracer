@@ -35,7 +35,7 @@ Ray Ray::shadowRay(const HitRecord& record, const SampleLight& slight, float eps
 	Vec3 x  = pointAtParameter(record.t);
 	Vec3 wi = slight.position - x;
 	wi.makeUnitVector();
-	Ray sray(x + wi * epsilon, wi);
+	Ray sray(x + record.normal * epsilon, wi);
 	sray.setTime(record.time);
 
 	return sray;

@@ -21,6 +21,9 @@ class CBTexture : public Texture
 	offset(_offset), scale(_scale), normalizer(_normalizer),
 	black(_black), white(_white), dimension3(_dimension3)
 	{ decal_mode = _decal_mode; }
+
+	virtual ~CBTexture() {}
+
 	rgb value(const Vec2& uv, const Vec3& p) const
 	{
 		int check;

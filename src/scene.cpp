@@ -328,17 +328,34 @@ Scene::~Scene()
 	}
 	lights.clear();
 
+	// Free meshes
 	for(Mesh* mesh : meshes)
 	{
 		delete mesh;
 	}
 	meshes.clear();
 
+	// Free textures
+	for(Texture* texture : textures)
+	{
+		delete texture;
+	}
+	textures.clear();
+
+	// Free texture images
+	for(Image* textureImage : textureImages)
+	{
+		delete textureImage;
+	}
+	textureImages.clear();
+
+	// Free primary mesh BVHs
 	for(Shape* primMeshBVH : primMeshBVHs)
 	{
 		delete primMeshBVH;
 	}
 	primMeshBVHs.clear();
 
+	// Free scene BVH
 	delete bvh;
 }

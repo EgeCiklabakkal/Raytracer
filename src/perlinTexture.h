@@ -32,6 +32,8 @@ class PerlinTexture : public Texture
 	c0(_c0), c1(_c1), scale(_scale), normalizer(_normalizer), perlin_pattern(_perlin_pattern)
 	{ decal_mode = _decal_mode; }
 
+	virtual ~PerlinTexture() {}
+
 	rgb value(const Vec2& uv, const Vec3& p) const
 	{
 		float val;
