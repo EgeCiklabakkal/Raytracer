@@ -108,8 +108,10 @@ Vec2 Sphere::textureUV(const Vec3& p) const
 	}
 
 	// sphere is always unit at origin, no need to translate or divide by r
-	float theta = acos (dot(alignmentBasis.V, p));
-	float phi   = atan2(dot(alignmentBasis.W, p), dot(alignmentBasis.U, p));
+	//float theta = acos (dot(alignmentBasis.V, p));
+	//float phi   = atan2(dot(alignmentBasis.W, p), dot(alignmentBasis.U, p));
+	float theta = acos (p.y());
+	float phi   = atan2(p.z(), p.x());
 
 	float u = (-phi + M_PI) * INV_2PI;
 	float v = (M_PI - theta) * INV_PI;

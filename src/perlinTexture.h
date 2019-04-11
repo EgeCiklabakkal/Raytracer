@@ -18,8 +18,9 @@ class PerlinTexture : public Texture
 	PerlinPattern perlin_pattern;
 
 	PerlinTexture(float _scale=1.0f, float _normalizer=1.0f,
-			DecalMode _decal_mode=DecalMode::REPLACEKD)
-	: scale(_scale), normalizer(_normalizer), perlin_pattern(PerlinPattern::PATCHY)
+			DecalMode _decal_mode=DecalMode::REPLACEKD,
+			PerlinPattern _perlin_pattern=PerlinPattern::PATCHY)
+	: scale(_scale), normalizer(_normalizer), perlin_pattern(_perlin_pattern)
 	{
 		c0 = rgb(1.0f);
 		c1 = rgb(0.0f);

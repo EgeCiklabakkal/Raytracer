@@ -166,7 +166,7 @@ bool Shape::setTransform(const glm::mat4& transformMatrix, bool resetTransform)
 
 	else
 	{
-		M *= transformMatrix;
+		M = transformMatrix * M;
 	}
 
 	N = glm::inverse(M);

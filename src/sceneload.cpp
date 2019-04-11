@@ -318,7 +318,7 @@ void Scene::loadFromXML(const std::string& fname)
 		setMotionBlurOfShape(sphere_ptr, element, ss);
 
 		// Set alignment
-		setAlignmentOfSphere((Sphere*) sphere_ptr);
+		//setAlignmentOfSphere((Sphere*) sphere_ptr);
 
 		shapes.push_back(sphere_ptr);
 		element = element->NextSiblingElement("Sphere");

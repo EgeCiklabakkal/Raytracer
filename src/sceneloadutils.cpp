@@ -72,6 +72,47 @@ bool getFloatChildWithDefault(tinyxml2::XMLElement* element, std::stringstream& 
 	}
 }
 
+bool getVec3ChildWithDefault(tinyxml2::XMLElement* element, std::stringstream& ss,
+                                std::string name, const Vec3& _default, Vec3& val)
+{
+	float x, y, z;
+	tinyxml2::XMLElement *child = element->FirstChildElement(name.data());
+	if(child)
+	{
+		ss << child->GetText() << std::endl;
+		ss >> x >> y >> z;
+		val = Vec3(x, y, z);
+		return true;
+	}
+
+	else
+	{
+		val = _default;
+		return false;
+	}
+}
+
+bool getrgbChildWithDefault(tinyxml2::XMLElement* element, std::stringstream& ss,
+                                std::string name, const rgb& _default, rgb& val)
+{
+	float x, y, z;
+	tinyxml2::XMLElement *child = element->FirstChildElement(name.data());
+	if(child)
+	{
+		ss << child->GetText() << std::endl;
+		ss >> x >> y >> z;
+		val = rgb(x, y, z);
+		return true;
+	}
+
+	else
+	{
+		val = _default;
+		return false;
+	}
+}
+
+
 int getCameraType(tinyxml2::XMLElement* element)
 {
 	const char *type = element->Attribute("type");
@@ -194,23 +235,52 @@ int getTextures(tinyxml2::XMLElement* element, std::stringstream& ss, const std:
 	{
 		child = element_texture->FirstChildElement("ImageName");
 		std::string textureName(child->GetText());
+		DecalMode decal_mode;
+		float normalizer;
 
 		if(textureName == "perlin")	// Perlin Texture
 		{
+			float scale;
+			PerlinPattern perlin_pattern;
 
+			getFloatChildWithDefault(element_texture, ss, "ScalingFactor",
+							1.0f, scale);
+			getFloatChildWithDefault(element_texture, ss, "Normalizer",
+							1.0f, normalizer);
+			decal_mode = getDecalMode(element_texture);
+			perlin_pattern = getPerlinPattern(element_texture);
+
+			PerlinTexture *perlinTexture = new PerlinTexture(scale, normalizer,
+										decal_mode,
+										perlin_pattern);
+			textures.push_back(perlinTexture);
 		}
 
 		else if(textureName == "checkerboard")	// Checkerboard Texture
 		{
+			float offset, scale;
+			rgb black, white;
 
+			getrgbChildWithDefault(element_texture, ss, "BlackColor", rgb(), black);
+			getrgbChildWithDefault(element_texture, ss, "WhiteColor", rgb(1.0f), white);
+			getFloatChildWithDefault(element_texture, ss, "ScalingFactor", 
+							1.0f, scale);
+			getFloatChildWithDefault(element_texture, ss, "Offset", 
+							0.01f, offset);
+			getFloatChildWithDefault(element_texture, ss, "Normalizer",
+							1.0f, normalizer);
+			decal_mode = getDecalMode(element_texture);
+
+			CBTexture *cbTexture = new CBTexture(offset, scale, normalizer,
+								black, white, decal_mode);
+
+			textures.push_back(cbTexture);
 		}
 
 		else	// Image Texture
 		{
 			Image* textureImage;
 			InterpolationMode interpolation_mode;
-			DecalMode decal_mode;
-			float normalizer;
 
 			// Image instancing
 			if(uniqueImageNames.find(textureName) != uniqueImageNames.end())
@@ -283,6 +353,24 @@ DecalMode getDecalMode(tinyxml2::XMLElement* element)
 	{
 		return DecalMode::REPLACEALL;
 	}
+}
+
+PerlinPattern getPerlinPattern(tinyxml2::XMLElement* element)
+{
+	tinyxml2::XMLElement *child = element->FirstChildElement("Appearance");
+
+	std::string stext(child->GetText());
+
+	if(stext == "patch")
+	{
+		return PerlinPattern::PATCHY;
+	}
+
+	else	// "vein"
+	{
+		return PerlinPattern::VEINY;
+	}
+
 }
 
 bool applyTransforms(tinyxml2::XMLElement* element, std::stringstream& ss, glm::mat4& transMat,

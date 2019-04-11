@@ -12,6 +12,11 @@ bool getIntChildWithDefault(tinyxml2::XMLElement* element, std::stringstream& ss
 				std::string name, int _default, int& val);
 bool getFloatChildWithDefault(tinyxml2::XMLElement* element, std::stringstream& ss,
 				std::string name, float _default, float& val);
+bool getVec3ChildWithDefault(tinyxml2::XMLElement* element, std::stringstream& ss,
+				std::string name, const Vec3& _default, Vec3& val);
+bool getrgbChildWithDefault(tinyxml2::XMLElement* element, std::stringstream& ss,
+				std::string name, const rgb& _default, rgb& val);
+
 int getCameraType(tinyxml2::XMLElement* element);
 int getMeshType(tinyxml2::XMLElement* element, std::string& ply_path);
 int getMeshShadingMode(tinyxml2::XMLElement* element);
@@ -29,6 +34,7 @@ int getTextures(tinyxml2::XMLElement* element, std::stringstream& ss, const std:
 			std::vector<Image*>& textureImages, std::vector<Texture*>& textures);
 InterpolationMode getInterpolationMode(tinyxml2::XMLElement* element);
 DecalMode getDecalMode(tinyxml2::XMLElement* element);
+PerlinPattern getPerlinPattern(tinyxml2::XMLElement* element);
 
 // Apply specified transformations
 bool applyTransforms(tinyxml2::XMLElement* element, std::stringstream& ss, glm::mat4& transMat,

@@ -15,9 +15,10 @@ class CBTexture : public Texture
 	rgb white;
 	bool dimension3;
 
-	CBTexture(float _offset, float _scale, float _normalizer=1.0f,
+	// setting offset 0.0f might cause artifacts
+	CBTexture(float _offset=0.01f, float _scale=1.0f, float _normalizer=1.0f,
 			rgb _black=rgb(0.0f), rgb _white=rgb(1.0f),
-			bool _dimension3=true, DecalMode _decal_mode=DecalMode::REPLACEKD) :
+			DecalMode _decal_mode=DecalMode::REPLACEKD, bool _dimension3=true) :
 	offset(_offset), scale(_scale), normalizer(_normalizer),
 	black(_black), white(_white), dimension3(_dimension3)
 	{ decal_mode = _decal_mode; }
