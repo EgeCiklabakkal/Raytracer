@@ -15,7 +15,7 @@ class Texture
 
 	virtual ~Texture() = 0;
 
-	virtual rgb value(const Vec2& uv , const Vec3& p) const=0;
+	virtual rgb value(const Vec2& uv , const Vec3& p, bool reverseY=true) const=0;
 	DecalMode decalmode() const { return decal_mode; }
 };
 

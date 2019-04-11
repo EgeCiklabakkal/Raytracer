@@ -568,7 +568,7 @@ void pushFacesOfPlyMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Ver
 			Vec3 b(vertex_data[facedata[1]].position);
 			Vec3 c(vertex_data[facedata[2]].position);
 			Vec3 n(unitVector(cross(b - a, c - a)));
-			Shape *mt = new MeshTriangle(facedata, mesh, n, shadingMode);
+			Shape *mt = new MeshTriangle(facedata, facedata, mesh, n, shadingMode);
 			shapes.push_back(mt);
 
 			if(shadingMode == MESH_SHADING_SMOOTH)
@@ -596,8 +596,8 @@ void pushFacesOfPlyMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Ver
 
 			Vec3 n0(unitVector(cross(b - a, c - a)));
 			Vec3 n1(unitVector(cross(c - a, d - a)));
-			Shape *mt0 = new MeshTriangle(facedata0, mesh, n0, shadingMode);
-			Shape *mt1 = new MeshTriangle(facedata1, mesh, n1, shadingMode);
+			Shape *mt0 = new MeshTriangle(facedata0, facedata0, mesh, n0, shadingMode);
+			Shape *mt1 = new MeshTriangle(facedata1, facedata1, mesh, n1, shadingMode);
 			shapes.push_back(mt0);
 			shapes.push_back(mt1);
 
@@ -633,7 +633,7 @@ void pushFacesOfMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Vertex
 		Vec3 b(vertex_data[ptemp[1]].position);
 		Vec3 c(vertex_data[ptemp[2]].position);
 		Vec3 n(unitVector(cross(b - a, c - a)));
-		Shape *mt = new MeshTriangle(ptemp, mesh, n, shadingMode);
+		Shape *mt = new MeshTriangle(ptemp, ptemp, mesh, n, shadingMode);
 		shapes.push_back(mt);
 
 		if(shadingMode == MESH_SHADING_SMOOTH)

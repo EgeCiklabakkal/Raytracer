@@ -114,7 +114,8 @@ Vec2 Sphere::textureUV(const Vec3& p) const
 	float phi   = atan2(p.z(), p.x());
 
 	float u = (-phi + M_PI) * INV_2PI;
-	float v = (M_PI - theta) * INV_PI;
+	float v = theta * INV_PI;
+	//float v = (M_PI - theta) * INV_PI;	// this reverses Y
 
 	return Vec2(u, v);
 }

@@ -25,7 +25,7 @@ class ImageTexture : public Texture
 
 	virtual ~ImageTexture();
 
-	rgb value(const Vec2& uv, const Vec3& p) const;
+	rgb value(const Vec2& uv, const Vec3& p, bool reverseY) const;
 	rgb fetch(int i, int j) const;
 };
 

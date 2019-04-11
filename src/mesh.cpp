@@ -1,5 +1,15 @@
 #include "mesh.h"
 
+Vec2 Mesh::texCoord(int x) const
+{
+	if(x < (int)scene_texCoord_data->size())
+	{
+		return (*scene_texCoord_data)[x];
+	}
+
+	return Vec2();	// dummy
+}
+
 bool MeshTriangle::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const
 {
 	Ray tray = transformRayToLocal(r);
@@ -63,6 +73,7 @@ bool MeshTriangle::hit(const Ray& r, float tmin, float tmax, float time, HitReco
 		record.material = parent_mesh->material;
 		record.time 	= r.time;		
 		record.texture  = parent_mesh->texture;
+		record.uv	= textureUV(beta, gamma);
 
 		record = transformRecordToWorld(record);
                 return true;
@@ -128,4 +139,14 @@ bool MeshTriangle::boundingBox(float time0, float time1, BBox& _box) const
         _box = BBox(Vec3(xmin, ymin, zmin), Vec3(xmax, ymax, zmax));
 	_box = transformBBoxToWorld(_box);
         return true;
+}
+
+Vec2 MeshTriangle::textureUV(float beta, float gamma) const
+{
+	Vec2 tca = texa();
+	Vec2 tcb = texb();
+	Vec2 tcc = texc();
+
+	// barycentric texture coordinates
+	return (tca + beta*(tcb - tca) + gamma*(tcc - tca));
 }

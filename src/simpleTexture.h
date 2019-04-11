@@ -15,7 +15,7 @@ class SimpleTexture : public Texture
 
 	virtual ~SimpleTexture() {}
 
-	rgb value(const Vec2& uv, const Vec3& p) const
+	rgb value(const Vec2& uv, const Vec3& p, bool reverseY) const
 	{
 		return color;
 	}

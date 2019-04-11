@@ -123,6 +123,20 @@ void Scene::loadFromXML(const std::string& fname)
 		ss.clear();
 	}
 
+	// TexCoordData
+	element = scene_element->FirstChildElement("TexCoordData");
+	if(element)
+	{
+		ss << element->GetText() << std::endl;
+		Vec2 texCoord;
+		while(!(ss >> texCoord[0]).eof())
+		{
+			ss >> texCoord[1];
+			texCoord_data.push_back(texCoord);
+		}
+		ss.clear();
+	}
+
 	// Objects
 	std::vector<ObjectInstance*> baseMeshInstances;
 	element = scene_element->FirstChildElement("Objects");
@@ -133,18 +147,19 @@ void Scene::loadFromXML(const std::string& fname)
 		int mesh_type = getMeshType(element, plyname);
 		std::vector<Shape*> meshTriangles;
 		Material meshMaterial;
+		Texture *instanceTexture = nullptr;
 		bool _transformed;
 		tinyxml2::XMLElement *trans_element;
 		glm::mat4 transMatInstance(1.0f);
+		int itemp;
 
 		if(mesh_type == MESH_SIMPLE)
 		{
-			int itemp;
 			child = element->FirstChildElement("Material");
 			ss << child->GetText() << std::endl;
 			ss >> itemp;
 			meshMaterial = materials[itemp - 1];
-			Mesh *mesh = new Mesh(&vertex_data, meshMaterial);
+			Mesh *mesh = new Mesh(&vertex_data, &texCoord_data, meshMaterial);
 			meshes.push_back(mesh);
 
 			child = element->FirstChildElement("Faces");
@@ -157,12 +172,11 @@ void Scene::loadFromXML(const std::string& fname)
 
 		else if(mesh_type == MESH_PLY)
 		{
-			int itemp;
 			child = element->FirstChildElement("Material");
 			ss << child->GetText() << std::endl;
 			ss >> itemp;
 			meshMaterial = materials[itemp - 1];
-			Mesh *mesh = new Mesh(&vertex_data, meshMaterial);
+			Mesh *mesh = new Mesh(&vertex_data, &texCoord_data, meshMaterial);
 			meshes.push_back(mesh);
 			int shadingMode = getMeshShadingMode(element);
 
@@ -180,9 +194,16 @@ void Scene::loadFromXML(const std::string& fname)
 		_transformed = applyTransforms(trans_element, ss, transMatInstance,
 					translations, scalings, rotations);
 
+		if(getIntChildWithDefault(element, ss, "Texture", 0, itemp))	// has texture
+		{
+			instanceTexture = textures[itemp - 1];
+		}
+
 		// Create instance
 		ObjectInstance *instance_ptr = new ObjectInstance(transMatInstance, meshBVH, 
-								meshMaterial, _transformed);
+									meshMaterial,
+									_transformed,
+									instanceTexture);
 		// Set Motion Blur
 		setMotionBlurOfShape(instance_ptr, element, ss);
 
@@ -206,6 +227,7 @@ void Scene::loadFromXML(const std::string& fname)
 		bool resetTransform = getBoolAttributeWithDefault(element, "resetTransform", false); 
 		
 		Material instanceMaterial;
+		Texture *instanceTexture = nullptr;
 		int itemp;
 		child = element->FirstChildElement("Material");
 		ss << child->GetText() << std::endl;
@@ -229,9 +251,16 @@ void Scene::loadFromXML(const std::string& fname)
 			_transformed = _transformed || baseMeshInstance->transformed;
 		}
 
+		if(getIntChildWithDefault(element, ss, "Texture", 0, itemp))	// has texture
+		{
+			instanceTexture = textures[itemp - 1];
+		}
+
 		// Create instance
 		ObjectInstance *instance_ptr = new ObjectInstance(transMatInstance, primBVH, 
-								instanceMaterial, _transformed);
+								instanceMaterial,
+								_transformed,
+								instanceTexture);
 		// Set Motion Blur
 		setMotionBlurOfShape(instance_ptr, element, ss);
 

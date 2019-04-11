@@ -12,10 +12,10 @@ texture_mode(_texture_mode)
 
 ImageTexture::~ImageTexture() {}
 
-rgb ImageTexture::value(const Vec2& uv, const Vec3& p) const
+rgb ImageTexture::value(const Vec2& uv, const Vec3& p, bool reverseY) const
 {
 	float i = uv[0] * image->nx;
-	float j = uv[1] * image->ny;
+	float j = (reverseY) ? (image->ny - uv[1]*image->ny) : (uv[1] * image->ny);
 
 	if(interpolation_mode == InterpolationMode::NEAREST)
 	{

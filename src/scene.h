@@ -5,6 +5,7 @@
 #include <string>
 #include <math.h>
 #include "vector3.h"
+#include "vector2.h"
 #include "vertex.h"
 #include "rgb.h"
 #include "mesh.h"
@@ -25,6 +26,7 @@ class Scene
 	std::vector<Image*> textureImages;
 	std::vector<Texture*> textures;
 	std::vector<Vertex> vertex_data;
+	std::vector<Vec2> texCoord_data;
 	std::vector<Shape*> shapes;
 	std::vector<Mesh*> meshes;
 	std::vector<Shape*> primMeshBVHs;
