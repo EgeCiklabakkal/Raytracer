@@ -1,0 +1,183 @@
+<Scene>
+    <MaxRecursionDepth>6</MaxRecursionDepth>
+
+    <BackgroundColor>0 0 0</BackgroundColor>
+
+    <ShadowRayEpsilon>1e-1</ShadowRayEpsilon>
+
+    <IntersectionTestEpsilon>1e-2</IntersectionTestEpsilon>
+
+    <Cameras>
+        <Camera id="1">
+            <Position>0 50 225</Position>
+            <Gaze>0 -0.15 -1</Gaze>
+            <Up>0 1 0</Up>
+            <NearPlane>-1 1 -1 1</NearPlane>
+            <NearDistance>10</NearDistance>
+            <ImageResolution>800 800</ImageResolution>
+            <NumSamples>100</NumSamples>
+            <ImageName>perlin_types_bump.png</ImageName>
+        </Camera>
+    </Cameras>
+
+    <Lights>
+        <AmbientLight>25 25 25</AmbientLight>
+        <PointLight id="1">
+            <Position>20 20 20</Position>
+            <Intensity>100000 100000 100000</Intensity>
+        </PointLight>
+        <PointLight id="2">
+            <Position>-15 30 5</Position>
+            <Intensity>100000 100000 100000</Intensity>
+        </PointLight>
+        <PointLight id="3">
+            <Position>-15 20 50</Position>
+            <Intensity>100000 100000 100000</Intensity>
+        </PointLight>
+        <PointLight id="4">
+            <Position>-15 20 -110</Position>
+            <Intensity>300000 300000 300000</Intensity>
+        </PointLight>
+        <PointLight id="5">
+            <Position>-15 20 -400</Position>
+            <Intensity>300000 300000 300000</Intensity>
+        </PointLight>
+        <PointLight id="6">
+            <Position>15 20 -110</Position>
+            <Intensity>300000 300000 300000</Intensity>
+        </PointLight>
+        <PointLight id="7">
+            <Position>15 20 -400</Position>
+            <Intensity>300000 300000 300000</Intensity>
+        </PointLight>
+    </Lights>
+
+
+
+    <Materials>
+        <Material id="1">
+            <AmbientReflectance>1 1 1</AmbientReflectance>
+            <DiffuseReflectance>0.26 0.52 0.82</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <PhongExponent>1</PhongExponent>
+            <MirrorReflectance>0.5 0.5 0.5</MirrorReflectance>
+        </Material>
+        <Material id="2">
+            <AmbientReflectance>1 1 1</AmbientReflectance>
+            <DiffuseReflectance>1 0 0</DiffuseReflectance>
+            <SpecularReflectance>1 1 1</SpecularReflectance>
+            <PhongExponent>100</PhongExponent>
+        </Material>
+    </Materials>
+
+    <Textures>
+        <Texture id="1" bumpmap="true">
+            <ImageName>perlin</ImageName>
+            <ScalingFactor>1</ScalingFactor>
+            <Appearance>patch</Appearance>
+            <DecalMode>replace_kd</DecalMode>
+            <Normalizer>1</Normalizer>
+        </Texture>
+        <Texture id="2" bumpmap="true">
+            <ImageName>perlin</ImageName>
+            <ScalingFactor>1</ScalingFactor>
+            <Appearance>vein</Appearance>
+            <DecalMode>replace_kd</DecalMode>
+            <Normalizer>1</Normalizer>
+        </Texture>
+        <Texture id="3" bumpmap="true">
+            <ImageName>perlin</ImageName>
+            <ScalingFactor>0.03</ScalingFactor>
+            <Appearance>patch</Appearance>
+            <DecalMode>blend_kd</DecalMode>
+            <Normalizer>1</Normalizer>
+        </Texture>
+        <Texture id="4" bumpmap="true">
+            <ImageName>perlin</ImageName>
+            <ScalingFactor>3</ScalingFactor>
+            <Appearance>patch</Appearance>
+            <DecalMode>replace_kd</DecalMode>
+            <Normalizer>1</Normalizer>
+        </Texture>
+        <Texture id="5" bumpmap="true">
+            <ImageName>perlin</ImageName>
+            <ScalingFactor>3</ScalingFactor>
+            <Appearance>vein</Appearance>
+            <DecalMode>replace_kd</DecalMode>
+            <Normalizer>1</Normalizer>
+        </Texture>
+        <Texture id="6">
+            <ImageName>checkerboard</ImageName>
+            <BlackColor>0.4 0.4 0.4</BlackColor>
+            <WhiteColor>10 10 10</WhiteColor>
+            <ScalingFactor>0.1</ScalingFactor>
+            <Offset>79</Offset>
+            <DecalMode>blend_kd</DecalMode>
+        </Texture>
+    </Textures>
+
+    <Transformations>
+        <Translation id="1">0 0 -160</Translation>
+        <Translation id="2">0 0 -450</Translation>
+    </Transformations>
+
+    <VertexData>
+        -1000 0  1000
+         1000 0  1000
+         1000 0 -1000
+        -1000 0 -1000 
+          -10 10 0
+          10 10 0
+    </VertexData>
+
+    <Objects>
+        <Mesh id="1">
+            <Material>1</Material>
+            <Texture>6</Texture>
+            <Faces>
+                3 1 2
+                1 3 4
+            </Faces>
+        </Mesh>
+        <Sphere id="1">
+            <Material>2</Material>
+            <Texture>4</Texture>
+            <Center>5</Center>
+            <Radius>10</Radius>
+        </Sphere>
+        <Sphere id="2">
+            <Material>2</Material>
+            <Texture>5</Texture>
+            <Center>6</Center>
+            <Radius>10</Radius>
+        </Sphere>
+        <Sphere id="3">
+            <Material>2</Material>
+            <Texture>1</Texture>
+            <Transformations>t1</Transformations>
+            <Center>5</Center>
+            <Radius>10</Radius>
+        </Sphere>
+        <Sphere id="4">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Transformations>t1</Transformations>
+            <Center>6</Center>
+            <Radius>10</Radius>
+        </Sphere>
+        <Sphere id="5">
+            <Material>2</Material>
+            <Texture>1</Texture>
+            <Transformations>t2</Transformations>
+            <Center>5</Center>
+            <Radius>10</Radius>
+        </Sphere>
+        <Sphere id="6">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Transformations>t2</Transformations>
+            <Center>6</Center>
+            <Radius>10</Radius>
+        </Sphere>
+    </Objects>
+</Scene>

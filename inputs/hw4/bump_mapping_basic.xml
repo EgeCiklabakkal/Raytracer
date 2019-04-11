@@ -1,0 +1,102 @@
+<Scene>
+    <MaxRecursionDepth>6</MaxRecursionDepth>
+
+    <BackgroundColor>0 0 0</BackgroundColor>
+
+    <Cameras>
+        <Camera id="1">
+            <Position>0 5 225</Position>
+            <Gaze>0 0 -1</Gaze>
+            <Up>0 1 0</Up>
+            <NearPlane>-1 1 -1 1</NearPlane>
+            <NearDistance>10</NearDistance>
+            <ImageResolution>800 800</ImageResolution>
+            <NumSamples>36</NumSamples>
+            <ImageName>bump_mapping_basic.png</ImageName>
+        </Camera>
+    </Cameras>
+
+    <Lights>
+        <AmbientLight>25 25 25</AmbientLight>
+        <PointLight id="1">
+            <Position>20 20 20</Position>
+            <Intensity>100000 100000 100000</Intensity>
+        </PointLight>
+        <PointLight id="2">
+            <Position>-15 30 5</Position>
+            <Intensity>100000 100000 100000</Intensity>
+        </PointLight>
+        <PointLight id="3">
+            <Position>-15 20 50</Position>
+            <Intensity>100000 100000 100000</Intensity>
+        </PointLight>
+    </Lights>
+
+    <Materials>
+        <Material id="1">
+            <AmbientReflectance>1 1 1</AmbientReflectance>
+            <DiffuseReflectance>1 1 1</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <PhongExponent>1</PhongExponent>
+        </Material>
+        <Material id="2">
+            <AmbientReflectance>1 1 1</AmbientReflectance>
+            <DiffuseReflectance>1 0 0</DiffuseReflectance>
+            <SpecularReflectance>1 1 1</SpecularReflectance>
+            <PhongExponent>100</PhongExponent>
+        </Material>
+    </Materials>
+
+    <Textures>
+        <Texture id="1" bumpmap="true">
+            <ImageName>textures/leather.jpg</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+            <Normalizer>255</Normalizer>
+        </Texture>
+        <Texture id="2" bumpmap="true" bumpmapMultiplier="30">
+            <ImageName>textures/another_grid.jpg</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+            <Normalizer>255</Normalizer>
+        </Texture>
+    </Textures>
+
+    <Transformations>
+        <Rotation id="1">45 1.0 0.0 0.0</Rotation>
+        <Scaling id="1">0.05 0.05 0.05</Scaling>
+    </Transformations>
+
+    <VertexData>
+        -1000 0  1000
+         1000 0  1000
+         1000 0 -1000
+        -1000 0 -1000 
+          0 10 0
+    </VertexData>
+
+    <TexCoordData>
+        0 1
+        1 1
+        1 0
+        0 0
+    </TexCoordData>
+
+    <Objects>
+        <Mesh id="1">
+            <Material>1</Material>
+            <Texture>2</Texture>
+            <Transformations>s1 r1</Transformations>
+            <Faces>
+                3 1 2
+                1 3 4
+            </Faces>
+        </Mesh>
+        <Sphere id="1">
+            <Material>2</Material>
+            <Texture>1</Texture>
+            <Center>5</Center>
+            <Radius>10</Radius>
+        </Sphere>
+    </Objects>
+</Scene>

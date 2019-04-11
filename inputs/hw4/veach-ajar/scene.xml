@@ -1,0 +1,284 @@
+<Scene>
+    <BackgroundColor>0 0 0</BackgroundColor>
+
+    <MaxRecursionDepth>6</MaxRecursionDepth>
+
+    <Cameras>
+        <Camera id="1" type="lookAt">
+            <Position>4.05402 1.61647 -2.30652</Position>
+            <GazePoint>-4.29809 1.34399 -3.4641</GazePoint>
+            <Up>0 1 0</Up>
+            <FovY>35.983398</FovY>
+            <NearDistance>1.7321</NearDistance>
+            <ImageResolution>1280 720</ImageResolution>
+            <ImageName>VeachAjar.png</ImageName>
+            <NumSamples>64</NumSamples>
+        </Camera>
+    </Cameras>
+
+    <Transformations>
+        <Composite id="1">-0.0757886 0 -0.0468591 -1.95645 0 0.0891049 0 0.648205 0.0468591 0 -0.0757886 -1.77687 0 0 0 1</Composite>
+        <Composite id="2">-0.0891049 0 7.7898e-009 -1.95645 0 0.0891049 0 0.648205 -7.7898e-009 0 -0.0891049 -2.67687 0 0 0 1</Composite>
+        <Composite id="3">-0.083761 0 0.0303938 -1.95645 0 0.0891049 0 0.651268 -0.0303938 0 -0.083761 -3.57687 0 0 0 1</Composite>
+        <Composite id="4">1.8 0 0 2.3 0 1 0 0 0 0 1 0 0 0 0 1</Composite>
+    </Transformations>
+
+    <Lights>
+        <AmbientLight>7.5 7.5 7.5</AmbientLight>
+
+        <!--
+        <AreaLight id="1">
+            <Position> -4.4391 1.50656 -4.44377</Position>
+            <Normal>0 -1 1</Normal>
+            <Size>3.86</Size>
+            <Radiance>1000 1000 1000</Radiance>
+        </AreaLight>
+        -->
+        <PointLight id="1">
+            <Position> -4.4391 1.50656 -4.44377</Position>
+            <Intensity>1000 1000 1000</Intensity>
+        </PointLight>
+
+        <PointLight id="2">
+            <Position> 3.4391 1.50656 -4.44377</Position>
+            <Intensity>1000 1000 1000</Intensity>
+        </PointLight>
+
+        <PointLight id="3">
+            <Position> 3.4391 3.50656 -4.44377</Position>
+            <Intensity>1000 1000 1000</Intensity>
+        </PointLight>
+
+    </Lights>
+
+    <Materials>
+        <Material id="1">
+            <AmbientReflectance>1 1 1</AmbientReflectance>
+            <DiffuseReflectance>1 1 1</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <PhongExponent>1</PhongExponent>
+        </Material>
+
+        <Material id="2">
+            <AmbientReflectance>0.1 0.1 0.1</AmbientReflectance>
+            <DiffuseReflectance>2 2 2</DiffuseReflectance>
+            <SpecularReflectance>1 1 1</SpecularReflectance>
+            <PhongExponent>1</PhongExponent>
+        </Material>
+
+        <Material id="3">
+            <AmbientReflectance>0 0 0</AmbientReflectance>
+            <DiffuseReflectance>0.0 0.0 0.0</DiffuseReflectance>
+            <SpecularReflectance>0.0 0.0 0.0</SpecularReflectance>
+            <PhongExponent>30</PhongExponent>
+            <Transparency>0.98 0.98 0.98</Transparency>
+            <RefractionIndex>1.5</RefractionIndex>
+        </Material>
+
+        <Material id="4">
+            <AmbientReflectance>0 0 0</AmbientReflectance>
+            <DiffuseReflectance>1 1 1</DiffuseReflectance>
+            <SpecularReflectance>1 1 1</SpecularReflectance>
+            <PhongExponent>10</PhongExponent>
+            <MirrorReflectance>0.3 0.3 0.3</MirrorReflectance>
+        </Material>
+
+        <Material id="5">
+            <AmbientReflectance>1 1 1</AmbientReflectance>
+            <DiffuseReflectance>1 1 1</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <MirrorReflectance>0.4 0.4 0.4</MirrorReflectance>
+            <PhongExponent>10</PhongExponent>
+        </Material>
+
+        <Material id="6">
+            <AmbientReflectance>0 0 0</AmbientReflectance>
+            <DiffuseReflectance>5 5 5</DiffuseReflectance>
+            <SpecularReflectance>1 1 1</SpecularReflectance>
+            <PhongExponent>10</PhongExponent>
+        </Material>
+
+        <Material id="7">
+            <AmbientReflectance>0 0 0</AmbientReflectance>
+            <DiffuseReflectance>2.58824 2.07843 1.45098</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <PhongExponent>1</PhongExponent>
+        </Material>
+
+        <Material id="8">
+            <AmbientReflectance>0 0 0</AmbientReflectance>
+            <DiffuseReflectance>2.47059 1.68627 0.901961</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <PhongExponent>1</PhongExponent>
+        </Material>
+
+        <Material id="9">
+            <AmbientReflectance>0 0 0</AmbientReflectance>
+            <DiffuseReflectance>1 1 1</DiffuseReflectance>
+            <SpecularReflectance>1 1 1</SpecularReflectance>
+            <PhongExponent>10</PhongExponent>
+            <MirrorReflectance>0.3 0.3 0.3</MirrorReflectance>
+        </Material>
+
+        <Material id="10">
+            <AmbientReflectance>0 0 0</AmbientReflectance>
+            <DiffuseReflectance>3 3 3</DiffuseReflectance>
+            <SpecularReflectance>0.5 0.5 0.5</SpecularReflectance>
+            <PhongExponent>1</PhongExponent>
+            <MirrorReflectance>0.05 0.05 0.05</MirrorReflectance>
+        </Material>
+
+    </Materials>
+
+    <Textures>
+        <Texture id="1">
+            <ImageName>textures/landscape-with-a-lake2.jpg</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_all</DecalMode>
+            <Appearance>clamp</Appearance>
+            <Normalizer>1</Normalizer>
+        </Texture>
+
+        <Texture id="2">
+            <ImageName>textures/Good_Textures_005844_2.jpg</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+            <Appearance>clamp</Appearance>
+            <Normalizer>30</Normalizer>
+        </Texture>
+
+        <Texture id="3">
+            <ImageName>textures/cherry-wood-texture_2.jpg</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+            <Appearance>repeat</Appearance>
+            <Normalizer>30</Normalizer>
+        </Texture>
+
+        <Texture id="4">
+            <ImageName>checkerboard</ImageName>
+            <BlackColor>0.4 0.4 0.4</BlackColor>
+            <WhiteColor>10 10 10</WhiteColor>
+            <ScalingFactor>5</ScalingFactor>
+            <Offset>0</Offset>
+            <DecalMode>blend_kd</DecalMode>
+        </Texture>
+    </Textures>
+
+
+    <Objects>
+        <Mesh id="1"> <!-- Pot -->
+            <Material>6</Material>
+            <Transformations>c1</Transformations>
+            <Faces plyFile="models/Mesh000.ply" />
+        </Mesh>
+
+        <MeshInstance id="1" baseMeshId="1" resetTransform="true"> <!-- Pot -->
+            <Material>5</Material>
+            <Transformations>c2</Transformations>
+        </MeshInstance>
+
+        <MeshInstance id="2" baseMeshId="1" resetTransform="true"> <!-- Pot -->
+            <Material>3</Material>
+            <Transformations>c3</Transformations>
+        </MeshInstance>
+
+        <Mesh id="2"> <!-- Landscape -->
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces plyFile="models/Mesh008.ply" />
+        </Mesh>
+
+        <Mesh id="3"> <!-- PictureFrame -->
+            <Material>7</Material>
+            <Faces plyFile="models/Mesh013.ply" />
+        </Mesh>
+
+        <Mesh id="4"> <!-- Floor -->
+            <Material>4</Material>
+            <Texture>4</Texture>
+            <Transformations>c4</Transformations>
+            <Faces plyFile="models/Mesh011.ply" />
+        </Mesh>
+
+        <Mesh id="5"> <!-- DoorHandle -->
+            <Material>9</Material>
+            <Faces plyFile="models/Mesh015.ply" />
+        </Mesh>
+
+        <Mesh id="6"> <!-- Hinge -->
+            <Material>9</Material>
+            <Faces plyFile="models/Mesh016.ply" />
+        </Mesh>
+
+        <Mesh id="7"> <!-- Hinge -->
+            <Material>9</Material>
+            <Faces plyFile="models/Mesh012.ply" />
+        </Mesh>
+
+        <Mesh id="8"> <!-- Hinge -->
+            <Material>9</Material>
+            <Faces plyFile="models/Mesh010.ply" />
+        </Mesh>
+
+        <Mesh id="9"> <!-- Door -->
+            <Material>1</Material>
+            <Texture>3</Texture>
+            <Faces plyFile="models/Mesh006.ply" />
+        </Mesh>
+
+        <Mesh id="10"> <!-- DoorFrame -->
+            <Material>8</Material>
+            <Faces plyFile="models/Mesh005.ply" />
+        </Mesh>
+
+        <Mesh id="11"> <!-- TableLeg -->
+            <Material>10</Material>
+            <Faces plyFile="models/Mesh007.ply" />
+        </Mesh>
+
+        <Mesh id="12"> <!-- TableLeg -->
+            <Material>10</Material>
+            <Faces plyFile="models/Mesh003.ply" />
+        </Mesh>
+
+        <Mesh id="13"> <!-- TableLeg -->
+            <Material>10</Material>
+            <Faces plyFile="models/Mesh002.ply" />
+        </Mesh>
+
+        <Mesh id="14"> <!-- TableLeg -->
+            <Material>10</Material>
+            <Faces plyFile="models/Mesh001.ply" />
+        </Mesh>
+
+        <Mesh id="15"> <!-- Table -->
+            <Material>1</Material>
+            <Texture>2</Texture>
+            <Faces plyFile="models/Mesh004.ply" />
+        </Mesh>
+
+        <Mesh id="16"> <!-- Wall -->
+            <Material>2</Material>
+            <Transformations>c4</Transformations>
+            <Faces plyFile="models/Mesh014.ply" />
+        </Mesh>
+
+        <Mesh id="17"> <!-- Pot -->
+            <Material>6</Material>
+            <Transformations>c1</Transformations>
+            <Faces plyFile="models/Mesh009.ply" />
+        </Mesh>
+
+        <MeshInstance id="3" baseMeshId="17" resetTransform="true"> <!-- Pot -->
+            <Material>5</Material>
+            <Transformations>c2</Transformations>
+        </MeshInstance>
+
+        <MeshInstance id="4" baseMeshId="17" resetTransform="true"> <!-- Pot -->
+            <Material>3</Material>
+            <Transformations>c3</Transformations>
+        </MeshInstance>
+
+    </Objects>
+</Scene>

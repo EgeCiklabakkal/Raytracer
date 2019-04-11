@@ -1,0 +1,156 @@
+<Scene>
+    <MaxRecursionDepth>6</MaxRecursionDepth>
+
+    <BackgroundColor>0 0 0</BackgroundColor>
+
+    <Cameras>
+        <Camera id="1">
+            <Position>0 1 5</Position>
+            <Gaze>0 0 -1</Gaze>
+            <Up>0 1 0</Up>
+            <NearPlane>-2 2 -1 1</NearPlane>
+            <NearDistance>1</NearDistance>
+            <ImageResolution>1600 800</ImageResolution>
+            <NumSamples>100</NumSamples>
+            <ImageName>skybox.png</ImageName>
+        </Camera>
+    </Cameras>
+
+    <Lights>
+        <AmbientLight>25 25 25</AmbientLight>
+        <AreaLight id="1">
+            <Position>-5 5 2</Position>
+            <Normal>0 -1 0</Normal>
+            <Size>3 0 0</Size>
+            <Radiance>2000 2000 2000</Radiance>
+        </AreaLight>
+    </Lights>
+
+    <Materials>
+        <Material id="1">
+            <AmbientReflectance>1 1 1</AmbientReflectance>
+            <DiffuseReflectance>1 1 1</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <PhongExponent>1</PhongExponent>
+        </Material>
+        <Material id="2">
+            <AmbientReflectance>1 1 1</AmbientReflectance>
+            <DiffuseReflectance>1 0 0</DiffuseReflectance>
+            <SpecularReflectance>1 1 1</SpecularReflectance>
+            <PhongExponent>100</PhongExponent>
+        </Material>
+        <Material id="3">
+            <AmbientReflectance>1 1 1</AmbientReflectance>
+            <DiffuseReflectance>0.4 0.4 1</DiffuseReflectance>
+            <SpecularReflectance>1 1 1</SpecularReflectance>
+            <PhongExponent>100</PhongExponent>
+        </Material>
+    </Materials>
+
+    <Textures>
+        <Texture id="1">
+            <ImageName>textures/skybox_sun_clouds.jpg</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_all</DecalMode>
+            <Normalizer>1</Normalizer>
+        </Texture>
+        <Texture id="2" bumpmap="true" bumpmapMultiplier="0.01">
+            <ImageName>textures/sand.jpg</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+            <Normalizer>255</Normalizer>
+            <Appearance>repeat</Appearance>
+        </Texture>
+    </Textures>
+
+    <Transformations>
+        <Scaling id="1">40 1 40</Scaling>
+        <Scaling id="2">2 1 1</Scaling>
+        <Scaling id="3">1 3 1</Scaling>
+        <Scaling id="4">1 1 5</Scaling>
+        <Translation id="1">3 2 15</Translation>
+        <Translation id="2">-20 -5 0</Translation>
+        <Translation id="3">0 13 0</Translation>
+        <Translation id="4">-20 5 0</Translation>
+        <Translation id="5">-5 5 -10</Translation>
+        <Translation id="6">0 0.5 0</Translation>
+        <Translation id="7">-1 0.5 0</Translation>
+        <Translation id="8">1 0.5 0</Translation>
+        <Translation id="9">-0.5 0.4 0.9</Translation>
+        <Translation id="10">0.5 0.4 0.9</Translation>
+        <Translation id="11">0 0.35 1.65</Translation>
+        <Rotation id="1">45 0.0 0.0 1.0</Rotation>
+        <Rotation id="2">0 0.0 1.0 0.0</Rotation>
+        <Rotation id="3">0 1.0 0.0 0.0</Rotation>
+    </Transformations>
+
+    <VertexData>
+        -1 0  1
+         1 0  1
+         1 0 -1
+        -1 0 -1 
+          0 0 0
+    </VertexData>
+
+    <TexCoordData>
+        0 100
+        100 100
+        100 0
+        0 0
+    </TexCoordData>
+
+    <Objects>
+        <Mesh id="1">
+            <Material>1</Material>
+            <Texture>2</Texture>
+            <Transformations>s1</Transformations>
+            <Faces>
+                3 1 2
+                1 3 4
+            </Faces>
+        </Mesh>
+        <Sphere id="1">
+            <Material>2</Material>
+            <Texture>1</Texture>
+            <Transformations>r2 r3</Transformations>
+            <Center>5</Center>
+            <Radius>30</Radius>
+        </Sphere>
+        <Sphere id="2">
+            <Material>3</Material>
+            <Transformations>t6</Transformations>
+            <Center>5</Center>
+            <Radius>0.5</Radius>
+        </Sphere>
+        <Sphere id="3">
+            <Material>3</Material>
+            <Transformations>t7</Transformations>
+            <Center>5</Center>
+            <Radius>0.5</Radius>
+        </Sphere>
+        <Sphere id="4">
+            <Material>3</Material>
+            <Transformations>t8</Transformations>
+            <Center>5</Center>
+            <Radius>0.5</Radius>
+        </Sphere>
+        <Sphere id="5">
+            <Material>3</Material>
+            <Transformations>t9</Transformations>
+            <Center>5</Center>
+            <Radius>0.4</Radius>
+        </Sphere>
+        <Sphere id="6">
+            <Material>3</Material>
+            <Transformations>t10</Transformations>
+            <Center>5</Center>
+            <Radius>0.4</Radius>
+        </Sphere>
+        <Sphere id="7">
+            <Material>3</Material>
+            <Transformations>t11</Transformations>
+            <Center>5</Center>
+            <Radius>0.35</Radius>
+        </Sphere>
+    </Objects>
+</Scene>
