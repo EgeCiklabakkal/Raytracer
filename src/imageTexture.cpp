@@ -1,6 +1,6 @@
 #include "imageTexture.h"
 
-ImageTexture::ImageTexture(FlatImage *_image, float normalizer,
+ImageTexture::ImageTexture(Image *_image, float normalizer,
 				InterpolationMode _interpolation_mode,
 				DecalMode _decal_mode,
 				TextureMode _texture_mode) :

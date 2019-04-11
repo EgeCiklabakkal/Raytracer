@@ -13,12 +13,12 @@ class ImageTexture : public Texture
 {
 	public:
 
-	FlatImage *image;
+	Image *image;
 	float normalizer;
 	InterpolationMode interpolation_mode;
 	TextureMode texture_mode;
 
-	ImageTexture(FlatImage *_image, float normalizer=255.0f, 
+	ImageTexture(Image *_image, float normalizer=255.0f, 
 			InterpolationMode _interpolation_mode=InterpolationMode::NEAREST,
 			DecalMode _decal_mode=DecalMode::REPLACEKD,
 			TextureMode _texture_mode=TextureMode::CLAMP);

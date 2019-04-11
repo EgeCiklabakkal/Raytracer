@@ -12,7 +12,7 @@ void Scene::raytraceImages(int threadCount, bool showProgress)
                 width  = cam.image_width;
                 height = cam.image_height;
 
-                FlatImage img(width, height);
+                Image img(width, height);
 
                 // Determine the pixels;
                 SafeStack<std::pair<float, float>> pixels(width * height);
@@ -62,7 +62,7 @@ void Scene::raytraceImages(int threadCount, bool showProgress)
         }
 }
 
-void Scene::raytrace_routine(Scene* scene, const Camera* cam, FlatImage* img, 
+void Scene::raytrace_routine(Scene* scene, const Camera* cam, Image* img, 
 		SafeStack<std::pair<float, float>>* pixels, int num_samples)
 {
 	std::pair<float, float> currPixel;
@@ -98,7 +98,7 @@ void Scene::raytrace_routine(Scene* scene, const Camera* cam, FlatImage* img,
 	}
 }
 
-void Scene::raytrace_singleSample(Scene* scene, const Camera* cam, FlatImage* img, 
+void Scene::raytrace_singleSample(Scene* scene, const Camera* cam, Image* img, 
 		SafeStack<std::pair<float, float>>* pixels)
 {
 	std::pair<float, float> currPixel;

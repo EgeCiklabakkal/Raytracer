@@ -32,9 +32,9 @@ class Scene
 	// Methods
 	void loadFromXML(const std::string& fname);
 	void raytraceImages(int threadCount, bool showProgress=true);
-	static void raytrace_routine(Scene* scene, const Camera* cam, FlatImage* img, 
+	static void raytrace_routine(Scene* scene, const Camera* cam, Image* img, 
 			SafeStack<std::pair<float, float>>* pixels, int num_samples);
-	static void raytrace_singleSample(Scene* scene, const Camera* cam, FlatImage* img,
+	static void raytrace_singleSample(Scene* scene, const Camera* cam, Image* img,
 			SafeStack<std::pair<float, float>>* pixels);
 
 	rgb rayColor(const Ray& r, int recursion_depth, bool cullFace=true) const;
