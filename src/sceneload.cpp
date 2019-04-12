@@ -92,8 +92,9 @@ void Scene::loadFromXML(const std::string& fname)
 	std::vector<glm::mat4> translations;
 	std::vector<glm::mat4> scalings;
 	std::vector<glm::mat4> rotations;
+	std::vector<glm::mat4> composites;
 	element = scene_element->FirstChildElement("Transformations");
-	getTransformations(element, ss, translations, scalings, rotations);
+	getTransformations(element, ss, translations, scalings, rotations, composites);
 
 	// Textures
 	element = scene_element->FirstChildElement("Textures");
@@ -169,8 +170,9 @@ void Scene::loadFromXML(const std::string& fname)
 			ss << child->GetText() << std::endl;	
 			int shadingMode  = getMeshShadingMode(element);
 			int vertexOffset = getIntAttributeWithDefault(child, "vertexOffset", 0);
+			int textureOffset = getIntAttributeWithDefault(child, "textureOffset", 0);
 			pushFacesOfMesh(meshTriangles, mesh, vertex_data, 
-						shadingMode, vertexOffset, ss);
+						shadingMode, vertexOffset, textureOffset, ss);
 		}
 
 		else if(mesh_type == MESH_PLY)
@@ -183,7 +185,7 @@ void Scene::loadFromXML(const std::string& fname)
 			meshes.push_back(mesh);
 			int shadingMode = getMeshShadingMode(element);
 
-			pushFacesOfPlyMesh(meshTriangles, mesh, vertex_data, 
+			pushFacesOfPlyMesh(meshTriangles, mesh, vertex_data, texCoord_data,
 						shadingMode, fname, plyname);
 		}
 
@@ -195,7 +197,7 @@ void Scene::loadFromXML(const std::string& fname)
 		// Apply Mesh/Instance Transformations
 		trans_element = element->FirstChildElement("Transformations");
 		_transformed = applyTransforms(trans_element, ss, transMatInstance,
-					translations, scalings, rotations);
+					translations, scalings, rotations, composites);
 
 		if(getIntChildWithDefault(element, ss, "Texture", 0, itemp))	// has texture
 		{
@@ -243,14 +245,16 @@ void Scene::loadFromXML(const std::string& fname)
 		if(resetTransform)
 		{
 			_transformed = applyTransforms(trans_element, ss, transMatInstance,
-							translations, scalings, rotations);
+							translations, scalings,
+							rotations, composites);
 		}
 
 		else
 		{
 			transMatInstance = baseMeshInstance->M;
 			_transformed = applyTransforms(trans_element, ss, transMatInstance,
-							translations, scalings, rotations);
+							translations, scalings,
+							rotations, composites);
 			_transformed = _transformed || baseMeshInstance->transformed;
 		}
 
@@ -299,7 +303,7 @@ void Scene::loadFromXML(const std::string& fname)
 		// Set Transformation
 		glm::mat4 transMatTriangle(1.0f);
 		setTransformOfShape(triangle_ptr, element, ss, transMatTriangle,
-					translations, scalings, rotations);
+					translations, scalings, rotations, composites);
 
 		// Set Motion Blur
 		setMotionBlurOfShape(triangle_ptr, element, ss);
@@ -344,7 +348,7 @@ void Scene::loadFromXML(const std::string& fname)
 		// Set Transformation (resetTransform is false, consider unitSphere transforms)
 		glm::mat4 transMatSphere(1.0f);
 		setTransformOfShape(sphere_ptr, element, ss, transMatSphere,
-					translations, scalings, rotations, false);
+					translations, scalings, rotations, composites, false);
 
 		// Set Motion Blur
 		setMotionBlurOfShape(sphere_ptr, element, ss);

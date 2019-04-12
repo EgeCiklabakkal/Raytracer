@@ -30,6 +30,7 @@ SOFTWARE.
 */
 
 #include <array>
+#include <algorithm>
 #include <cctype>
 #include <fstream>
 #include <iostream>
@@ -1181,6 +1182,40 @@ public:
       result[i][0] = xPos[i];
       result[i][1] = yPos[i];
       result[i][2] = zPos[i];
+    }
+
+    return result;
+  }
+
+  std::vector<std::array<double, 2>> getVertexUV(const std::string& vertexElementName = "vertex") {
+    bool hasUV = false;
+    for (std::unique_ptr<Property>& prop : getElement(vertexElementName).properties) {
+      if (prop->name == "u") {
+        hasUV = true;
+      }
+    }
+
+    if(!hasUV)
+    {
+        return std::vector<std::array<double, 2>>();
+    }
+
+    std::vector<double> uPos = getElement(vertexElementName).getProperty<double>("u");
+    std::vector<double> vPos = getElement(vertexElementName).getProperty<double>("v");
+    bool allzeros = std::all_of(uPos.begin(), uPos.end(), [](double i) { return i==0.0f; });
+    allzeros = allzeros || std::all_of(vPos.begin(), vPos.end(), [](double i) { return i==0.0f; });
+
+    if(allzeros)
+    {
+        return std::vector<std::array<double, 2>>();
+    }
+
+    // else, we have valid UVs
+    std::vector<std::array<double, 2>> result(uPos.size());
+    for (size_t i = 0; i < result.size(); i++) {
+      //std::cout << uPos[i] << " " << vPos[i] << std::endl;
+      result[i][0] = uPos[i];
+      result[i][1] = vPos[i];
     }
 
     return result;

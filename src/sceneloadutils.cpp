@@ -194,7 +194,8 @@ bool getBoolAttributeWithDefault(tinyxml2::XMLElement* element, std::string name
 int getTransformations(tinyxml2::XMLElement* element, std::stringstream& ss, 
 			std::vector<glm::mat4>& translations, 
 			std::vector<glm::mat4>& scalings, 
-			std::vector<glm::mat4>& rotations)
+			std::vector<glm::mat4>& rotations,
+			std::vector<glm::mat4>& composites)
 {
 	if(!element)
 	{
@@ -243,6 +244,23 @@ int getTransformations(tinyxml2::XMLElement* element, std::stringstream& ss,
 		rotations.push_back(transformation);
 		count_trans++;
 		element_trans = element_trans->NextSiblingElement("Rotation");
+	}
+
+	element_trans = element->FirstChildElement("Composite");
+	while(element_trans)
+	{
+		float arrMat[16];
+		ss << element_trans->GetText() << std::endl;
+		for(int i = 0; i < 16; i++)
+		{
+			ss >> arrMat[i];
+		}
+
+		// row major to column major
+		transformation = glm::transpose(glm::make_mat4(arrMat));
+		composites.push_back(transformation);
+		count_trans++;
+		element_trans = element_trans->NextSiblingElement("Composite");
 	}
 
 	ss.clear();
@@ -443,7 +461,8 @@ PerlinPattern getPerlinPattern(tinyxml2::XMLElement* element)
 bool applyTransforms(tinyxml2::XMLElement* element, std::stringstream& ss, glm::mat4& transMat,
 			const std::vector<glm::mat4>& translations, 
 			const std::vector<glm::mat4>& scalings, 
-			const std::vector<glm::mat4>& rotations)
+			const std::vector<glm::mat4>& rotations,
+			const std::vector<glm::mat4>& composites)
 {
 	if(!element)	// No transformations
 	{
@@ -469,6 +488,8 @@ bool applyTransforms(tinyxml2::XMLElement* element, std::stringstream& ss, glm::
 			case 'r':
 				transMat = rotations[tid] * transMat;
 				break;
+			case 'c':
+				transMat = composites[tid] * transMat;
 		}
 	}
 
@@ -605,8 +626,8 @@ int getMeshShadingMode(tinyxml2::XMLElement* element)
 }
 
 void pushFacesOfPlyMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Vertex>& vertex_data, 
-			int shadingMode, const std::string& fname, 
-			const std::string& plyname)
+			std::vector<Vec2>& texCoord_data,
+			int shadingMode, const std::string& fname, const std::string& plyname)
 {
 	std::size_t pos = fname.find_last_of("/");
 	std::string plydir(fname.substr(0, pos+1));
@@ -616,6 +637,17 @@ void pushFacesOfPlyMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Ver
 
 	std::vector<std::array<double, 3>> vPos = plyIn.getVertexPositions();
 	std::vector<std::vector<size_t>> fInd = plyIn.getFaceIndices<size_t>();
+	std::vector<std::array<double, 2>> vUV = plyIn.getVertexUV();
+
+	int texoffset = texCoord_data.size();
+	if(vUV.size())
+	{	
+		// push uv data
+		for(auto& uv : vUV)
+		{
+			texCoord_data.push_back(Vec2(uv[0], uv[1]));
+		}
+	}
 
 	int offset = vertex_data.size();
 	// push vertex_data
@@ -628,14 +660,29 @@ void pushFacesOfPlyMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Ver
 	{
 		if(f.size() == 3)	// Triangle
 		{
-			std::array<int, 3> facedata = {offset+(int)f[0], 
+			std::array<int, 3> facedata = { offset+(int)f[0], 
 							offset+(int)f[1], 
 							offset+(int)f[2]};
+			std::array<int, 3> texcdata;
+			if(vUV.size())
+			{
+				texcdata[0] = texoffset+(int)f[0];
+				texcdata[1] = texoffset+(int)f[1];
+				texcdata[2] = texoffset+(int)f[2];
+			}
+
+			else
+			{
+				texcdata[0] = 0;
+				texcdata[1] = 0;
+				texcdata[2] = 0;
+			}
+
 			Vec3 a(vertex_data[facedata[0]].position);
 			Vec3 b(vertex_data[facedata[1]].position);
 			Vec3 c(vertex_data[facedata[2]].position);
 			Vec3 n(unitVector(cross(b - a, c - a)));
-			Shape *mt = new MeshTriangle(facedata, facedata, mesh, n, shadingMode);
+			Shape *mt = new MeshTriangle(facedata, texcdata, mesh, n, shadingMode);
 			shapes.push_back(mt);
 
 			if(shadingMode == MESH_SHADING_SMOOTH)
@@ -656,6 +703,28 @@ void pushFacesOfPlyMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Ver
 			std::array<int, 3> facedata1 = {offset+(int)f[0], 
 							offset+(int)f[2], 
 							offset+(int)f[3]};
+			std::array<int, 3> texcdata0;
+			std::array<int, 3> texcdata1;
+			if(vUV.size())
+			{
+				texcdata0[0] = texoffset+(int)f[0];
+				texcdata0[1] = texoffset+(int)f[1];
+				texcdata0[2] = texoffset+(int)f[2];
+				texcdata1[0] = texoffset+(int)f[0];
+				texcdata1[1] = texoffset+(int)f[2];
+				texcdata1[2] = texoffset+(int)f[3];
+			}
+
+			else
+			{
+				texcdata0[0] = 0;
+				texcdata0[1] = 0;
+				texcdata0[2] = 0;
+				texcdata1[0] = 0;
+				texcdata1[1] = 0;
+				texcdata1[2] = 0;
+			}
+
 			Vec3 a(vertex_data[facedata0[0]].position);
 			Vec3 b(vertex_data[facedata0[1]].position);
 			Vec3 c(vertex_data[facedata0[2]].position);
@@ -663,8 +732,8 @@ void pushFacesOfPlyMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Ver
 
 			Vec3 n0(unitVector(cross(b - a, c - a)));
 			Vec3 n1(unitVector(cross(c - a, d - a)));
-			Shape *mt0 = new MeshTriangle(facedata0, facedata0, mesh, n0, shadingMode);
-			Shape *mt1 = new MeshTriangle(facedata1, facedata1, mesh, n1, shadingMode);
+			Shape *mt0 = new MeshTriangle(facedata0, texcdata0, mesh, n0, shadingMode);
+			Shape *mt1 = new MeshTriangle(facedata1, texcdata1, mesh, n1, shadingMode);
 			shapes.push_back(mt0);
 			shapes.push_back(mt1);
 
@@ -682,25 +751,33 @@ void pushFacesOfPlyMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Ver
 }
 
 void pushFacesOfMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Vertex>& vertex_data,
-			int shadingMode, int vertexOffset, std::stringstream& ss)
+			int shadingMode, int vertexOffset,
+			int textureOffset, std::stringstream& ss)
 {
 	std::array<int, 3> ptemp;
+	std::array<int, 3> textemp;
 
 	while(!(ss >> ptemp[0]).eof())
 	{
 		ss >> ptemp[1] >> ptemp[2];
+
+		textemp = ptemp;
 		
 		// 1 based to 0 based
 		ptemp[0] = ptemp[0] + vertexOffset - 1;
 		ptemp[1] = ptemp[1] + vertexOffset - 1;
 		ptemp[2] = ptemp[2] + vertexOffset - 1;
 
+		textemp[0] = textemp[0] + textureOffset - 1;
+		textemp[1] = textemp[1] + textureOffset - 1;
+		textemp[2] = textemp[2] + textureOffset - 1;
+
 		// Precompute normal
 		Vec3 a(vertex_data[ptemp[0]].position);
 		Vec3 b(vertex_data[ptemp[1]].position);
 		Vec3 c(vertex_data[ptemp[2]].position);
 		Vec3 n(unitVector(cross(b - a, c - a)));
-		Shape *mt = new MeshTriangle(ptemp, ptemp, mesh, n, shadingMode);
+		Shape *mt = new MeshTriangle(ptemp, textemp, mesh, n, shadingMode);
 		shapes.push_back(mt);
 
 		if(shadingMode == MESH_SHADING_SMOOTH)
@@ -758,11 +835,12 @@ bool setTransformOfShape(Shape* shape_ptr, tinyxml2::XMLElement* element, std::s
 			const std::vector<glm::mat4>& translations, 
 			const std::vector<glm::mat4>& scalings, 
 			const std::vector<glm::mat4>& rotations,
+			const std::vector<glm::mat4>& composites,
 			bool resetTransform)
 {
 	tinyxml2::XMLElement *trans_element = element->FirstChildElement("Transformations");
 	bool _transformed = applyTransforms(trans_element, ss, transMat,
-						translations, scalings, rotations);
+						translations, scalings, rotations, composites);
 	if(_transformed)
 	{
 		shape_ptr->setTransform(transMat, resetTransform);

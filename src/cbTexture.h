@@ -15,8 +15,7 @@ class CBTexture : public Texture
 	rgb white;
 	bool dimension3;
 
-	// setting offset 0.0f might cause artifacts
-	CBTexture(float _offset=0.01f, float _scale=1.0f, float _normalizer=1.0f,
+	CBTexture(float _offset=0.0f, float _scale=1.0f, float _normalizer=1.0f,
 			rgb _black=rgb(0.0f), rgb _white=rgb(1.0f),
 			DecalMode _decal_mode=DecalMode::REPLACEKD, bool _dimension3=true) :
 	offset(_offset), scale(_scale), normalizer(_normalizer),
@@ -31,15 +30,20 @@ class CBTexture : public Texture
 
 		if(dimension3)
 		{
-			check = (	(int)std::floor((p.x() + offset) * scale)  +
-					(int)std::floor((p.y() + offset) * scale)  +
-					(int)std::floor((p.z() + offset) * scale)) % 2;
+			bool x = (int) ((p.x() + offset) * scale) % 2;
+			bool y = (int) ((p.y() + offset) * scale) % 2;
+			bool z = (int) ((p.z() + offset) * scale) % 2;
+
+			bool xorXY = (x != y);
+			check = (xorXY == z);
 		}
 
 		else	// 2d
 		{
-			check = (	(int)std::floor((p.x() + offset) * scale)  +
-					(int)std::floor((p.y() + offset) * scale)) % 2;
+			bool x = (int) ((p.x() + offset) * scale) % 2;
+			bool y = (int) ((p.y() + offset) * scale) % 2;
+
+			check = (x == y);
 		}
 
 		return ((check ? white : black) / normalizer);

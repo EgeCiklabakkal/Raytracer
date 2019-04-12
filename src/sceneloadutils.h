@@ -31,7 +31,8 @@ bool getBoolAttributeWithDefault(tinyxml2::XMLElement* element, std::string name
 int getTransformations(tinyxml2::XMLElement* element, std::stringstream& ss,
                         std::vector<glm::mat4>& translations,
                         std::vector<glm::mat4>& scalings,
-                        std::vector<glm::mat4>& rotations);
+                        std::vector<glm::mat4>& rotations,
+			std::vector<glm::mat4>& composites);
 
 // Read all texture images, create texture objects
 int getTextures(tinyxml2::XMLElement* element, std::stringstream& ss, const std::string& fname,
@@ -45,7 +46,8 @@ PerlinPattern getPerlinPattern(tinyxml2::XMLElement* element);
 bool applyTransforms(tinyxml2::XMLElement* element, std::stringstream& ss, glm::mat4& transMat,
                         const std::vector<glm::mat4>& translations,
                         const std::vector<glm::mat4>& scalings,
-                        const std::vector<glm::mat4>& rotations);
+                        const std::vector<glm::mat4>& rotations,
+			const std::vector<glm::mat4>& composites);
 
 // set Transformation of a shape (to set/update it after its creation)
 bool setTransformOfShape(Shape* shape_ptr, tinyxml2::XMLElement* element, std::stringstream& ss,
@@ -53,6 +55,7 @@ bool setTransformOfShape(Shape* shape_ptr, tinyxml2::XMLElement* element, std::s
                         const std::vector<glm::mat4>& translations,
                         const std::vector<glm::mat4>& scalings,
                         const std::vector<glm::mat4>& rotations,
+			const std::vector<glm::mat4>& composites,
                         bool resetTransform=true);
 
 bool setMotionBlurOfShape(Shape* shape_ptr, tinyxml2::XMLElement* element, std::stringstream& ss);
@@ -62,10 +65,11 @@ void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,
 void pushCameraSimple(tinyxml2::XMLElement* element, std::stringstream& ss,
                         std::vector<Camera>& cameras);
 void pushFacesOfPlyMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Vertex>& vertex_data,
-                        int shadingMode, const std::string& fname,
-                        const std::string& plyname);
+                        std::vector<Vec2>& texCoord_data,
+			int shadingMode, const std::string& fname, const std::string& plyname);
 void pushFacesOfMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Vertex>& vertex_data,
-                        int shadingMode, int vertexOffset, std::stringstream& ss);
+                        int shadingMode, int vertexOffset,
+			int textureOffset, std::stringstream& ss);
 
 // Specific to spheres 
 // make the original sphere unit and apply transformations on it

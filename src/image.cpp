@@ -17,8 +17,10 @@ Image::Image(int w, int h) : raster(w * h * 4, 0), nx(w), ny(h) {}
 // Methods
 bool Image::get(int x, int y, rgb& color)
 {
-	if(0 > x || x > this->nx) return false;
-	if(0 > y || y > this->ny) return false;
+	//if(0 > x || x > this->nx) return false;
+	//if(0 > y || y > this->ny) return false;
+	x = (x > 0) ? x : this->nx + x;
+	y = (y > 0) ? y : this->ny + y;
 
 	unsigned char cr, cg, cb;
 

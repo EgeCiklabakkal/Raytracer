@@ -15,6 +15,7 @@
 #include <glm/trigonometric.hpp>		// radians
 #include <glm/matrix.hpp>			// matrix functions: transpose, inverse, etc.
 #include <glm/gtx/string_cast.hpp>		// glm::to_string(mat)
+#include <glm/gtc/type_ptr.hpp>
 
 #include <chrono>
 #include <iostream>
