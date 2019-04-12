@@ -19,6 +19,7 @@ class Scene
 	float shadow_ray_epsilon;
 	float intersection_test_epsilon;
 	int max_recursion_depth;
+	bool cullFace;
 	std::vector<Camera> cameras;
 	AmbientLight ambient_light;
 	std::vector<Light*> lights;
@@ -35,13 +36,13 @@ class Scene
 	~Scene();
 	// Methods
 	void loadFromXML(const std::string& fname);
-	void raytraceImages(int threadCount, bool showProgress=true);
+	void renderImages(int threadCount, bool showProgress=true);
 	static void raytrace_routine(Scene* scene, const Camera* cam, Image* img, 
 			SafeStack<std::pair<float, float>>* pixels, int num_samples);
 	static void raytrace_singleSample(Scene* scene, const Camera* cam, Image* img,
 			SafeStack<std::pair<float, float>>* pixels);
 
-	rgb rayColor(const Ray& r, int recursion_depth, bool cullFace=true) const;
+	rgb rayColor(const Ray& r, int recursion_depth) const;
 	rgb ambientColor(const HitRecord& record) const;
 	rgb diffuseColor(const Ray& r, const HitRecord& record, const SampleLight& slight) const;
 	rgb specularColor(const Ray& r, const HitRecord& record, const SampleLight& slight) const;

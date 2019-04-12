@@ -37,6 +37,9 @@ void Scene::loadFromXML(const std::string& fname)
 	// MaxRecursionDepth
 	getChildTextWithDefaultFromNode(scene_element, ss, "MaxRecursionDepth", "0");
 	ss >> max_recursion_depth;
+
+	// BackfaceCulling
+	getBoolChildWithDefaultFromNode(scene_element, "BackfaceCulling", true, cullFace);
 	
 	// Cameras
 	element = scene_element->FirstChildElement("Cameras");

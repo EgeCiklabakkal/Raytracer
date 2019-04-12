@@ -1,6 +1,6 @@
 #include "utils.h"
 
-void Scene::raytraceImages(int threadCount, bool showProgress)
+void Scene::renderImages(int threadCount, bool showProgress)
 {
 	int width, height;
 	HitRecord record;
@@ -115,7 +115,7 @@ void Scene::raytrace_singleSample(Scene* scene, const Camera* cam, Image* img,
 	}
 }
 
-rgb Scene::rayColor(const Ray& r, int recursion_depth, bool cullFace) const
+rgb Scene::rayColor(const Ray& r, int recursion_depth) const
 {
 	rgb rcolor(0.0f, 0.0f, 0.0f);
 	float tmax = 100000.0f;		// Note: tmax, tmin, time can be made an argument
@@ -127,7 +127,7 @@ rgb Scene::rayColor(const Ray& r, int recursion_depth, bool cullFace) const
 
 	if(bvh->hit(r, tmin, tmax, time, record))
 	{
-		if(!r.primary || (cullFace && (dot(r.direction(), record.normal) < 0)))
+		if(!cullFace || !r.primary || (dot(r.direction(), record.normal) < 0))
 		{
 			// Handle texture
 			textured = handleTexture(record, decal_mode, rcolor);

@@ -35,7 +35,7 @@ class PerlinTexture : public Texture
 
 	virtual ~PerlinTexture() {}
 
-	rgb value(const Vec2& uv, const Vec3& p, bool reverseY) const
+	rgb value(const Vec2& uv, const Vec3& p) const
 	{
 		float val;
 		

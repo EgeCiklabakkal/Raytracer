@@ -35,6 +35,24 @@ bool getChildTextWithDefaultFromNode(tinyxml2::XMLNode* node, std::stringstream&
 	}
 }
 
+bool getBoolChildWithDefaultFromNode(tinyxml2::XMLNode* node, std::string name,
+					bool _default, bool& val)
+{
+	tinyxml2::XMLElement *child = node->FirstChildElement(name.data());
+	if(child)
+	{
+		std::string sbool(child->GetText());
+		val = (sbool == "true") ? true : false;
+		return true;
+	}
+
+	else
+	{
+		val = _default;
+		return false;
+	}
+}
+
 bool getIntChildWithDefault(tinyxml2::XMLElement* element, std::stringstream& ss,
 				std::string name, int _default, int& val)
 {
@@ -62,6 +80,24 @@ bool getFloatChildWithDefault(tinyxml2::XMLElement* element, std::stringstream& 
 	{
 		ss << child->GetText() << std::endl;
 		ss >> val;
+		return true;
+	}
+
+	else
+	{
+		val = _default;
+		return false;
+	}
+}
+
+bool getBoolChildWithDefault(tinyxml2::XMLElement* element, std::string name,
+				bool _default, bool& val)
+{
+	tinyxml2::XMLElement *child = element->FirstChildElement(name.data());
+	if(child)
+	{
+		std::string sbool(child->GetText());
+		val = (sbool == "true") ? true : false;
 		return true;
 	}
 
@@ -111,7 +147,6 @@ bool getrgbChildWithDefault(tinyxml2::XMLElement* element, std::stringstream& ss
 		return false;
 	}
 }
-
 
 int getCameraType(tinyxml2::XMLElement* element)
 {
@@ -281,6 +316,8 @@ int getTextures(tinyxml2::XMLElement* element, std::stringstream& ss, const std:
 		{
 			Image* textureImage;
 			InterpolationMode interpolation_mode;
+			TextureMode texture_mode;
+			bool flipVertical;
 
 			// Image instancing
 			if(uniqueImageNames.find(textureName) != uniqueImageNames.end())
@@ -299,13 +336,19 @@ int getTextures(tinyxml2::XMLElement* element, std::stringstream& ss, const std:
 
 			interpolation_mode = getInterpolationMode(element_texture);
 			decal_mode = getDecalMode(element_texture);
+			texture_mode = getTextureModeWithDefault
+					(element_texture, TextureMode::CLAMP);
 			getFloatChildWithDefault(element_texture, ss, "Normalizer",
 							255.0f, normalizer);
+			getBoolChildWithDefault(element_texture, "FlipVertical",
+							true, flipVertical);
 
 			ImageTexture *imageTexture = new ImageTexture(textureImage,
 									normalizer,
 									interpolation_mode,
-									decal_mode);
+									decal_mode,
+									texture_mode,
+									flipVertical);
 			textures.push_back(imageTexture);
 		}
 
@@ -355,6 +398,31 @@ DecalMode getDecalMode(tinyxml2::XMLElement* element)
 	}
 }
 
+TextureMode getTextureModeWithDefault(tinyxml2::XMLElement* element, TextureMode _default)
+{
+	tinyxml2::XMLElement *child = element->FirstChildElement("Appearance");
+
+	if(child)
+	{
+		std::string stext(child->GetText());
+
+		if(stext == "repeat")
+		{
+			return TextureMode::REPEAT;
+		}
+
+		else	// "clamp"
+		{
+			return TextureMode::CLAMP;
+		}
+	}
+
+	else
+	{
+		return _default;
+	}
+}
+
 PerlinPattern getPerlinPattern(tinyxml2::XMLElement* element)
 {
 	tinyxml2::XMLElement *child = element->FirstChildElement("Appearance");
@@ -370,7 +438,6 @@ PerlinPattern getPerlinPattern(tinyxml2::XMLElement* element)
 	{
 		return PerlinPattern::VEINY;
 	}
-
 }
 
 bool applyTransforms(tinyxml2::XMLElement* element, std::stringstream& ss, glm::mat4& transMat,

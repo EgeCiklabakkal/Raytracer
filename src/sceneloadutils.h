@@ -8,10 +8,14 @@ bool getChildTextWithDefault(tinyxml2::XMLElement* element, std::stringstream& s
                                 std::string name, std::string _default);
 bool getChildTextWithDefaultFromNode(tinyxml2::XMLNode* node, std::stringstream& ss,
                                 std::string name, std::string _default);
+bool getBoolChildWithDefaultFromNode(tinyxml2::XMLNode* node, std::string name,
+					bool _default, bool& val);
 bool getIntChildWithDefault(tinyxml2::XMLElement* element, std::stringstream& ss,
 				std::string name, int _default, int& val);
 bool getFloatChildWithDefault(tinyxml2::XMLElement* element, std::stringstream& ss,
 				std::string name, float _default, float& val);
+bool getBoolChildWithDefault(tinyxml2::XMLElement* element, std::string name,
+					bool _default, bool& val);
 bool getVec3ChildWithDefault(tinyxml2::XMLElement* element, std::stringstream& ss,
 				std::string name, const Vec3& _default, Vec3& val);
 bool getrgbChildWithDefault(tinyxml2::XMLElement* element, std::stringstream& ss,
@@ -34,6 +38,7 @@ int getTextures(tinyxml2::XMLElement* element, std::stringstream& ss, const std:
 			std::vector<Image*>& textureImages, std::vector<Texture*>& textures);
 InterpolationMode getInterpolationMode(tinyxml2::XMLElement* element);
 DecalMode getDecalMode(tinyxml2::XMLElement* element);
+TextureMode getTextureModeWithDefault(tinyxml2::XMLElement* element, TextureMode _default);
 PerlinPattern getPerlinPattern(tinyxml2::XMLElement* element);
 
 // Apply specified transformations

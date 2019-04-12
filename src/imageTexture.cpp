@@ -3,19 +3,20 @@
 ImageTexture::ImageTexture(Image* _image, float normalizer,
 				InterpolationMode _interpolation_mode,
 				DecalMode _decal_mode,
-				TextureMode _texture_mode) :
+				TextureMode _texture_mode,
+				bool _flipVertical) :
 image(_image), normalizer(normalizer), interpolation_mode(_interpolation_mode), 
-texture_mode(_texture_mode) 
+texture_mode(_texture_mode), flipVertical(_flipVertical)
 {
 	decal_mode = _decal_mode;
 }
 
 ImageTexture::~ImageTexture() {}
 
-rgb ImageTexture::value(const Vec2& uv, const Vec3& p, bool reverseY) const
+rgb ImageTexture::value(const Vec2& uv, const Vec3& p) const
 {
 	float i = uv[0] * image->nx;
-	float j = (reverseY) ? (image->ny - uv[1]*image->ny) : (uv[1] * image->ny);
+	float j = uv[1] * image->ny;
 
 	if(interpolation_mode == InterpolationMode::NEAREST)
 	{
@@ -44,12 +45,15 @@ rgb ImageTexture::fetch(int i, int j) const
 	{
 		i = (i >= image->nx) ? (image->nx - 1) : i;
 		j = (j >= image->ny) ? (image->ny - 1) : j;
+		j = (flipVertical) ? (image->ny - 1) - j : j;
 		image->get(i, j, color);
 	}
 
 	else	// TextureMode::REPEAT
 	{
-		i %= image->nx; j %= image->ny;
+		i %= image->nx;
+		j %= image->ny;
+		j = (flipVertical) ? (image->ny - 1) - j : j;
 		image->get(i, j, color);
 	}
 

@@ -3,6 +3,8 @@
 
     <BackgroundColor>0 0 0</BackgroundColor>
 
+    <BackfaceCulling>false</BackfaceCulling>
+
     <Cameras>
         <Camera id="1">
             <Position>0 1 5</Position>
@@ -21,7 +23,7 @@
         <AreaLight id="1">
             <Position>-5 5 2</Position>
             <Normal>0 -1 0</Normal>
-            <Size>3 0 0</Size>
+            <Size>3</Size>
             <Radiance>2000 2000 2000</Radiance>
         </AreaLight>
     </Lights>
