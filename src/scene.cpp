@@ -316,6 +316,14 @@ bool Scene::handleTexture(HitRecord& record, DecalMode& decal_mode, rgb& color) 
 		color = texture->value(record.uv, record.p);
 	}
 
+	if(texture->bumpmap)
+	{
+		Vec3 localNormal = texture->bumpNormal(record.uv, record.bump.p, record.bump.normal,
+							record.bump.dpdu, record.bump.dpdv);
+		record.normal = unitVector(rtmath::transformVec(
+						glm::transpose(record.bump.N), localNormal));
+	}
+
 	return true;
 }
 

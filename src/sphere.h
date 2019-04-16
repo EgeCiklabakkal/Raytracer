@@ -24,7 +24,7 @@ class Sphere : public Shape
 	bool boundingBox(float time0, float time1, BBox& _box) const;
 
 	Vec2 textureUV(const Vec3& p) const;
-	Vec3 bumpNormal(const HitRecord& record) const;
+	BumpRecord bump(const HitRecord& record) const;
 };
 
 #endif

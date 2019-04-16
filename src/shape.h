@@ -8,6 +8,7 @@
 #include "rgb.h"
 #include "material.h"
 #include "texture.h"
+#include "bumpRecord.h"
 #include "BBox.h"
 #include "rtmath.h"
 #include <glm/mat4x4.hpp>
@@ -29,6 +30,7 @@ class HitRecord
 	rgb color;
 	Material material;
 	Texture *texture = nullptr;
+	BumpRecord bump;
 	float time;
 
 	// Constructors
@@ -50,6 +52,7 @@ class HitRecord
 		material = rhs.material;
 		time     = rhs.time;
 		texture  = rhs.texture;
+		bump     = rhs.bump;
 
 		return *this;
 	}

@@ -29,6 +29,7 @@ bool ObjectInstance::hit(const Ray& r, float tmin, float tmax, float time, HitRe
 		// Also update material and texture
 		record.material = material;
 		record.texture  = texture;
+		record.bump.N	= N;
 		return true;
 	}
 

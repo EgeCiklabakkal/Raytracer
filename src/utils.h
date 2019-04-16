@@ -31,6 +31,7 @@
 
 #include "util/happly.h"
 #include "util/tinyxml2.h"
+#include "bumpRecord.h"
 #include "BVH.h"
 #include "camera.h"
 #include "cbTexture.h"

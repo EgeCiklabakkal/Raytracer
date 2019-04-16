@@ -74,6 +74,7 @@ bool MeshTriangle::hit(const Ray& r, float tmin, float tmax, float time, HitReco
 		record.time 	= r.time;		
 		record.texture  = parent_mesh->texture;
 		record.uv	= textureUV(beta, gamma);
+		record.bump     = bump(record);
 
 		record = transformRecordToWorld(record);
                 return true;
@@ -149,4 +150,27 @@ Vec2 MeshTriangle::textureUV(float beta, float gamma) const
 
 	// barycentric texture coordinates
 	return (tca + beta*(tcb - tca) + gamma*(tcc - tca));
+}
+
+BumpRecord MeshTriangle::bump(const HitRecord& record) const
+{
+	float a, b, c, d, invDet;
+	Vec2 tca = texa();
+	Vec2 tcb = texb();
+	Vec2 tcc = texc();
+
+	a = tcb[0] - tca[0];
+	b = tcb[1] - tca[1];
+	c = tcc[0] - tca[0];
+	d = tcc[1] - tca[1];
+
+	invDet = 1.0f / (a * d - b * c);
+
+	Vec3 p2p1 = this->b() - this->a();
+	Vec3 p3p1 = this->c() - this->a();
+	
+	Vec3 dpdu = invDet * (d * p2p1 - b * p3p1);
+	Vec3 dpdv = invDet * (a * p3p1 - c * p2p1);
+
+	return BumpRecord(record.p, record.normal, dpdu, dpdv);
 }

@@ -50,7 +50,7 @@ bool Sphere::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& re
 		record.time      = r.time;
 		record.texture   = texture;
 		record.uv	 = textureUV(record.p);
-		record.normal	 = bumpNormal(record);
+		record.bump	 = bump(record);
 
 		record = transformRecordToWorld(record);
 		return true;
@@ -121,7 +121,7 @@ Vec2 Sphere::textureUV(const Vec3& p) const
 	return Vec2(u, v);
 }
 
-Vec3 Sphere::bumpNormal(const HitRecord& record) const
+BumpRecord Sphere::bump(const HitRecord& record) const
 {
 	Texture *texture = record.texture;
 
@@ -142,8 +142,8 @@ Vec3 Sphere::bumpNormal(const HitRecord& record) const
 		Vec3 dpdu = Vec3(dxdu, dydu, dzdu);
 		Vec3 dpdv = Vec3(dxdv, dydv, dzdv);
 
-		return texture->bumpNormal(record.uv, p, record.normal, dpdu, dpdv);
+		return BumpRecord(p, record.normal, dpdu, dpdv, N);
 	}
 
-	return record.normal;
+	return BumpRecord();
 }
