@@ -282,6 +282,7 @@ void Scene::loadFromXML(const std::string& fname)
 	while(element)
 	{
 		Material triangleMaterial;
+		Texture *triangleTexture = nullptr;
 		int itemp;
 		Vec3i vitemp;
 		child = element->FirstChildElement("Material");
@@ -293,12 +294,27 @@ void Scene::loadFromXML(const std::string& fname)
 		ss << child->GetText() << std::endl;
 		ss >> vitemp.e[0] >> vitemp.e[1] >> vitemp.e[2];
 
+		int vertexOffset = getIntAttributeWithDefault(child, "vertexOffset", 0);
+		int textureOffset = getIntAttributeWithDefault(child, "textureOffset", 0);
+
 		// Precompute normal
-		Vec3 a(vertex_data[vitemp.e[0] - 1].position);
-		Vec3 b(vertex_data[vitemp.e[1] - 1].position);
-		Vec3 c(vertex_data[vitemp.e[2] - 1].position);
+		Vec3 a(vertex_data[vitemp.e[0] + vertexOffset - 1].position);
+		Vec3 b(vertex_data[vitemp.e[1] + vertexOffset - 1].position);
+		Vec3 c(vertex_data[vitemp.e[2] + vertexOffset - 1].position);
 		Vec3 n(unitVector(cross(b - a, c - a)));
-		Shape *triangle_ptr = new Triangle(a, b, c, n, triangleMaterial);
+
+		// Texture coordinates
+		Vec2 tca(texCoord_data[vitemp.e[0] + textureOffset - 1]);
+		Vec2 tcb(texCoord_data[vitemp.e[1] + textureOffset - 1]);
+		Vec2 tcc(texCoord_data[vitemp.e[2] + textureOffset - 1]);
+
+		if(getIntChildWithDefault(element, ss, "Texture", 0, itemp))	// has texture
+		{
+			triangleTexture = textures[itemp - 1];
+		}
+
+		Shape *triangle_ptr = new Triangle(a, b, c, tca, tcb, tcc, n,
+							triangleMaterial, triangleTexture);
 
 		// Set Transformation
 		glm::mat4 transMatTriangle(1.0f);

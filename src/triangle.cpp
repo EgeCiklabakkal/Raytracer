@@ -19,6 +19,21 @@ Triangle::Triangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2,
 	texture = _texture;
 }
 
+Triangle::Triangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2,
+                        const Vec2& _tc0, const Vec2& _tc1, const Vec2& _tc2,
+                        const Vec3& _normal, const Material& _material, Texture* _texture)
+{
+	vertices[0]  = _p0;
+	vertices[1]  = _p1;
+	vertices[2]  = _p2;
+	texCoords[0] = _tc0;
+	texCoords[1] = _tc1;
+	texCoords[2] = _tc2;
+	normal = _normal;
+	material = _material;
+	texture = _texture;
+}
+
 /*
 	┌       ┐ ┌   ┐   ┌   ┐
 	│a  d  g│ │ β │   │ j │
@@ -75,6 +90,7 @@ bool Triangle::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& 
 		record.material  = material;
 		record.time	 = r.time;
 		record.texture   = texture;
+		record.uv	 = textureUV(beta, gamma);
 
 		record = transformRecordToWorld(record);
 		return true;
@@ -140,4 +156,13 @@ bool Triangle::boundingBox(float time0, float time1, BBox& _box) const
 	_box = BBox(Vec3(xmin, ymin, zmin), Vec3(xmax, ymax, zmax));
 	_box = transformBBoxToWorld(_box);
 	return true;
+}
+
+Vec2 Triangle::textureUV(float beta, float gamma) const
+{
+	Vec2 tca = texCoords[0];
+	Vec2 tcb = texCoords[1];
+	Vec2 tcc = texCoords[2];
+
+	return (tca + beta*(tcb - tca) + gamma*(tcc - tca));
 }
