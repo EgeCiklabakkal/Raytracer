@@ -17,10 +17,16 @@ class CBTexture : public Texture
 
 	CBTexture(float _offset=0.0f, float _scale=1.0f, float _normalizer=1.0f,
 			rgb _black=rgb(0.0f), rgb _white=rgb(1.0f),
-			DecalMode _decal_mode=DecalMode::REPLACEKD, bool _dimension3=true) :
+			DecalMode _decal_mode=DecalMode::REPLACEKD,
+			bool _bumpmap=false, float _bumpmapMultiplier=1.0f,
+			bool _dimension3=true) :
 	offset(_offset), scale(_scale), normalizer(_normalizer),
 	black(_black), white(_white), dimension3(_dimension3)
-	{ decal_mode = _decal_mode; }
+	{
+		decal_mode = _decal_mode;
+		bumpmap = _bumpmap;
+		bumpmapMultiplier = _bumpmapMultiplier;
+	}
 
 	virtual ~CBTexture() {}
 
@@ -47,6 +53,12 @@ class CBTexture : public Texture
 		}
 
 		return ((check ? white : black) / normalizer);
+	}
+
+        Vec3 bumpNormal(const Vec2& uv, const Vec3& p, const Vec3& n,
+				const Vec3& dpdu, const Vec3& dpdv) const
+	{
+		return n;
 	}
 };
 

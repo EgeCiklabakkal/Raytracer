@@ -26,6 +26,7 @@ int getMeshType(tinyxml2::XMLElement* element, std::string& ply_path);
 int getMeshShadingMode(tinyxml2::XMLElement* element);
 int getIntAttributeWithDefault(tinyxml2::XMLElement* element, std::string name, int _default);
 bool getBoolAttributeWithDefault(tinyxml2::XMLElement* element, std::string name, bool _default);
+float getFloatAttributeWithDefault(tinyxml2::XMLElement* element, std::string name, float _default);
 
 // Read All transformations into appropriate vectors as Matrices
 int getTransformations(tinyxml2::XMLElement* element, std::stringstream& ss,

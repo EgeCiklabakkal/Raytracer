@@ -11,11 +11,15 @@ class Texture
 {
 	public:
 
+	bool bumpmap;
+	float bumpmapMultiplier;
 	DecalMode decal_mode;
 
 	virtual ~Texture() = 0;
 
 	virtual rgb value(const Vec2& uv , const Vec3& p) const=0;
+	virtual Vec3 bumpNormal(const Vec2& uv, const Vec3& p, const Vec3& n, 
+					const Vec3& dpdu, const Vec3& dpdv) const=0;
 	DecalMode decalmode() const { return decal_mode; }
 };
 

@@ -23,12 +23,16 @@ class ImageTexture : public Texture
 			InterpolationMode _interpolation_mode=InterpolationMode::NEAREST,
 			DecalMode _decal_mode=DecalMode::REPLACEKD,
 			TextureMode _texture_mode=TextureMode::CLAMP,
+			bool _bumpmap=false,
+			float _bumpmapMultiplier=1.0f,
 			bool flipVertical=true);
 
 	virtual ~ImageTexture();
 
 	rgb value(const Vec2& uv, const Vec3& p) const;
 	rgb fetch(int i, int j) const;
+        Vec3 bumpNormal(const Vec2& uv, const Vec3& p, const Vec3& n,
+				const Vec3& dpdu, const Vec3& dpdv) const;
 };
 
 #endif

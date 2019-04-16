@@ -47,6 +47,7 @@ class rgb
 	friend rgb operator*(const rgb& c1, const rgb& c2);
 	friend rgb operator/(const rgb& c1, const rgb& c2);
 	friend rgb operator+(const rgb& c1, const rgb& c2);
+	friend rgb operator-(const rgb& c1, const rgb& c2);
 
 	// I/O Operator
 	friend std::ostream& operator<<(std::ostream& out, const rgb& c);
@@ -145,6 +146,11 @@ inline rgb operator/(const rgb& c1, const rgb& c2)
 inline rgb operator+(const rgb& c1, const rgb& c2)
 {
 	return rgb(c1._r+c2._r, c1._g+c2._g, c1._b+c2._b);
+}
+
+inline rgb operator-(const rgb& c1, const rgb& c2)
+{
+	return rgb(c1._r-c2._r, c1._g-c2._g, c1._b-c2._b);
 }
 
 // I/O Operator

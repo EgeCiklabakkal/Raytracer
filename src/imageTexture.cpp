@@ -4,11 +4,15 @@ ImageTexture::ImageTexture(Image* _image, float normalizer,
 				InterpolationMode _interpolation_mode,
 				DecalMode _decal_mode,
 				TextureMode _texture_mode,
+				bool _bumpmap,
+				float _bumpmapMultiplier,
 				bool _flipVertical) :
 image(_image), normalizer(normalizer), interpolation_mode(_interpolation_mode), 
 texture_mode(_texture_mode), flipVertical(_flipVertical)
 {
 	decal_mode = _decal_mode;
+	bumpmap    = _bumpmap;
+	bumpmapMultiplier = _bumpmapMultiplier;
 }
 
 ImageTexture::~ImageTexture() {}
@@ -58,4 +62,34 @@ rgb ImageTexture::fetch(int i, int j) const
 	}
 
 	return color;
+}
+
+Vec3 ImageTexture::bumpNormal(const Vec2& uv, const Vec3& p, const Vec3& n,
+				const Vec3& dpdu, const Vec3& dpdv) const
+{
+	rgb xy, x1y, xy1;
+	float grayXY, grayX1Y, grayXY1;
+
+	int i = floor(uv[0] * image->nx);
+	int j = floor(uv[1] * image->ny);
+
+	xy  = fetch(i, j);
+	x1y = fetch(i+1, j);
+	xy1 = fetch(i, j+1);
+
+	grayXY  = ( xy.r() +  xy.g() +  xy.b()) / 3.0f;
+	grayX1Y = (x1y.r() + x1y.g() + x1y.b()) / 3.0f;
+	grayXY1 = (xy1.r() + xy1.g() + xy1.b()) / 3.0f;
+
+	float dddu = grayX1Y - grayXY;
+	float dddv = grayXY1 - grayXY;
+
+	Vec3 dqdu = (dpdu + dddu * n) * bumpmapMultiplier;
+	Vec3 dqdv = (dpdv + dddv * n) * bumpmapMultiplier;
+
+	Vec3 nprime = unitVector(cross(dqdv, dqdu));
+
+	nprime = (dot(nprime, n) > 0) ? nprime : -nprime;
+
+	return nprime;
 }

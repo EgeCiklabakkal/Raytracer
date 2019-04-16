@@ -19,19 +19,27 @@ class PerlinTexture : public Texture
 
 	PerlinTexture(float _scale=1.0f, float _normalizer=1.0f,
 			DecalMode _decal_mode=DecalMode::REPLACEKD,
-			PerlinPattern _perlin_pattern=PerlinPattern::PATCHY)
+			PerlinPattern _perlin_pattern=PerlinPattern::PATCHY,
+			bool _bumpmap=false, float _bumpmapMultiplier=1.0f)
 	: scale(_scale), normalizer(_normalizer), perlin_pattern(_perlin_pattern)
 	{
 		c0 = rgb(1.0f);
 		c1 = rgb(0.0f);
 		decal_mode = _decal_mode;
+		bumpmap = _bumpmap;
+		bumpmapMultiplier = _bumpmapMultiplier;
 	}
 
 	PerlinTexture(const rgb& _c0, const rgb& _c1, float _scale, float _normalizer=1.0f,
 			DecalMode _decal_mode=DecalMode::REPLACEKD,
-			PerlinPattern _perlin_pattern=PerlinPattern::PATCHY) :
+			PerlinPattern _perlin_pattern=PerlinPattern::PATCHY,
+			bool _bumpmap=false, float _bumpmapMultiplier=1.0f) :
 	c0(_c0), c1(_c1), scale(_scale), normalizer(_normalizer), perlin_pattern(_perlin_pattern)
-	{ decal_mode = _decal_mode; }
+	{
+		decal_mode = _decal_mode;
+		bumpmap = _bumpmap;
+		bumpmapMultiplier = _bumpmapMultiplier;
+	}
 
 	virtual ~PerlinTexture() {}
 
@@ -55,6 +63,12 @@ class PerlinTexture : public Texture
 		}
 
 		return (val*c0 + (1.0f - val)*c1) / normalizer;
+	}
+
+	Vec3 bumpNormal(const Vec2& uv, const Vec3& p, const Vec3& n,
+				const Vec3& dpdu, const Vec3& dpdv) const
+	{
+		return n;
 	}
 };
 

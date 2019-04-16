@@ -191,6 +191,17 @@ bool getBoolAttributeWithDefault(tinyxml2::XMLElement* element, std::string name
 	return _default;
 }
 
+float getFloatAttributeWithDefault(tinyxml2::XMLElement* element, std::string name, float _default)
+{
+	const char *sattr = element->Attribute(name.data());
+	if(sattr)
+	{
+		return atof(sattr);
+	}
+
+	return _default;
+}
+
 int getTransformations(tinyxml2::XMLElement* element, std::stringstream& ss, 
 			std::vector<glm::mat4>& translations, 
 			std::vector<glm::mat4>& scalings, 
@@ -286,6 +297,9 @@ int getTextures(tinyxml2::XMLElement* element, std::stringstream& ss, const std:
 	tinyxml2::XMLElement *element_texture = element->FirstChildElement("Texture");
 	while(element_texture)
 	{
+		bool bumpmap = getBoolAttributeWithDefault(element_texture, "bumpmap", false);
+		bool bumpmapMultiplier = getFloatAttributeWithDefault(element_texture, 
+									"bumpmapMultiplier", 1.0f);
 		child = element_texture->FirstChildElement("ImageName");
 		std::string textureName(child->GetText());
 		DecalMode decal_mode;
@@ -305,7 +319,9 @@ int getTextures(tinyxml2::XMLElement* element, std::stringstream& ss, const std:
 
 			PerlinTexture *perlinTexture = new PerlinTexture(scale, normalizer,
 										decal_mode,
-										perlin_pattern);
+										perlin_pattern,
+										bumpmap,
+										bumpmapMultiplier);
 			textures.push_back(perlinTexture);
 		}
 
@@ -325,7 +341,8 @@ int getTextures(tinyxml2::XMLElement* element, std::stringstream& ss, const std:
 			decal_mode = getDecalMode(element_texture);
 
 			CBTexture *cbTexture = new CBTexture(offset, scale, normalizer,
-								black, white, decal_mode);
+								black, white, decal_mode,
+								bumpmap, bumpmapMultiplier);
 
 			textures.push_back(cbTexture);
 		}
@@ -366,6 +383,8 @@ int getTextures(tinyxml2::XMLElement* element, std::stringstream& ss, const std:
 									interpolation_mode,
 									decal_mode,
 									texture_mode,
+									bumpmap,
+									bumpmapMultiplier,
 									flipVertical);
 			textures.push_back(imageTexture);
 		}
