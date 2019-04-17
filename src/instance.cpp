@@ -29,7 +29,14 @@ bool ObjectInstance::hit(const Ray& r, float tmin, float tmax, float time, HitRe
 		// Also update material and texture
 		record.material = material;
 		record.texture  = texture;
-		record.bump.N	= N;
+
+		// Bump inverse transform
+		Vec3 blurDistance = (motionBlurred) ? velocity * time : Vec3(0.0f);
+		glm::mat4 invCurrBlur = glm::translate(glm::mat4(1.0f),
+						glm::vec3(-blurDistance[0],
+								-blurDistance[1],
+								-blurDistance[2]));
+		record.bump.N = N * invCurrBlur;
 		return true;
 	}
 
