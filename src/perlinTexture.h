@@ -90,8 +90,6 @@ class PerlinTexture : public Texture
 		Vec3 gSurface(g - n * dot(n, g));
 
 		return unitVector(n - gSurface);
-
-		return n;
 	}
 };
 
