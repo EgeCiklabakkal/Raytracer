@@ -142,7 +142,7 @@ BumpRecord Sphere::bump(const HitRecord& record) const
 		Vec3 dpdu = Vec3(dxdu, dydu, dzdu);
 		Vec3 dpdv = Vec3(dxdv, dydv, dzdv);
 
-		return BumpRecord(p, record.normal, dpdu, dpdv, N);
+		return BumpRecord(dpdu, dpdv, M);
 	}
 
 	return BumpRecord();

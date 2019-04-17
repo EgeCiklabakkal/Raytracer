@@ -77,7 +77,7 @@ class MeshTriangle : public Shape
 	int ib() const { return p[1]; }
 	int ic() const { return p[2]; }
 
-	BumpRecord bump(const HitRecord& record) const;
+	BumpRecord bump() const;
 };
 
 #endif
