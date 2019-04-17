@@ -67,19 +67,14 @@ rgb ImageTexture::fetch(int i, int j) const
 Vec3 ImageTexture::bumpNormal(const Vec2& uv, const Vec3& p, const Vec3& n,
 				const Vec3& dpdu, const Vec3& dpdv) const
 {
-	rgb xy, x1y, xy1;
 	float grayXY, grayX1Y, grayXY1;
 
 	int i = floor(uv[0] * image->nx);
 	int j = floor(uv[1] * image->ny);
 
-	xy  = fetch(i, j);
-	x1y = fetch(i+1, j);
-	xy1 = fetch(i, j+1);
-
-	grayXY  = ( xy.r() +  xy.g() +  xy.b()) / 3.0f;
-	grayX1Y = (x1y.r() + x1y.g() + x1y.b()) / 3.0f;
-	grayXY1 = (xy1.r() + xy1.g() + xy1.b()) / 3.0f;
+	grayXY  = fetch(i, j).grayscale();
+	grayX1Y = fetch(i+1, j).grayscale();
+	grayXY1 = fetch(i, j+1).grayscale();
 
 	float dddu = (grayX1Y - grayXY) * bumpmapMultiplier;
 	float dddv = (grayXY1 - grayXY) * bumpmapMultiplier;

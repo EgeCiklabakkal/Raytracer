@@ -61,6 +61,7 @@ class rgb
 	//Methods
 	void initFromBytes(const Vec3& color_in_bytes);
 	Vec3 asVec3() const;
+	float grayscale() const;
 };
 
 // Constructors
@@ -197,6 +198,11 @@ inline void rgb::initFromBytes(const Vec3& color_in_bytes)
 inline Vec3 rgb::asVec3() const
 {
 	return Vec3(_r, _g, _b);
+}
+
+inline float rgb::grayscale() const
+{
+	return ((_r + _g + _b) / 3.0f);
 }
 
 #endif

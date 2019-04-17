@@ -68,6 +68,29 @@ class PerlinTexture : public Texture
 	Vec3 bumpNormal(const Vec2& uv, const Vec3& p, const Vec3& n,
 				const Vec3& dpdu, const Vec3& dpdv) const
 	{
+		float gray, graydx, graydy, graydz;
+		float dddx, dddy, dddz;
+		static float epsilon = 1e-3;
+
+		// Calculate gradient (partial derivatives of displacement function)
+		Vec3 vecdx(p.x() + epsilon, p.y(), p.z());
+		Vec3 vecdy(p.x(), p.y() + epsilon, p.z());
+		Vec3 vecdz(p.x(), p.y(), p.z() + epsilon);
+
+		gray   = value(uv, p).grayscale();
+		graydx = value(uv, vecdx).grayscale();
+		graydy = value(uv, vecdy).grayscale();
+		graydz = value(uv, vecdz).grayscale();
+
+		dddx = (graydx - gray) / epsilon;
+		dddy = (graydy - gray) / epsilon;
+		dddz = (graydz - gray) / epsilon;
+		Vec3 g(dddx, dddy, dddz);	// gradient
+
+		Vec3 gSurface(g - n * dot(n, g));
+
+		return unitVector(n - gSurface);
+
 		return n;
 	}
 };
