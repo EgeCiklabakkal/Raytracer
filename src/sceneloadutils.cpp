@@ -298,7 +298,7 @@ int getTextures(tinyxml2::XMLElement* element, std::stringstream& ss, const std:
 	while(element_texture)
 	{
 		bool bumpmap = getBoolAttributeWithDefault(element_texture, "bumpmap", false);
-		bool bumpmapMultiplier = getFloatAttributeWithDefault(element_texture, 
+		float bumpmapMultiplier = getFloatAttributeWithDefault(element_texture,
 									"bumpmapMultiplier", 1.0f);
 		child = element_texture->FirstChildElement("ImageName");
 		std::string textureName(child->GetText());

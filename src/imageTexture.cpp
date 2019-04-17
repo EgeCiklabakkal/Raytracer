@@ -84,8 +84,8 @@ Vec3 ImageTexture::bumpNormal(const Vec2& uv, const Vec3& p, const Vec3& n,
 	float dddu = grayX1Y - grayXY;
 	float dddv = grayXY1 - grayXY;
 
-	Vec3 dqdu = (dpdu + dddu * n) * bumpmapMultiplier;
-	Vec3 dqdv = (dpdv + dddv * n) * bumpmapMultiplier;
+	Vec3 dqdu = (dpdu * bumpmapMultiplier + dddu * n);
+	Vec3 dqdv = (dpdv * bumpmapMultiplier + dddv * n);
 
 	Vec3 nprime = unitVector(cross(dqdv, dqdu));
 
