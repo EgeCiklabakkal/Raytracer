@@ -10,12 +10,15 @@
 #include "rgb.h"
 #include "mesh.h"
 #include "BVH.h"
+#include "image.h"
 
 class Scene
 {
 	public:
 
 	rgb background_color;
+	Image background_texture;
+	bool hasBackgroundTexture;
 	float shadow_ray_epsilon;
 	float intersection_test_epsilon;
 	int max_recursion_depth;
@@ -42,7 +45,8 @@ class Scene
 	static void raytrace_singleSample(Scene* scene, const Camera* cam, Image* img,
 			SafeStack<std::pair<float, float>>* pixels);
 
-	rgb rayColor(const Ray& r, int recursion_depth) const;
+	rgb rayColor(const Ray& r, int recursion_depth, Vec2 ij=Vec2()) const;
+	rgb backgroundColor(const Vec2 ij) const;
 	rgb ambientColor(const HitRecord& record) const;
 	rgb diffuseColor(const Ray& r, const HitRecord& record, const SampleLight& slight) const;
 	rgb specularColor(const Ray& r, const HitRecord& record, const SampleLight& slight) const;

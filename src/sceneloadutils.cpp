@@ -1,6 +1,22 @@
 #include "sceneloadutils.h"
 
 // Helpers
+bool getBackgroundTexture(tinyxml2::XMLNode* node, std::string fname, Image& image)
+{
+	auto child = node->FirstChildElement("BackgroundTexture");
+	if(child)
+	{
+		std::string textureName(child->GetText());
+		std::size_t pos = fname.find_last_of("/");
+	        std::string fpath(fname.substr(0, pos+1));
+
+		image.imread(fpath + textureName);
+		return true;
+	}
+
+	return false;
+}
+
 bool getChildTextWithDefault(tinyxml2::XMLElement* element, std::stringstream& ss, 
 				std::string name, std::string _default)
 {

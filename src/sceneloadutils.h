@@ -4,6 +4,7 @@
 #include "utils.h"
 
 // Helper Declerations
+bool getBackgroundTexture(tinyxml2::XMLNode* node, std::string fname, Image& image);
 bool getChildTextWithDefault(tinyxml2::XMLElement* element, std::stringstream& ss,
                                 std::string name, std::string _default);
 bool getChildTextWithDefaultFromNode(tinyxml2::XMLNode* node, std::stringstream& ss,

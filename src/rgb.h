@@ -62,6 +62,7 @@ class rgb
 	void initFromBytes(const Vec3& color_in_bytes);
 	Vec3 asVec3() const;
 	float grayscale() const;
+	bool hasNegatives() const;
 };
 
 // Constructors
@@ -203,6 +204,11 @@ inline Vec3 rgb::asVec3() const
 inline float rgb::grayscale() const
 {
 	return ((_r + _g + _b) / 3.0f);
+}
+
+inline bool rgb::hasNegatives() const
+{
+	return (_r < 0.0f) || (_g < 0.0f) || (_b < 0.0f);
 }
 
 #endif

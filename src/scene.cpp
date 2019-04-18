@@ -7,18 +7,19 @@ void Scene::renderImages(int threadCount, bool showProgress)
 
 	for(const Camera& cam: cameras)
         {
+		int i, j;
 		auto const prior = std::chrono::system_clock::now();
 
                 width  = cam.image_width;
                 height = cam.image_height;
 
-                Image img(width, height);
+                Image img(width, height);	
 
                 // Determine the pixels;
                 SafeStack<std::pair<float, float>> pixels(width * height);
-                for(int i = 0; i < width; i++)
+                for(i = 0; i < width; i++)
                 {
-                        for(int j = 0; j < height; j++)
+                        for(j = 0; j < height; j++)
                         {
                                 pixels.sstack.push_back(std::make_pair((float)i, (float)j));
                         }
@@ -27,7 +28,7 @@ void Scene::renderImages(int threadCount, bool showProgress)
 		// Create threads
 		std::vector<std::thread> threads;
 
-		for(int i = 0; i < threadCount; i++)
+		for(i = 0; i < threadCount; i++)
 		{
 			if(cam.num_samples == 1)	// Single Sample
 			{
@@ -49,7 +50,7 @@ void Scene::renderImages(int threadCount, bool showProgress)
 		}
 
 		// Wait for them to complete
-		for(int i = 0; i < threadCount; i++)
+		for(i = 0; i < threadCount; i++)
 		{
 			threads[i].join();
 		}
@@ -86,7 +87,7 @@ void Scene::raytrace_routine(Scene* scene, const Camera* cam, Image* img,
 		float weightsum = 0.0f;
 		for(const Ray& r : sampledRays)
 		{
-			rgb raycolor = scene->rayColor(r, scene->max_recursion_depth);
+			rgb raycolor = scene->rayColor(r, scene->max_recursion_depth, Vec2(i, j));
 
 			weightsum += r.weight;
 			pixel_color += raycolor * r.weight;
@@ -109,13 +110,13 @@ void Scene::raytrace_singleSample(Scene* scene, const Camera* cam, Image* img,
 		j = currPixel.second;
 
 		Ray r = cam->getRay(i, j);
-		rgb raycolor = scene->rayColor(r, scene->max_recursion_depth);
+		rgb raycolor = scene->rayColor(r, scene->max_recursion_depth, Vec2(i, j));
 		raycolor.clamp256();
 		img->set(i, j, raycolor);
 	}
 }
 
-rgb Scene::rayColor(const Ray& r, int recursion_depth) const
+rgb Scene::rayColor(const Ray& r, int recursion_depth, Vec2 ij) const
 {
 	rgb rcolor(0.0f, 0.0f, 0.0f);
 	float tmax = 100000.0f;		// Note: tmax, tmin, time can be made an argument
@@ -167,7 +168,28 @@ rgb Scene::rayColor(const Ray& r, int recursion_depth) const
 		return rcolor;
 	}
 
-	return background_color;
+	else if(r.primary)
+	{
+		return backgroundColor(ij);
+	}
+
+	return rgb();
+}
+
+rgb Scene::backgroundColor(const Vec2 ij) const
+{
+	if(!hasBackgroundTexture)
+	{
+		return background_color;
+	}
+
+	int i = int(ij[0]) % background_texture.nx;
+	int j = int(ij[1]) % background_texture.ny;
+
+	rgb color;
+	background_texture.get(i, j, color);
+
+	return color;	
 }
 
 rgb Scene::ambientColor(const HitRecord& record) const

@@ -26,6 +26,9 @@ void Scene::loadFromXML(const std::string& fname)
 	readVec3FromSS(background_color_vec3, ss);
 	background_color = rgb(background_color_vec3);
 
+	// BackgroundTexture
+	hasBackgroundTexture = getBackgroundTexture(scene_element, fname, background_texture);
+
 	// ShadowRayEpsilon
 	getChildTextWithDefaultFromNode(scene_element, ss, "ShadowRayEpsilon", "0.001");
 	ss >> shadow_ray_epsilon;
