@@ -55,7 +55,7 @@ void Scene::renderImages(int threadCount, bool showProgress)
 			threads[i].join();
 		}
 
-                img.writePNG(cam.image_name);
+                img.imwrite(cam.image_name);
 
 		// Time Duration Print
 		auto const latter = std::chrono::system_clock::now();
@@ -93,7 +93,6 @@ void Scene::raytrace_routine(Scene* scene, const Camera* cam, Image* img,
 			pixel_color += raycolor * r.weight;
 		}
 		pixel_color /= weightsum;
-		pixel_color.clamp256();
 
 		img->set(i, j, pixel_color);
 	}
@@ -111,7 +110,6 @@ void Scene::raytrace_singleSample(Scene* scene, const Camera* cam, Image* img,
 
 		Ray r = cam->getRay(i, j, true);
 		rgb raycolor = scene->rayColor(r, scene->max_recursion_depth, Vec2(i, j));
-		raycolor.clamp256();
 		img->set(i, j, raycolor);
 	}
 }

@@ -25,7 +25,11 @@ class Image
 	bool set(int x, int y, const rgb& color);
 	void gammaCorrect(float gamma);
 	int imread(std::string fname, int channels=4);
-	void writePNG(std::string fname);
+	void imwrite(std::string fname) const;
+	int readCommon(std::string fname, int channels=4);
+	int readEXR(std::string fname, int channels=4);
+	void writePNG(std::string fname) const;
+	void writeEXR(std::string fname) const;
 };
 
 #endif
