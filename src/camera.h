@@ -50,11 +50,11 @@ class Camera
 		q  = position + near_distance*gaze + near_plane[0]*across + near_plane[2]*up;
 	}
 
-	Ray getRay(float x, float y) const
+	Ray getRay(float x, float y, bool primary=true) const
 	{
 		Vec3 s = q + (pw*x + pw/2)*across + (ph*y + ph/2)*up;
 
-		return Ray(position, unitVector(s - position));
+		return Ray(position, unitVector(s - position), 1.0f, primary);
 	}
 
 	bool isDOF() const { return (int)aperture_size; }

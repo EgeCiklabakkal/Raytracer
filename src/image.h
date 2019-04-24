@@ -13,7 +13,7 @@ class Image
 	public:
 
 	// Member variables
-	std::vector<unsigned char> raster;	// Image is stored as 1D array
+	std::vector<rgb> raster;	// Image is stored as 1D array
 	int nx;
 	int ny;
 
@@ -25,7 +25,6 @@ class Image
 	bool set(int x, int y, const rgb& color);
 	void gammaCorrect(float gamma);
 	int imread(std::string fname, int channels=4);
-	void readPNG(std::string fname);
 	void writePNG(std::string fname);
 };
 

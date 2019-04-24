@@ -109,7 +109,7 @@ void Scene::raytrace_singleSample(Scene* scene, const Camera* cam, Image* img,
 		i = currPixel.first;
 		j = currPixel.second;
 
-		Ray r = cam->getRay(i, j);
+		Ray r = cam->getRay(i, j, true);
 		rgb raycolor = scene->rayColor(r, scene->max_recursion_depth, Vec2(i, j));
 		raycolor.clamp256();
 		img->set(i, j, raycolor);
