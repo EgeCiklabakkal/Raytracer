@@ -218,6 +218,53 @@ float getFloatAttributeWithDefault(tinyxml2::XMLElement* element, std::string na
 	return _default;
 }
 
+int getLights(tinyxml2::XMLNode* node, tinyxml2::XMLElement* element,
+		std::stringstream& ss, std::vector<Light*>& lights)
+{
+	int lightcount = 0;
+
+	// PointLights
+	element = node->FirstChildElement("Lights");
+	element = element->FirstChildElement("PointLight");
+	while(element)
+	{
+		lightcount++;
+		PointLight *point_light = new PointLight();
+		parsePointLight(point_light, element, ss);
+
+		lights.push_back(point_light);
+		element = element->NextSiblingElement("PointLight");
+	}
+
+	// AreaLights
+	element = node->FirstChildElement("Lights");
+	element = element->FirstChildElement("AreaLight");
+	while(element)
+	{
+		lightcount++;
+		AreaLight *area_light = new AreaLight();
+		parseAreaLight(area_light, element, ss);
+
+		lights.push_back(area_light);
+		element = element->NextSiblingElement("AreaLight");
+        }
+
+	// DirectionalLight
+	element = node->FirstChildElement("Lights");
+	element = element->FirstChildElement("DirectionalLight");
+	while(element)
+	{
+		lightcount++;
+		DirectionalLight *directional_light = new DirectionalLight();
+		parseDirectionalLight(directional_light, element, ss);
+
+		lights.push_back(directional_light);
+		element = element->NextSiblingElement("DirectionalLight");
+	}
+
+	return lightcount;
+}
+
 int getTransformations(tinyxml2::XMLElement* element, std::stringstream& ss, 
 			std::vector<glm::mat4>& translations, 
 			std::vector<glm::mat4>& scalings, 
@@ -946,6 +993,22 @@ void parseAreaLight(AreaLight* area_light, tinyxml2::XMLElement* element, std::s
 
 	// Make sure its normal is unit
 	area_light->normal.makeUnitVector();	
+}
+
+void parseDirectionalLight(DirectionalLight* directional_light,
+				tinyxml2::XMLElement* element, std::stringstream& ss)
+{
+	tinyxml2::XMLElement *child;
+
+	child = element->FirstChildElement("Direction");
+	ss << child->GetText() << std::endl;
+	child = element->FirstChildElement("Radiance");
+	ss << child->GetText() << std::endl;
+
+	ss >> directional_light->direction[0] >> directional_light->direction[1]
+		>> directional_light->direction[2];
+	ss >> directional_light->radiance[0] >> directional_light->radiance[1]
+		>> directional_light->radiance[2];
 }
 
 void parseMaterial(Material& material, tinyxml2::XMLElement* element, std::stringstream& ss)

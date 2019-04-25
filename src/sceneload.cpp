@@ -67,29 +67,7 @@ void Scene::loadFromXML(const std::string& fname)
 	// Lights
 	element = scene_element->FirstChildElement("Lights");
 	parseAmbientLight(ambient_light, element, ss);
-
-	// PointLights
-	element = element->FirstChildElement("PointLight");
-	while(element)
-	{
-		PointLight *point_light = new PointLight();
-		parsePointLight(point_light, element, ss);
-
-		lights.push_back(point_light);
-		element = element->NextSiblingElement("PointLight");
-	}
-
-	// AreaLights
-	element = scene_element->FirstChildElement("Lights");
-	element = element->FirstChildElement("AreaLight");
-	while(element)
-	{
-		AreaLight *area_light = new AreaLight();
-		parseAreaLight(area_light, element, ss);
-
-		lights.push_back(area_light);
-		element = element->NextSiblingElement("AreaLight");
-	}
+	getLights(scene_element, element, ss, lights);	
 
 	// Transformations
 	std::vector<glm::mat4> translations;

@@ -6,6 +6,7 @@
 #include "ONB.h"
 #include "rtmath.h"
 #include <vector>
+#include <limits>
 
 class Scene;
 class Ray;
@@ -15,19 +16,17 @@ class SampleLight
 {
 	public:
 
-	Vec3 position;
 	Vec3 intensity;
-	Vec3 relativeTo;
+	Vec3 wi;	// direction of incoming light to the intersection point
 
 	SampleLight() {}
-	SampleLight(Vec3 _position, Vec3 _intensity, Vec3 _relativeTo=Vec3()) :
-	position(_position), intensity(_intensity), relativeTo(_relativeTo) {}
+	SampleLight(const Vec3& _intensity, const Vec3& _wi) :
+	intensity(_intensity), wi(_wi) {}
 
 	SampleLight& operator=(const SampleLight& rhs)
 	{
-		position   = rhs.position;
 		intensity  = rhs.intensity;
-		relativeTo = rhs.relativeTo;
+		wi 	   = rhs.wi;
 
 		return *this;
 	}
@@ -70,6 +69,21 @@ class AreaLight : public Light
 	
 	AreaLight() {}
 	virtual ~AreaLight() {}
+
+	virtual bool sampleLight(const Scene* scene, const Ray& r,
+					const HitRecord& record, SampleLight& sampledLight) const;
+};
+
+class DirectionalLight : public Light
+{
+	public:
+
+	Vec3 direction;
+	Vec3 radiance;
+
+	DirectionalLight() {}
+	DirectionalLight(const Vec3& direction, const Vec3& radiance);
+	virtual ~DirectionalLight() {}
 
 	virtual bool sampleLight(const Scene* scene, const Ray& r,
 					const HitRecord& record, SampleLight& sampledLight) const;

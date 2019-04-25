@@ -29,6 +29,10 @@ int getIntAttributeWithDefault(tinyxml2::XMLElement* element, std::string name, 
 bool getBoolAttributeWithDefault(tinyxml2::XMLElement* element, std::string name, bool _default);
 float getFloatAttributeWithDefault(tinyxml2::XMLElement* element, std::string name, float _default);
 
+// Read lights
+int getLights(tinyxml2::XMLNode* node, tinyxml2::XMLElement* element,
+		std::stringstream& ss, std::vector<Light*>& lights);
+
 // Read All transformations into appropriate vectors as Matrices
 int getTransformations(tinyxml2::XMLElement* element, std::stringstream& ss,
                         std::vector<glm::mat4>& translations,
@@ -83,6 +87,8 @@ bool setAlignmentOfSphere(Sphere* sphere_ptr);
 void parseAmbientLight(Vec3& amblight, tinyxml2::XMLElement* element, std::stringstream& ss);
 void parsePointLight(PointLight* point_light, tinyxml2::XMLElement* element, std::stringstream& ss);
 void parseAreaLight(AreaLight* area_light, tinyxml2::XMLElement* element, std::stringstream& ss);
+void parseDirectionalLight(DirectionalLight* directional_light,
+				tinyxml2::XMLElement* element, std::stringstream& ss);
 void parseMaterial(Material& material, tinyxml2::XMLElement* element, std::stringstream& ss);
 
 // SS reads

@@ -25,6 +25,6 @@ bool AreaLight::sampleLight(const Scene* scene, const Ray& r,
 	declination = (declination >= 0.0f) ? declination : -declination;
 	Vec3 _I(radiance * declination * size * size);
 
-	sampledLight = SampleLight(ls, _I, from);
+	sampledLight = SampleLight(_I, ls - from);
 	return true;
 }

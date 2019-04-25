@@ -201,8 +201,7 @@ rgb Scene::diffuseColor(const Ray& r, const HitRecord& record, const SampleLight
 	rgb I(slight.intensity);
 	rgb kd(record.material.diffuse);
 
-	Vec3 x = r.pointAtParameter(record.t);
-	Vec3 wi(slight.position - x);
+	Vec3 wi(slight.wi);
 	float r2 = wi.squaredLength();
 	wi.makeUnitVector();
 
@@ -218,7 +217,7 @@ rgb Scene::specularColor(const Ray& r, const HitRecord& record, const SampleLigh
 	float phong_exp = record.material.phong_exponent;
 
 	Vec3 x = r.pointAtParameter(record.t);
-	Vec3 wi(slight.position - x);
+	Vec3 wi(slight.wi);
 	Vec3 wo(r.origin() - x);
 	float r2 = wi.squaredLength();
 	wi.makeUnitVector();

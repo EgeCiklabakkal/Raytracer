@@ -11,6 +11,6 @@ bool PointLight::sampleLight(const Scene* scene, const Ray& r,
 		return false;
 	}
 
-	sampledLight = SampleLight(position, intensity, record.p);
+	sampledLight = SampleLight(intensity, position - record.p);
 	return true;
 }
