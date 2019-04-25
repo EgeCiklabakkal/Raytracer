@@ -8,9 +8,14 @@
 #include "vector2.h"
 #include "vertex.h"
 #include "rgb.h"
+#include "camera.h"
+#include "light.h"
+#include "safeStack.h"
 #include "mesh.h"
 #include "BVH.h"
 #include "image.h"
+
+class Light;
 
 class Scene
 {
@@ -24,7 +29,7 @@ class Scene
 	int max_recursion_depth;
 	bool cullFace;
 	std::vector<Camera> cameras;
-	AmbientLight ambient_light;
+	Vec3 ambient_light;
 	std::vector<Light*> lights;
 	std::vector<Material> materials;
 	std::vector<Image*> textureImages;

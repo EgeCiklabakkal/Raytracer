@@ -899,13 +899,13 @@ bool setMotionBlurOfShape(Shape* shape_ptr, tinyxml2::XMLElement* element, std::
 	return false;
 }
 
-void parseAmbientLight(AmbientLight& light, tinyxml2::XMLElement* element, std::stringstream& ss)
+void parseAmbientLight(Vec3& amblight, tinyxml2::XMLElement* element, std::stringstream& ss)
 {
 	tinyxml2::XMLElement *child;
 
         child = element->FirstChildElement("AmbientLight");
         ss << child->GetText() << std::endl;
-        ss >> light.intensity[0] >> light.intensity[1] >> light.intensity[2];
+        ss >> amblight[0] >> amblight[1] >> amblight[2];
 }
 
 void parsePointLight(PointLight* point_light, tinyxml2::XMLElement* element, std::stringstream& ss)
@@ -941,8 +941,8 @@ void parseAreaLight(AreaLight* area_light, tinyxml2::XMLElement* element, std::s
 	ss >> area_light->normal[0] >> area_light->normal[1]
 		>> area_light->normal[2];
 	ss >> area_light->size;
-	ss >> area_light->intensity[0] >> area_light->intensity[1]
-		>> area_light->intensity[2];
+	ss >> area_light->radiance[0] >> area_light->radiance[1]
+		>> area_light->radiance[2];
 
 	// Make sure its normal is unit
 	area_light->normal.makeUnitVector();	

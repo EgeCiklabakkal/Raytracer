@@ -142,13 +142,11 @@ rgb Scene::rayColor(const Ray& r, int recursion_depth, Vec2 ij) const
 			// Loop over lights
 			for(const Light* light_ptr : this->lights)
 			{
-				SampleLight sampledLight = light_ptr->sampleLight(r, record);
-				Ray shadow_ray(r.shadowRay(record, sampledLight, 
-						shadow_ray_epsilon));
-				float tlight = shadow_ray.parameterAtPoint
-							(sampledLight.position);
+				SampleLight sampledLight;
+				bool notShadow = light_ptr->sampleLight(this, r,
+									record, sampledLight);
 
-				if(!bvh->shadowHit(shadow_ray, 0.0f, tlight, time))
+				if(notShadow)
 				{
 					rcolor += diffuseColor(r, record, sampledLight) +
 						specularColor(r, record, sampledLight);
@@ -192,7 +190,7 @@ rgb Scene::backgroundColor(const Vec2 ij) const
 
 rgb Scene::ambientColor(const HitRecord& record) const
 {
-	rgb Ia(ambient_light.intensity);
+	rgb Ia(ambient_light);
 	rgb ka(record.material.ambient);
 
 	return ka * Ia;

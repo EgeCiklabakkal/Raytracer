@@ -2,10 +2,12 @@
 #define _LIGHT_H_
 
 #include "shape.h"
+#include "scene.h"
 #include "ONB.h"
 #include "rtmath.h"
 #include <vector>
 
+class Scene;
 class Ray;
 class HitRecord;
 
@@ -20,6 +22,15 @@ class SampleLight
 	SampleLight() {}
 	SampleLight(Vec3 _position, Vec3 _intensity, Vec3 _relativeTo=Vec3()) :
 	position(_position), intensity(_intensity), relativeTo(_relativeTo) {}
+
+	SampleLight& operator=(const SampleLight& rhs)
+	{
+		position   = rhs.position;
+		intensity  = rhs.intensity;
+		relativeTo = rhs.relativeTo;
+
+		return *this;
+	}
 };
 
 class Light
@@ -28,7 +39,8 @@ class Light
 
 	virtual ~Light() {};
 
-	virtual SampleLight sampleLight(const Ray& r, const HitRecord& record) const=0;
+	virtual bool sampleLight(const Scene* scene, const Ray& r,
+					const HitRecord& record, SampleLight& sampledLight) const=0;
 };
 
 class PointLight : public Light
@@ -43,20 +55,8 @@ class PointLight : public Light
 	virtual ~PointLight() {}
 	PointLight(const PointLight& pl) { *this = pl; }
 
-	virtual SampleLight sampleLight(const Ray& r, const HitRecord& record) const
-	{ 
-		return SampleLight(position, intensity);
-	}
-};
-
-class AmbientLight : public Light
-{
-	public:
-
-	Vec3 intensity;
-
-	virtual SampleLight sampleLight(const Ray& r, const HitRecord& record) const
-	{ return SampleLight(); } // No use
+	virtual bool sampleLight(const Scene* scene, const Ray& r,
+					const HitRecord& record, SampleLight& sampledLight) const;
 };
 
 class AreaLight : public Light
@@ -64,14 +64,15 @@ class AreaLight : public Light
 	public:
 
 	Vec3 position;
-	Vec3 intensity;	// Radiance
+	Vec3 radiance;
 	float size;
 	Vec3 normal;
 	
 	AreaLight() {}
 	virtual ~AreaLight() {}
 
-	virtual SampleLight sampleLight(const Ray& r, const HitRecord& record) const;
+	virtual bool sampleLight(const Scene* scene, const Ray& r,
+					const HitRecord& record, SampleLight& sampledLight) const;
 };
 
 #endif

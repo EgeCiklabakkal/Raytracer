@@ -4,7 +4,6 @@
 #include <utility>
 #include "vector3.h"
 #include "shape.h"
-#include "light.h"
 #include "rtmath.h"
 #include "ONB.h"
 
@@ -42,7 +41,7 @@ class Ray
 	{ return data[0] + t*data[1]; }
 
 	Ray reflectionRay(const HitRecord& record, float epsilon) const;
-	Ray shadowRay(const HitRecord& record, const SampleLight& slight, float epsilon) const;
+	Ray shadowRay(const HitRecord& record, const Vec3& to, float epsilon) const;
 	Ray transmissionRay(const HitRecord& record, const Vec3& d, float epsilon) const;
 	float parameterAtPoint(const Vec3& point) const;
 	bool refract(const HitRecord& record, std::pair<float, float> refractionIndexes,

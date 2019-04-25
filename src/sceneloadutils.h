@@ -80,7 +80,7 @@ bool makeUnitSphere(Sphere* sphere_ptr);
 bool setAlignmentOfSphere(Sphere* sphere_ptr);
 
 // Parse methods
-void parseAmbientLight(AmbientLight& light, tinyxml2::XMLElement* element, std::stringstream& ss);
+void parseAmbientLight(Vec3& amblight, tinyxml2::XMLElement* element, std::stringstream& ss);
 void parsePointLight(PointLight* point_light, tinyxml2::XMLElement* element, std::stringstream& ss);
 void parseAreaLight(AreaLight* area_light, tinyxml2::XMLElement* element, std::stringstream& ss);
 void parseMaterial(Material& material, tinyxml2::XMLElement* element, std::stringstream& ss);
