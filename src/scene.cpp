@@ -55,7 +55,7 @@ void Scene::renderImages(int threadCount, bool showProgress)
 			threads[i].join();
 		}
 
-                img.imwrite(cam.image_name);
+                img.imwrite(cam.image_name, cam.tonemap);
 
 		// Time Duration Print
 		auto const latter = std::chrono::system_clock::now();
@@ -87,7 +87,8 @@ void Scene::raytrace_routine(Scene* scene, const Camera* cam, Image* img,
 		float weightsum = 0.0f;
 		for(const Ray& r : sampledRays)
 		{
-			rgb raycolor = scene->rayColor(r, scene->max_recursion_depth, Vec2(i, j));
+			rgb raycolor = scene->rayColor(r, scene->max_recursion_depth,
+							cam->tonemap, Vec2(i, j));
 
 			weightsum += r.weight;
 			pixel_color += raycolor * r.weight;
@@ -109,12 +110,13 @@ void Scene::raytrace_singleSample(Scene* scene, const Camera* cam, Image* img,
 		j = currPixel.second;
 
 		Ray r = cam->getRay(i, j, true);
-		rgb raycolor = scene->rayColor(r, scene->max_recursion_depth, Vec2(i, j));
+		rgb raycolor = scene->rayColor(r, scene->max_recursion_depth,
+						cam->tonemap, Vec2(i, j));
 		img->set(i, j, raycolor);
 	}
 }
 
-rgb Scene::rayColor(const Ray& r, int recursion_depth, Vec2 ij) const
+rgb Scene::rayColor(const Ray& r, int recursion_depth, const Tonemap& tonemap, const Vec2& ij) const
 {
 	rgb rcolor(0.0f, 0.0f, 0.0f);
 	float tmax = 100000.0f;		// Note: tmax, tmin, time can be made an argument
@@ -130,6 +132,7 @@ rgb Scene::rayColor(const Ray& r, int recursion_depth, Vec2 ij) const
 		{
 			// Handle texture
 			textured = handleTexture(record, decal_mode, rcolor);
+			handleTonemap(tonemap, record, rcolor);
 			if(textured && decal_mode == DecalMode::REPLACEALL)
 			{
 				// no shading
@@ -154,11 +157,11 @@ rgb Scene::rayColor(const Ray& r, int recursion_depth, Vec2 ij) const
 			}
 
 			// Add color from reflections
-			rcolor += reflectionColor(r, record, recursion_depth);
+			rcolor += reflectionColor(r, record, recursion_depth, tonemap);
 		}
 
 		// Add color from refractions
-		rcolor += refractionColor(r, record, recursion_depth);
+		rcolor += refractionColor(r, record, recursion_depth, tonemap);
 
 		// color is in bytes
 		return rcolor;
@@ -231,7 +234,8 @@ rgb Scene::specularColor(const Ray& r, const HitRecord& record, const SampleLigh
 	return (ks * (pow(costheta, phong_exp)) * I) / r2;
 }
 
-rgb Scene::reflectionColor(const Ray& r, const HitRecord& record, int recursion_depth) const
+rgb Scene::reflectionColor(const Ray& r, const HitRecord& record,
+				int recursion_depth, const Tonemap& tonemap) const
 {
 	rgb km(record.material.mirror);
 
@@ -246,10 +250,11 @@ rgb Scene::reflectionColor(const Ray& r, const HitRecord& record, int recursion_
 	}
 
 	return km * rayColor(r.reflectionRay(record, shadow_ray_epsilon), 	
-				recursion_depth - 1);
+				recursion_depth - 1, tonemap);
 }
 
-rgb Scene::refractionColor(const Ray& r, const HitRecord& record, int recursion_depth) const
+rgb Scene::refractionColor(const Ray& r, const HitRecord& record,
+				int recursion_depth, const Tonemap& tonemap) const
 {
 	Vec3 transparency = record.material.transparency;
 
@@ -289,7 +294,9 @@ rgb Scene::refractionColor(const Ray& r, const HitRecord& record, int recursion_
 
 			else
 			{
-				return rgb(k) * rayColor(reflectionRay, recursion_depth - 1);
+				return rgb(k) * rayColor(reflectionRay,
+							 recursion_depth - 1,
+							 tonemap);
 			}
 		}
 		
@@ -299,8 +306,10 @@ rgb Scene::refractionColor(const Ray& r, const HitRecord& record, int recursion_
 		Ray transmissionRay(r.transmissionRay(nrecord, transmissionDirection, 
 					intersection_test_epsilon));
 
-		return rgb(k) * (R * rayColor(reflectionRay, recursion_depth - 1)
-					+ (1 - R) * rayColor(transmissionRay, recursion_depth - 1));
+		return rgb(k) * (R * rayColor(reflectionRay, recursion_depth - 1, tonemap)
+					+ (1 - R) * rayColor(	transmissionRay,
+								recursion_depth - 1,
+								tonemap));
 	}
 
 	return rgb();
@@ -340,6 +349,29 @@ bool Scene::handleTexture(HitRecord& record, DecalMode& decal_mode, rgb& color) 
 		record.normal = texture->bumpNormal(record.uv, record.p, record.normal, dpdu, dpdv);
 	}
 
+	return true;
+}
+
+bool Scene::handleTonemap(const Tonemap& tonemap, HitRecord& record, rgb& color) const
+{
+	if(tonemap.tonemap_mode == TonemapMode::NOTONEMAP)
+	{
+		return false;
+	}
+
+	if(record.material.degamma)
+	{
+		record.material.ambient = record.material.ambient.comppow(tonemap.gamma);
+		record.material.diffuse = record.material.diffuse.comppow(tonemap.gamma);
+		record.material.specular = record.material.specular.comppow(tonemap.gamma);
+		record.material.mirror = record.material.mirror.comppow(tonemap.gamma);
+	}
+
+	if(record.texture && record.texture->degamma)
+	{
+		color = rgb(color.asVec3().comppow(tonemap.gamma));
+	}
+	
 	return true;
 }
 

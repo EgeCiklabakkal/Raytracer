@@ -43,6 +43,7 @@ class Vec3
 	int indexOfMinAbsComponent() const;
 	int indexOfMaxComponent() const;
 	int indexOfMaxAbsComponent() const;
+	Vec3 comppow(float exp) const;
 
 	// Boolean Operators
 	friend bool operator==(const Vec3& v1, const Vec3& v2);
@@ -196,6 +197,15 @@ inline int Vec3::indexOfMaxAbsComponent() const
 	if(fabs(e[2]) > max) { index = 2; }
 
 	return index;
+}
+
+inline Vec3 Vec3::comppow(float exp) const
+{
+	float a = pow(e[0], exp);
+	float b = pow(e[1], exp);
+	float c = pow(e[2], exp);
+
+	return Vec3(a, b, c);
 }
 
 inline Vec3 operator*(float s, const Vec3& v)

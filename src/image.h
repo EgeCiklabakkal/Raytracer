@@ -1,12 +1,14 @@
 #ifndef _IMAGE_H_
 #define _IMAGE_H_
 
-#include <cmath>
+#include <math.h>
+#include <algorithm>
 #include <string>
 #include <fstream>
 #include <vector>
 #include "util/lodepng.h"
 #include "rgb.h"
+#include "tonemap.h"
 
 class Image
 {
@@ -25,11 +27,12 @@ class Image
 	bool set(int x, int y, const rgb& color);
 	void gammaCorrect(float gamma);
 	int imread(std::string fname, int channels=4);
-	void imwrite(std::string fname) const;
+	void imwrite(std::string fname, const Tonemap& tonemap=Tonemap()) const;
 	int readCommon(std::string fname, int channels=4);
 	int readEXR(std::string fname, int channels=4);
-	void writePNG(std::string fname) const;
+	void writePNG(std::string fname, const Tonemap& tonemap=Tonemap()) const;
 	void writeEXR(std::string fname) const;
+	bool handleTonemap(const Tonemap& tonemap, std::vector<unsigned char>& data) const;
 };
 
 #endif

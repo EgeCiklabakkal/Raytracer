@@ -1,5 +1,4 @@
 #include "image.h"
-#include <iostream>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "util/stb_image.h"
@@ -35,7 +34,7 @@ bool Image::set(int x, int y, const rgb& color)
 	return true;
 }
 
-void Image::imwrite(std::string fname) const
+void Image::imwrite(std::string fname, const Tonemap& tonemap) const
 {
 	size_t dot = fname.find_last_of(".");
 
@@ -50,7 +49,7 @@ void Image::imwrite(std::string fname) const
 
 		// force a png write
 		img_name = fname.substr(0, dot) + ".png";
-		writePNG(img_name);
+		writePNG(img_name, tonemap);
 	}
 }
 
@@ -116,27 +115,14 @@ void Image::writeEXR(std::string fname) const
 	free(header.requested_pixel_types);
 }
 
-void Image::writePNG(std::string fname) const
+void Image::writePNG(std::string fname, const Tonemap& tonemap) const
 {
 	std::vector<unsigned char> png;
 	std::vector<unsigned char> data(nx * ny * 4, 0);
-	rgb temp;
 	unsigned error;
 
-	for(int x = 0; x < nx; x++)
-	{
-		for(int y = 0; y < ny; y++)
-		{
-			temp = raster[(y*nx + x)];
-			temp.clamp256();
-
-			data[(y*nx + x)*4]     = temp._r;
-			data[(y*nx + x)*4 + 1] = temp._g;
-			data[(y*nx + x)*4 + 2] = temp._b;
-			data[(y*nx + x)*4 + 3] = 255;
-		}
-	}
-
+	handleTonemap(tonemap, data);	// tonemapping fills in display values
+	
 	error = lodepng::encode(png, data, nx, ny);
 	if(!error) lodepng::save_file(png, fname);
 
@@ -214,4 +200,85 @@ int Image::readCommon(std::string fname, int channels)
 
 	stbi_image_free(data);
 	return channels;
+}
+
+bool Image::handleTonemap(const Tonemap& tonemap, std::vector<unsigned char>& data) const
+{
+	rgb temp;
+
+	if(tonemap.tonemap_mode == TonemapMode::PHOTOGRAPHIC)
+	{
+		std::vector<float> Ls(nx * ny, 0.0f);	// L values in an array
+		std::vector<float> Lws(nx * ny, 0.0f);	// Lw values in an array
+		float avglogLw, acclogLw, N, Lwhite, burnoutKeepRatio, Ld, a, s, g;
+		acclogLw = 0.0f;	// accumulated log Lw
+		N = nx * ny;		// Number of pixels
+		a = tonemap.a;
+		s = tonemap.saturation;
+		g = 1.0f / tonemap.gamma;	// 1 / gamma
+
+		for(int i = 0; i < N; i++)	// calculate Lws into the array
+		{
+			temp = raster[i];
+			Lws[i]  = 0.2126f * temp._r + 0.7152f * temp._g + 0.0722 * temp._b;
+			acclogLw += log(1e-5 + Lws[i]);
+		}
+		avglogLw = exp((1.0f / N) * acclogLw);
+
+		for(int i = 0; i < N; i++)	// initial scaling, key value ∊ [0, 1]
+		{
+			Ls[i] = (a / avglogLw) * Lws[i];
+		}
+
+		// Blooming
+		std::vector<float> Lscopy(Ls);
+		std::sort(Lscopy.begin(), Lscopy.end());
+		burnoutKeepRatio = (100.0f - tonemap.burnout) / 100.0f;
+		Lwhite = Lscopy[int(N * burnoutKeepRatio)];
+		Lwhite = Lwhite * Lwhite;	// squared
+
+		// Calculate Lcs into Ls
+		for(int i = 0; i < N; i++)
+		{
+			Ld = (Ls[i] * (1.0f + (Ls[i] / Lwhite))) / (1.0f + Ls[i]);
+			Ls[i] = std::clamp(Ld, 0.0f, 1.0f);
+		}
+
+		// calculate display values in rgb
+		for(int i = 0; i < N; i++)
+		{
+			temp = raster[i];
+			float rprime = std::clamp(pow(temp._r / Lws[i], s) * Ls[i], 0.0f, 1.0f);
+			float gprime = std::clamp(pow(temp._g / Lws[i], s) * Ls[i], 0.0f, 1.0f);
+			float bprime = std::clamp(pow(temp._b / Lws[i], s) * Ls[i], 0.0f, 1.0f);
+
+			unsigned char rd = (int)floor(pow(rprime,  g) * 255.0f);
+			unsigned char gd = (int)floor(pow(gprime,  g) * 255.0f);
+			unsigned char bd = (int)floor(pow(bprime,  g) * 255.0f);
+
+			data[i*4]     = rd;
+			data[i*4 + 1] = gd;
+			data[i*4 + 2] = bd;
+			data[i*4 + 3] = 255;
+		}
+
+		return true;
+	}
+
+	// else: NOTONEMAP, just clamp
+	for(int x = 0; x < nx; x++)
+	{
+		for(int y = 0; y < ny; y++)
+		{
+			temp = raster[(y*nx + x)];
+			temp.clamp256();
+
+			data[(y*nx + x)*4]     = temp._r;
+			data[(y*nx + x)*4 + 1] = temp._g;
+			data[(y*nx + x)*4 + 2] = temp._b;
+			data[(y*nx + x)*4 + 3] = 255;
+		}
+	}
+
+	return false;
 }

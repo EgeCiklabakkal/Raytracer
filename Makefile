@@ -24,7 +24,7 @@ OBJECTS = $(patsubst $(SRC_PATH)/%.$(SRC_EXT), $(BUILD_PATH)/%.$(OBJ_EXT), $(SOU
 DEPENDS = $(OBJECTS:%.$(OBJ_EXT)=%.$(DEP_EXT))
 
 # flags #
-COMPILE_FLAGS = -std=c++11 -Wall -pthread -g -O3
+COMPILE_FLAGS = -std=c++17 -Wall -pthread -g -O3
 
 # arguments #
 ARGS = ""
