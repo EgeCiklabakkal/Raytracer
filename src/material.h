@@ -14,6 +14,7 @@ class Material
 	float phong_exponent;
 	float refraction_index;
 	float roughness;
+	bool degamma;
 };
 
 #endif

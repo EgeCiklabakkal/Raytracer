@@ -29,6 +29,9 @@ int getIntAttributeWithDefault(tinyxml2::XMLElement* element, std::string name, 
 bool getBoolAttributeWithDefault(tinyxml2::XMLElement* element, std::string name, bool _default);
 float getFloatAttributeWithDefault(tinyxml2::XMLElement* element, std::string name, float _default);
 
+// Read cameras
+int getCameras(tinyxml2::XMLElement* element, std::stringstream& ss, std::vector<Camera>& cameras);
+
 // Read lights
 int getLights(tinyxml2::XMLNode* node, tinyxml2::XMLElement* element,
 		std::stringstream& ss, std::vector<Light*>& lights);
@@ -66,6 +69,7 @@ bool setTransformOfShape(Shape* shape_ptr, tinyxml2::XMLElement* element, std::s
 
 bool setMotionBlurOfShape(Shape* shape_ptr, tinyxml2::XMLElement* element, std::stringstream& ss);
 
+bool getTonemap(tinyxml2::XMLElement* element, std::stringstream& ss, Tonemap& tonemap);
 void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,
                         std::vector<Camera>& cameras);
 void pushCameraSimple(tinyxml2::XMLElement* element, std::stringstream& ss,

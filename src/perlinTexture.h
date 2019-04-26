@@ -20,7 +20,7 @@ class PerlinTexture : public Texture
 	PerlinTexture(float _scale=1.0f, float _normalizer=1.0f,
 			DecalMode _decal_mode=DecalMode::REPLACEKD,
 			PerlinPattern _perlin_pattern=PerlinPattern::PATCHY,
-			bool _bumpmap=false, float _bumpmapMultiplier=1.0f)
+			bool _bumpmap=false, float _bumpmapMultiplier=1.0f, bool _degamma=false)
 	: scale(_scale), normalizer(_normalizer), perlin_pattern(_perlin_pattern)
 	{
 		c0 = rgb(1.0f);
@@ -28,17 +28,19 @@ class PerlinTexture : public Texture
 		decal_mode = _decal_mode;
 		bumpmap = _bumpmap;
 		bumpmapMultiplier = _bumpmapMultiplier;
+		degamma = _degamma;
 	}
 
 	PerlinTexture(const rgb& _c0, const rgb& _c1, float _scale, float _normalizer=1.0f,
 			DecalMode _decal_mode=DecalMode::REPLACEKD,
 			PerlinPattern _perlin_pattern=PerlinPattern::PATCHY,
-			bool _bumpmap=false, float _bumpmapMultiplier=1.0f) :
+			bool _bumpmap=false, float _bumpmapMultiplier=1.0f, bool _degamma=false) :
 	c0(_c0), c1(_c1), scale(_scale), normalizer(_normalizer), perlin_pattern(_perlin_pattern)
 	{
 		decal_mode = _decal_mode;
 		bumpmap = _bumpmap;
 		bumpmapMultiplier = _bumpmapMultiplier;
+		degamma = _degamma;
 	}
 
 	virtual ~PerlinTexture() {}

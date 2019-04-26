@@ -19,13 +19,14 @@ class CBTexture : public Texture
 			rgb _black=rgb(0.0f), rgb _white=rgb(1.0f),
 			DecalMode _decal_mode=DecalMode::REPLACEKD,
 			bool _bumpmap=false, float _bumpmapMultiplier=1.0f,
-			bool _dimension3=true) :
+			bool _degamma=false, bool _dimension3=true) :
 	offset(_offset), scale(_scale), normalizer(_normalizer),
 	black(_black), white(_white), dimension3(_dimension3)
 	{
 		decal_mode = _decal_mode;
 		bumpmap = _bumpmap;
 		bumpmapMultiplier = _bumpmapMultiplier;
+		degamma = _degamma;
 	}
 
 	virtual ~CBTexture() {}

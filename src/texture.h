@@ -14,6 +14,7 @@ class Texture
 	bool bumpmap;
 	float bumpmapMultiplier;
 	DecalMode decal_mode;
+	bool degamma;
 
 	virtual ~Texture() = 0;
 

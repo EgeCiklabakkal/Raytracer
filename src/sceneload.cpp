@@ -46,23 +46,7 @@ void Scene::loadFromXML(const std::string& fname)
 	
 	// Cameras
 	element = scene_element->FirstChildElement("Cameras");
-	element = element->FirstChildElement("Camera");
-	while(element)
-	{
-		int cam_type = getCameraType(element);
-
-		if(cam_type == CAM_SIMPLE)
-		{
-			pushCameraSimple(element, ss, cameras);
-		}
-
-		else if(cam_type == CAM_LOOKAT)
-		{
-			pushCameraLookAt(element, ss, cameras);
-		}
-
-		element = element->NextSiblingElement("Camera");
-	}
+	getCameras(element, ss, cameras);
 
 	// Lights
 	element = scene_element->FirstChildElement("Lights");

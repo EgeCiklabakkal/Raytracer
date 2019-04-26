@@ -6,13 +6,15 @@ ImageTexture::ImageTexture(Image* _image, float normalizer,
 				TextureMode _texture_mode,
 				bool _bumpmap,
 				float _bumpmapMultiplier,
-				bool _flipVertical) :
-image(_image), normalizer(normalizer), interpolation_mode(_interpolation_mode), 
+				bool _flipVertical,
+				bool _degamma) :
+image(_image), normalizer(normalizer), interpolation_mode(_interpolation_mode),
 texture_mode(_texture_mode), flipVertical(_flipVertical)
 {
 	decal_mode = _decal_mode;
 	bumpmap    = _bumpmap;
 	bumpmapMultiplier = _bumpmapMultiplier;
+	degamma = _degamma;
 }
 
 ImageTexture::~ImageTexture() {}

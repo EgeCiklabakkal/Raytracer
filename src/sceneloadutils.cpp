@@ -218,6 +218,32 @@ float getFloatAttributeWithDefault(tinyxml2::XMLElement* element, std::string na
 	return _default;
 }
 
+int getCameras(tinyxml2::XMLElement* element, std::stringstream& ss, std::vector<Camera>& cameras)
+{
+	int cameraCount = 0;	
+
+	element = element->FirstChildElement("Camera");
+	while(element)
+	{
+		cameraCount++;
+		int cam_type = getCameraType(element);
+
+		if(cam_type == CAM_SIMPLE)
+		{
+			pushCameraSimple(element, ss, cameras);
+		}
+
+		else if(cam_type == CAM_LOOKAT)
+		{
+			pushCameraLookAt(element, ss, cameras);
+		}
+
+		element = element->NextSiblingElement("Camera");
+	}
+
+	return cameraCount;
+}
+
 int getLights(tinyxml2::XMLNode* node, tinyxml2::XMLElement* element,
 		std::stringstream& ss, std::vector<Light*>& lights)
 {
@@ -376,6 +402,7 @@ int getTextures(tinyxml2::XMLElement* element, std::stringstream& ss, const std:
 		bool bumpmap = getBoolAttributeWithDefault(element_texture, "bumpmap", false);
 		float bumpmapMultiplier = getFloatAttributeWithDefault(element_texture,
 									"bumpmapMultiplier", 1.0f);
+		bool degamma = getBoolAttributeWithDefault(element_texture, "degamma", false);
 		child = element_texture->FirstChildElement("ImageName");
 		std::string textureName(child->GetText());
 		DecalMode decal_mode;
@@ -397,7 +424,8 @@ int getTextures(tinyxml2::XMLElement* element, std::stringstream& ss, const std:
 										decal_mode,
 										perlin_pattern,
 										bumpmap,
-										bumpmapMultiplier);
+										bumpmapMultiplier,
+										degamma);
 			textures.push_back(perlinTexture);
 		}
 
@@ -418,7 +446,8 @@ int getTextures(tinyxml2::XMLElement* element, std::stringstream& ss, const std:
 
 			CBTexture *cbTexture = new CBTexture(offset, scale, normalizer,
 								black, white, decal_mode,
-								bumpmap, bumpmapMultiplier);
+								bumpmap, bumpmapMultiplier,
+								degamma);
 
 			textures.push_back(cbTexture);
 		}
@@ -461,7 +490,8 @@ int getTextures(tinyxml2::XMLElement* element, std::stringstream& ss, const std:
 									texture_mode,
 									bumpmap,
 									bumpmapMultiplier,
-									flipVertical);
+									flipVertical,
+									degamma);
 			textures.push_back(imageTexture);
 		}
 
@@ -592,6 +622,31 @@ bool applyTransforms(tinyxml2::XMLElement* element, std::stringstream& ss, glm::
 	return true;
 }
 
+bool getTonemap(tinyxml2::XMLElement* element, std::stringstream& ss, Tonemap& tonemap)
+{
+	if(!element)
+	{
+		tonemap = Tonemap();	// NOTONEMAP
+		return false;
+	}
+
+	TonemapMode tonemap_mode;
+	float a, burnout, saturation, gamma;
+
+	tinyxml2::XMLElement *child = element->FirstChildElement("TMO");
+	std::string smode(child->GetText());
+	if(smode == "Photographic") { tonemap_mode = TonemapMode::PHOTOGRAPHIC; }
+	else { tonemap_mode = TonemapMode::NOTONEMAP; }
+	child = element->FirstChildElement("TMOOptions");
+	ss << child->GetText() << std::endl;
+	ss >> a >> burnout;
+	getFloatChildWithDefault(element, ss, "Saturation", 1.0f, saturation);
+	getFloatChildWithDefault(element, ss, "Gamma", 2.2f, gamma);
+
+	tonemap = Tonemap(tonemap_mode, a, burnout, saturation, gamma);
+	return true;
+}
+
 void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,
 			std::vector<Camera>& cameras)
 {
@@ -643,8 +698,13 @@ void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,
 	std::array<float, 4> near_plane = {_l, _r, _b, _t};
 	Vec3 gaze(gazepoint - pos);
 
+	// Tonemap Info
+	Tonemap tonemap;
+	child = element->FirstChildElement("Tonemap");
+	getTonemap(child, ss, tonemap);
+
 	cameras.push_back(Camera(pos, gaze, up, near_plane, near_distance,
-		 focus_distance, aperture_size, w, h, img_name, num_samples));
+		 focus_distance, aperture_size, w, h, img_name, num_samples, tonemap));
 }
 
 void pushCameraSimple(tinyxml2::XMLElement* element, std::stringstream& ss,
@@ -688,8 +748,13 @@ void pushCameraSimple(tinyxml2::XMLElement* element, std::stringstream& ss,
 	ss >> img_name;
 	ss >> num_samples; 
 
+	// Tonemap Info
+	Tonemap tonemap;
+	child = element->FirstChildElement("Tonemap");
+	getTonemap(child, ss, tonemap);
+
 	cameras.push_back(Camera(pos, gaze, up, near_plane, near_distance,
-		 focus_distance, aperture_size, w, h, img_name, num_samples));
+		 focus_distance, aperture_size, w, h, img_name, num_samples, tonemap));
 }
 
 int getMeshType(tinyxml2::XMLElement* element, std::string& ply_path)
@@ -1052,7 +1117,7 @@ void parseSpotLight(SpotLight* spot_light, tinyxml2::XMLElement* element, std::s
 void parseMaterial(Material& material, tinyxml2::XMLElement* element, std::stringstream& ss)
 {
 	tinyxml2::XMLElement *child;
-
+	
 	child = element->FirstChildElement("AmbientReflectance");
 	ss << child->GetText() << std::endl;
 	child = element->FirstChildElement("DiffuseReflectance");
@@ -1074,6 +1139,7 @@ void parseMaterial(Material& material, tinyxml2::XMLElement* element, std::strin
 		>> material.transparency[2];
 	ss >> material.refraction_index;
 	ss >> material.roughness;
+	material.degamma = getBoolAttributeWithDefault(element, "degamma", false);
 }
 
 void readVec3FromSS(Vec3& out, std::stringstream& ss)

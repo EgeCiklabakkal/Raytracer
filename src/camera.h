@@ -4,6 +4,7 @@
 #include "ray.h"
 #include "ONB.h"
 #include "rtmath.h"
+#include "tonemap.h"
 #include <array>
 #include <string>
 #include <vector>
@@ -24,6 +25,7 @@ class Camera
 	int image_width, image_height;
 	std::string image_name;
 	int num_samples;
+	Tonemap tonemap;
 
 	ONB uvw;
 	float pw, ph;				// pixel width/height
@@ -32,12 +34,14 @@ class Camera
 	// Constructors
 	Camera() {}
 	Camera(Vec3 _position, Vec3 _gaze, Vec3 _up, std::array<float, 4> _near_plane, 
-		float _near_distance, float _focus_distance, float _aperture_size, int _image_width, int _image_height, std::string _image_name,
-		int _num_samples) :
+		float _near_distance, float _focus_distance, float _aperture_size,
+		int _image_width, int _image_height, std::string _image_name,
+		int _num_samples, const Tonemap& _tonemap) :
 	position(_position), gaze(_gaze), up(_up), near_plane(_near_plane), 
 	near_distance(_near_distance), focus_distance(_focus_distance), 
 	aperture_size(_aperture_size), image_width(_image_width), 
-	image_height(_image_height), image_name(_image_name), num_samples(_num_samples)
+	image_height(_image_height), image_name(_image_name),
+	num_samples(_num_samples), tonemap(_tonemap)
 	{
 		uvw.initFromWV(-gaze, up);
 		across =  uvw.u();

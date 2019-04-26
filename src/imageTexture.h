@@ -25,7 +25,8 @@ class ImageTexture : public Texture
 			TextureMode _texture_mode=TextureMode::CLAMP,
 			bool _bumpmap=false,
 			float _bumpmapMultiplier=1.0f,
-			bool flipVertical=true);
+			bool flipVertical=true,
+			bool _degamma=false);
 
 	virtual ~ImageTexture();
 

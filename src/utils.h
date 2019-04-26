@@ -57,6 +57,7 @@
 #include "simpleTexture.h"
 #include "sphere.h"
 #include "texture.h"
+#include "tonemap.h"
 #include "triangle.h"
 #include "vector2.h"
 #include "vector3.h"
