@@ -89,6 +89,7 @@ void parsePointLight(PointLight* point_light, tinyxml2::XMLElement* element, std
 void parseAreaLight(AreaLight* area_light, tinyxml2::XMLElement* element, std::stringstream& ss);
 void parseDirectionalLight(DirectionalLight* directional_light,
 				tinyxml2::XMLElement* element, std::stringstream& ss);
+void parseSpotLight(SpotLight* spot_light, tinyxml2::XMLElement* element, std::stringstream& ss);
 void parseMaterial(Material& material, tinyxml2::XMLElement* element, std::stringstream& ss);
 
 // SS reads

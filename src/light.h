@@ -7,6 +7,7 @@
 #include "rtmath.h"
 #include <vector>
 #include <limits>
+#include <math.h>
 
 class Scene;
 class Ray;
@@ -17,7 +18,7 @@ class SampleLight
 	public:
 
 	Vec3 intensity;
-	Vec3 wi;	// direction of incoming light to the intersection point
+	Vec3 wi;	// direction of incoming light, ie. light.position - p
 
 	SampleLight() {}
 	SampleLight(const Vec3& _intensity, const Vec3& _wi) :
@@ -87,6 +88,26 @@ class DirectionalLight : public Light
 
 	virtual bool sampleLight(const Scene* scene, const Ray& r,
 					const HitRecord& record, SampleLight& sampledLight) const;
+};
+
+class SpotLight : public Light
+{
+	public:
+
+	Vec3 position;
+	Vec3 direction;
+	Vec3 intensity;
+	float alpha;	// CoverageAngle
+	float beta;	// FalloffAngle
+
+	SpotLight() {}
+	SpotLight(const Vec3& _position, const Vec3& _direction, const Vec3& _intensity,
+			float _alpha, float _beta);
+	virtual ~SpotLight() {}
+
+	virtual bool sampleLight(const Scene* scene, const Ray& r,
+					const HitRecord& record, SampleLight& sampledLight) const;
+	float falloff(const Vec3& wi) const;
 };
 
 #endif

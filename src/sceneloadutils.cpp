@@ -262,6 +262,19 @@ int getLights(tinyxml2::XMLNode* node, tinyxml2::XMLElement* element,
 		element = element->NextSiblingElement("DirectionalLight");
 	}
 
+	// SpotLights
+	element = node->FirstChildElement("Lights");
+	element = element->FirstChildElement("SpotLight");
+	while(element)
+	{
+		lightcount++;
+		SpotLight *spot_light = new SpotLight();
+		parseSpotLight(spot_light, element, ss);
+
+		lights.push_back(spot_light);
+		element = element->NextSiblingElement("SpotLight");
+	}
+
 	return lightcount;
 }
 
@@ -1009,6 +1022,31 @@ void parseDirectionalLight(DirectionalLight* directional_light,
 		>> directional_light->direction[2];
 	ss >> directional_light->radiance[0] >> directional_light->radiance[1]
 		>> directional_light->radiance[2];
+}
+
+void parseSpotLight(SpotLight* spot_light, tinyxml2::XMLElement* element, std::stringstream& ss)
+{
+	tinyxml2::XMLElement *child;
+
+	child = element->FirstChildElement("Position");
+	ss << child->GetText() << std::endl;
+	child = element->FirstChildElement("Direction");
+	ss << child->GetText() << std::endl;
+	child = element->FirstChildElement("Intensity");
+	ss << child->GetText() << std::endl;
+	child = element->FirstChildElement("CoverageAngle");
+	ss << child->GetText() << std::endl;
+	child = element->FirstChildElement("FalloffAngle");
+	ss << child->GetText() << std::endl;
+
+	ss >> spot_light->position[0] >> spot_light->position[1]
+		>> spot_light->position[2];
+	ss >> spot_light->direction[0] >> spot_light->direction[1]
+		>> spot_light->direction[2];
+	ss >> spot_light->intensity[0] >> spot_light->intensity[1]
+		>> spot_light->intensity[2];
+	ss >> spot_light->alpha;
+	ss >> spot_light->beta;
 }
 
 void parseMaterial(Material& material, tinyxml2::XMLElement* element, std::stringstream& ss)
