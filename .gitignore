@@ -5,6 +5,8 @@
 # image files
 *.ppm
 *.png
+*.exr
+*.hdr
 
 # input files
 *.xml
