@@ -156,6 +156,7 @@ int Image::readEXR(std::string fname, int channels)
 	float fr, fg, fb;
 
 	int ret = LoadEXR(&data, &nx, &ny, fname.c_str(), &err);
+	raster = std::vector<rgb>(nx * ny, rgb());
 	if(ret != TINYEXR_SUCCESS)
 	{
 		if(err)
