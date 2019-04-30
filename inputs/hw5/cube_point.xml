@@ -1,0 +1,59 @@
+<Scene>
+    <BackgroundColor>0 0 0</BackgroundColor>
+
+    <Cameras>
+        <Camera id="1" type="lookAt">
+            <Position>5 5 5</Position>
+            <GazePoint>0 0 0</GazePoint>
+            <Up>0 1 0</Up>
+            <FovY>45</FovY>
+            <NearDistance>1</NearDistance>
+            <ImageResolution>800 800</ImageResolution>
+            <ImageName>cube_point.png</ImageName>
+        </Camera>
+    </Cameras>
+
+    <Lights>
+        <AmbientLight>25 25 25</AmbientLight>
+        <PointLight id="1">
+            <Position>-5 4 5</Position>
+            <Intensity>10000 10000 10000</Intensity>
+        </PointLight>
+    </Lights>
+
+    <Materials>
+        <Material id="1">
+            <AmbientReflectance>1 1 1</AmbientReflectance>
+            <DiffuseReflectance>1 1 1</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <PhongExponent>1</PhongExponent>
+        </Material>
+        <Material id="2">
+            <AmbientReflectance>0.651 0.389 0.389</AmbientReflectance>
+            <DiffuseReflectance>0.651 0.389 0.389</DiffuseReflectance>
+            <SpecularReflectance>0.651 0.389 0.389</SpecularReflectance>
+            <PhongExponent>1</PhongExponent>
+        </Material>
+    </Materials>
+
+    <Transformations>
+        <Translation id="1">-0.5 0 -0.5</Translation>
+        <Translation id="2">-0.5 -0.5 -0.5</Translation>
+        <Translation id="3">0.5 0.5 0.5</Translation>
+        <Scaling id="1">1000 1000 1000</Scaling>
+        <Scaling id="2">2 2 2</Scaling>
+    </Transformations>
+
+    <Objects>
+        <Mesh id="1">
+            <Material>1</Material>
+            <Transformations>t1 s1</Transformations>
+            <Faces plyFile="ply/plane.ply" />
+        </Mesh>
+        <Mesh id="2">
+            <Material>2</Material>
+            <Transformations>t2 s2 t3</Transformations>
+            <Faces plyFile="ply/cube.ply" />
+        </Mesh>
+    </Objects>
+</Scene>
