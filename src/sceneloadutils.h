@@ -49,6 +49,10 @@ int getTextures(tinyxml2::XMLElement* element, std::stringstream& ss, const std:
 
 // Read BRDFs
 int getBRDFs(tinyxml2::XMLElement* element, std::stringstream& ss, std::vector<BRDF*>& brdfs);
+bool getSingleBRDF(tinyxml2::XMLElement* element, std::stringstream& ss,
+				std::vector<BRDF*>& brdfs);
+bool getOriginalPhongBRDF(tinyxml2::XMLElement* element, std::stringstream& ss,
+				std::vector<BRDF*>& brdfs);
 
 // Read Materials
 int getMaterials(tinyxml2::XMLElement* element, std::stringstream& ss,

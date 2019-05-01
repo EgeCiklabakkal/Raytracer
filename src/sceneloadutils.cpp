@@ -514,7 +514,42 @@ int getBRDFs(tinyxml2::XMLElement* element, std::stringstream& ss, std::vector<B
 		return count_brdf;
 	}
 
+	tinyxml2::XMLElement *child = element->FirstChildElement();
+	while(child)
+	{
+		count_brdf++;
+		getSingleBRDF(child, ss, brdfs);
+
+		child = child->NextSiblingElement();
+	}
+
 	return count_brdf;
+}
+
+bool getSingleBRDF(tinyxml2::XMLElement* element, std::stringstream& ss,
+				std::vector<BRDF*>& brdfs)
+{
+	std::string tag(element->Name());
+
+	if(tag == "OriginalPhong")
+	{
+		getOriginalPhongBRDF(element, ss, brdfs);
+	}
+
+	return true;
+}
+
+bool getOriginalPhongBRDF(tinyxml2::XMLElement* element, std::stringstream& ss,
+				std::vector<BRDF*>& brdfs)
+{
+	float exponent;
+	tinyxml2::XMLElement *child = element->FirstChildElement("Exponent");
+	ss << child->GetText() << std::endl;
+	ss >> exponent;
+
+	BRDF *brdf = new PhongBRDF(exponent);
+	brdfs.push_back(brdf);
+	return true;
 }
 
 int getMaterials(tinyxml2::XMLElement* element, std::stringstream& ss,

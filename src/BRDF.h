@@ -16,4 +16,6 @@ class BRDF
 	virtual rgb value(const Ray& r, const HitRecord& record, const SampleLight& slight) const=0;
 };
 
+inline BRDF::~BRDF() {}
+
 #endif

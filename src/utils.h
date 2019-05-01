@@ -48,6 +48,7 @@
 #include "ONB.h"
 #include "perlinNoise.h"
 #include "perlinTexture.h"
+#include "phongBRDF.h"
 #include "ray.h"
 #include "rdmGen.h"
 #include "rgb.h"

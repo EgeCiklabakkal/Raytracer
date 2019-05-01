@@ -22,6 +22,4 @@ class SimpleBRDF : public BRDF
 	virtual rgb value(const Ray& r, const HitRecord& record, const SampleLight& slight) const;
 };
 
-inline BRDF::~BRDF() {}
-
 #endif
