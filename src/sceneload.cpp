@@ -11,13 +11,13 @@ void Scene::loadFromXML(const std::string& fname)
 	auto load_failed = doc.LoadFile(fname.c_str());
 	if(load_failed)
 	{
-		throw std::runtime_error("Error: XML file failed to load!");
+		throw std::runtime_error("XML file failed to load!");
 	}
 
 	auto scene_element = doc.FirstChild();
 	if(!scene_element)
 	{
-		throw std::runtime_error("Error: Scene element missing!");
+		throw std::runtime_error("Scene element missing!");
 	}
 
 	// BackgroundColor

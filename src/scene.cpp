@@ -403,5 +403,8 @@ Scene::~Scene()
 	primMeshBVHs.clear();
 
 	// Free scene BVH
-	delete bvh;
+	if(bvh)
+	{
+		delete bvh;
+	}
 }

@@ -40,7 +40,7 @@ class Scene
 	std::vector<Shape*> shapes;
 	std::vector<Mesh*> meshes;
 	std::vector<Shape*> primMeshBVHs;
-	BVH *bvh;
+	BVH *bvh = nullptr;
 
 	~Scene();
 	// Methods
