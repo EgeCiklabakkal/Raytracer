@@ -3,7 +3,6 @@
 
 // Macros
 #define DEFAULT_THREAD_COUNT 8
-#define DEFAULT_AIR_REFRACTION_INDEX 1.0f
 #define PROGRESS_BAR_WIDTH 80
 #define PROGRESS_BAR_UPDATE_WAIT 10 		// In miliseconds
 #define SHOW_PROGRESS_BAR true
@@ -64,6 +63,7 @@
 #include "sphere.h"
 #include "texture.h"
 #include "tonemap.h"
+#include "torranceSparrowBRDF.h"
 #include "triangle.h"
 #include "vector2.h"
 #include "vector3.h"

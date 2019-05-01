@@ -59,6 +59,8 @@ bool getOriginalBlinnPhongBRDF(tinyxml2::XMLElement* element, std::stringstream&
 				std::vector<BRDF*>& brdfs);
 bool getModifiedBlinnPhongBRDF(tinyxml2::XMLElement* element, std::stringstream& ss,
 				std::vector<BRDF*>& brdfs);
+bool getTorranceSparrowBRDF(tinyxml2::XMLElement* element, std::stringstream& ss,
+				std::vector<BRDF*>& brdfs);
 
 // Read Materials
 int getMaterials(tinyxml2::XMLElement* element, std::stringstream& ss,

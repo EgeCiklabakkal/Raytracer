@@ -292,13 +292,13 @@ rgb Scene::refractionColor(const Ray& r, const HitRecord& record,
 		}
 		
 		float R0  = ((n1 - n2)*(n1 - n2)) / ((n1 + n2)*(n1 + n2));
-		float omc = 1 - c;
-		float R   = R0 + (1 - R0) * omc * omc * omc * omc * omc;
+		float omc = 1.0f - c;
+		float R   = R0 + (1.0f - R0) * omc * omc * omc * omc * omc;
 		Ray transmissionRay(r.transmissionRay(nrecord, transmissionDirection, 
 					intersection_test_epsilon));
 
 		return rgb(k) * (R * rayColor(reflectionRay, recursion_depth - 1, tonemap)
-					+ (1 - R) * rayColor(	transmissionRay,
+					+ (1.0f - R) * rayColor(transmissionRay,
 								recursion_depth - 1,
 								tonemap));
 	}

@@ -551,6 +551,11 @@ bool getSingleBRDF(tinyxml2::XMLElement* element, std::stringstream& ss,
 		getModifiedBlinnPhongBRDF(element, ss, brdfs);
 	}
 
+	else if(tag == "TorranceSparrow")
+	{
+		getTorranceSparrowBRDF(element, ss, brdfs);
+	}
+
 	return true;
 }
 
@@ -604,6 +609,22 @@ bool getModifiedBlinnPhongBRDF(tinyxml2::XMLElement* element, std::stringstream&
 	ss >> exponent;
 
 	BRDF *brdf = new ModifiedBlinnPhongBRDF(exponent, normalized);
+	brdfs.push_back(brdf);
+	return true;
+}
+
+bool getTorranceSparrowBRDF(tinyxml2::XMLElement* element, std::stringstream& ss,
+				std::vector<BRDF*>& brdfs)
+{
+	float exponent;
+	float refractive_index;
+	tinyxml2::XMLElement *child = element->FirstChildElement("Exponent");
+	ss << child->GetText() << std::endl;
+	child = element->FirstChildElement("RefractiveIndex");
+	ss << child->GetText() << std::endl;
+	ss >> exponent >> refractive_index;
+
+	BRDF *brdf = new TorranceSparrowBRDF(exponent, refractive_index);
 	brdfs.push_back(brdf);
 	return true;
 }

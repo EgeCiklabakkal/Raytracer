@@ -1,6 +1,9 @@
 #ifndef _MACROS_H_
 #define _MACROS_H_
 
+// Macros
+#define DEFAULT_AIR_REFRACTION_INDEX 1.0f
+
 // Cameras
 #define CAM_SIMPLE 0
 #define CAM_LOOKAT 1
