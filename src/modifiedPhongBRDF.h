@@ -6,14 +6,16 @@
 #include "ray.h"
 #include "shape.h"
 #include "light.h"
+#include "rtmath.h"
 
 class ModifiedPhongBRDF : public BRDF
 {
 	public:
 
 	float exponent;
+	bool normalized;
 
-	ModifiedPhongBRDF(float _exponent);
+	ModifiedPhongBRDF(float _exponent, bool _normalized=false);
 
 	virtual ~ModifiedPhongBRDF();
 

@@ -1,6 +1,7 @@
 #include "modifiedPhongBRDF.h"
 
-ModifiedPhongBRDF::ModifiedPhongBRDF(float _exponent) : exponent(_exponent) {}
+ModifiedPhongBRDF::ModifiedPhongBRDF(float _exponent, bool _normalized) :
+exponent(_exponent), normalized(_normalized) {}
 
 ModifiedPhongBRDF::~ModifiedPhongBRDF() {}
 
@@ -20,7 +21,10 @@ rgb ModifiedPhongBRDF::brdf(const Ray& r, const HitRecord& record, const SampleL
 		Vec3 wr(unitVector(-wi + 2 * n * (dot(n, wi)))); // reflection of wi
 		float cosalpha_r = std::max(0.0f, dot(wr, wo));
 
-		return kd + ks * pow(cosalpha_r, exponent);
+		if(normalized)
+			return kd * INV_PI + ks *(exponent + 2)*INV_2PI* pow(cosalpha_r, exponent);
+		else
+			return kd + ks * pow(cosalpha_r, exponent);
 	}
 
 	return rgb(0.0f);

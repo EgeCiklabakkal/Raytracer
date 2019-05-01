@@ -561,11 +561,12 @@ bool getModifiedPhongBRDF(tinyxml2::XMLElement* element, std::stringstream& ss,
 				std::vector<BRDF*>& brdfs)
 {
 	float exponent;
+	bool normalized = getBoolAttributeWithDefault(element, "normalized", false);
 	tinyxml2::XMLElement *child = element->FirstChildElement("Exponent");
 	ss << child->GetText() << std::endl;
 	ss >> exponent;
 
-	BRDF *brdf = new ModifiedPhongBRDF(exponent);
+	BRDF *brdf = new ModifiedPhongBRDF(exponent, normalized);
 	brdfs.push_back(brdf);
 	return true;
 }
