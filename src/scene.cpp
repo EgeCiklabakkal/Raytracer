@@ -204,13 +204,9 @@ rgb Scene::diffuseColor(const Ray& r, const HitRecord& record, const SampleLight
 	rgb I(slight.intensity);
 	rgb kd(record.material.diffuse);
 
-	Vec3 wi(slight.wi);
-	float r2 = wi.squaredLength();
-	wi.makeUnitVector();
+	float costheta = std::max(0.0f, dot(slight.wi, record.normal));
 
-	float costheta = std::max(0.0f, dot(wi, record.normal));
-
-	return (kd * costheta * I) / r2;
+	return kd * costheta * I;
 }
 
 rgb Scene::specularColor(const Ray& r, const HitRecord& record, const SampleLight& slight) const
@@ -219,19 +215,13 @@ rgb Scene::specularColor(const Ray& r, const HitRecord& record, const SampleLigh
 	rgb ks(record.material.specular);
 	float phong_exp = record.material.phong_exponent;
 
-	Vec3 x = r.pointAtParameter(record.t);
-	Vec3 wi(slight.wi);
-	Vec3 wo(r.origin() - x);
-	float r2 = wi.squaredLength();
-	wi.makeUnitVector();
-	wo.makeUnitVector();
+	Vec3 x = record.p;
+	Vec3 wo(unitVector(r.origin() - x));
+	Vec3 h(slight.wi + wo);
 
-	Vec3 h(wi + wo);
-	h.makeUnitVector();
+	float costheta = std::max(0.0f, dot(record.normal, unitVector(h)));
 
-	float costheta = std::max(0.0f, dot(record.normal, h));
-
-	return (ks * (pow(costheta, phong_exp)) * I) / r2;
+	return ks * (pow(costheta, phong_exp)) * I;
 }
 
 rgb Scene::reflectionColor(const Ray& r, const HitRecord& record,

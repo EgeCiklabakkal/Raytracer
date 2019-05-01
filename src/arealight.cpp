@@ -19,12 +19,16 @@ bool AreaLight::sampleLight(const Scene* scene, const Ray& r,
 	{
 		return false;
 	}
+
+	Vec3 wi(ls - from);
+	float d2 = wi.squaredLength();
+	wi.makeUnitVector();
 	
-	Vec3 l(unitVector(from - ls));
+	Vec3 l(-wi);
 	declination = dot(l, normal);
 	declination = (declination >= 0.0f) ? declination : -declination;
-	Vec3 _I(radiance * declination * size * size);
+	Vec3 _I((radiance * declination * size * size) / d2);
 
-	sampledLight = SampleLight(_I, ls - from);
+	sampledLight = SampleLight(_I, wi);
 	return true;
 }

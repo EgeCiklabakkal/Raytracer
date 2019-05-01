@@ -11,6 +11,9 @@ bool PointLight::sampleLight(const Scene* scene, const Ray& r,
 		return false;
 	}
 
-	sampledLight = SampleLight(intensity, position - record.p);
+	Vec3 wi(position - record.p);
+	float d2 = wi.squaredLength();
+
+	sampledLight = SampleLight(intensity / d2, unitVector(wi));
 	return true;
 }

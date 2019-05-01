@@ -15,7 +15,9 @@ bool SpotLight::sampleLight(const Scene* scene, const Ray& r,
 	}
 
 	Vec3 wi(position - record.p);
-	sampledLight = SampleLight(intensity * falloff(wi), wi);
+	float d2 = wi.squaredLength();
+
+	sampledLight = SampleLight((intensity * falloff(wi)) / d2, unitVector(wi));
 	return true;
 }
 
