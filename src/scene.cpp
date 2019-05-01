@@ -151,8 +151,9 @@ rgb Scene::rayColor(const Ray& r, int recursion_depth, const Tonemap& tonemap, c
 
 				if(notShadow)
 				{
-					rcolor += diffuseColor(r, record, sampledLight) +
-						specularColor(r, record, sampledLight);
+					// Diffuse and Specular shading
+					rcolor += record.material.brdf->value(r, record,
+										sampledLight);
 				}
 			}
 
@@ -373,6 +374,13 @@ Scene::~Scene()
 		delete light;
 	}
 	lights.clear();
+
+	// Free BRDFs
+	for(BRDF* brdf : brdfs)
+	{
+		delete brdf;
+	}
+	brdfs.clear();
 
 	// Free meshes
 	for(Mesh* mesh : meshes)

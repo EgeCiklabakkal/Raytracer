@@ -1,6 +1,9 @@
 #ifndef _MATERIAL_H_
 #define _MATERIAL_H_
 
+#include "vector3.h"
+#include "BRDF.h"
+
 class Material
 {
 	public:
@@ -15,6 +18,7 @@ class Material
 	float refraction_index;
 	float roughness;
 	bool degamma;
+	BRDF *brdf;
 };
 
 #endif

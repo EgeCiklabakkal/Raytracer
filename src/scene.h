@@ -15,8 +15,10 @@
 #include "BVH.h"
 #include "image.h"
 #include "tonemap.h"
+#include "BRDF.h"
 
 class Light;
+class BRDF;
 
 class Scene
 {
@@ -32,6 +34,7 @@ class Scene
 	std::vector<Camera> cameras;
 	Vec3 ambient_light;
 	std::vector<Light*> lights;
+	std::vector<BRDF*> brdfs;	// brdfs[0] is always simpleBRDF
 	std::vector<Material> materials;
 	std::vector<Image*> textureImages;
 	std::vector<Texture*> textures;

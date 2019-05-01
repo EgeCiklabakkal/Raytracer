@@ -65,18 +65,13 @@ void Scene::loadFromXML(const std::string& fname)
 	element = scene_element->FirstChildElement("Textures");
 	getTextures(element, ss, fname, textureImages, textures);
 
+	// BRDFs
+	element = scene_element->FirstChildElement("BRDFs");
+	getBRDFs(element, ss, brdfs);
+
 	// Materials
 	element = scene_element->FirstChildElement("Materials");
-	element = element->FirstChildElement("Material");
-	while(element)
-	{
-		Material material;
-		parseMaterial(material, element, ss);		
-	
-		materials.push_back(material);
-		element = element->NextSiblingElement("Material");
-	}
-	ss.clear();
+	getMaterials(element, ss, materials, brdfs);
 
 	// VertexData
 	element = scene_element->FirstChildElement("VertexData");

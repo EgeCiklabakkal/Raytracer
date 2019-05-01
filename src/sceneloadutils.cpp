@@ -502,6 +502,46 @@ int getTextures(tinyxml2::XMLElement* element, std::stringstream& ss, const std:
 	return textures.size();
 }
 
+int getBRDFs(tinyxml2::XMLElement* element, std::stringstream& ss, std::vector<BRDF*>& brdfs)
+{
+	// brdfs[0] is always simpleBRDF, serves as a default for non-specified BRDFs for mats.
+	BRDF *simple = new SimpleBRDF();
+	brdfs.push_back(simple);
+	int count_brdf = 1;
+
+	if(!element)
+	{
+		return count_brdf;
+	}
+
+	return count_brdf;
+}
+
+int getMaterials(tinyxml2::XMLElement* element, std::stringstream& ss,
+                        std::vector<Material>& materials, const std::vector<BRDF*>& brdfs)
+{
+	if(!element)
+	{
+		return 0; // Then, you can't compute shading, so this shouldn't happen
+	}
+
+	int count_mat = 0;
+
+	tinyxml2::XMLElement *child = element->FirstChildElement("Material");
+	while(child)
+	{
+		count_mat++;
+		Material material;
+		parseMaterial(material, child, ss, brdfs);
+
+		materials.push_back(material);
+		child = child->NextSiblingElement("Material");
+	}
+	ss.clear();
+
+	return count_mat;
+}
+
 InterpolationMode getInterpolationMode(tinyxml2::XMLElement* element)
 {
 	tinyxml2::XMLElement *child = element->FirstChildElement("Interpolation");
@@ -1114,10 +1154,12 @@ void parseSpotLight(SpotLight* spot_light, tinyxml2::XMLElement* element, std::s
 	ss >> spot_light->beta;
 }
 
-void parseMaterial(Material& material, tinyxml2::XMLElement* element, std::stringstream& ss)
+void parseMaterial(Material& material, tinyxml2::XMLElement* element,
+			std::stringstream& ss, const std::vector<BRDF*>& brdfs)
 {
 	tinyxml2::XMLElement *child;
 	
+	int brdf_id = getIntAttributeWithDefault(element, "BRDF", 0);	// 0 is simple default
 	child = element->FirstChildElement("AmbientReflectance");
 	ss << child->GetText() << std::endl;
 	child = element->FirstChildElement("DiffuseReflectance");
@@ -1140,6 +1182,7 @@ void parseMaterial(Material& material, tinyxml2::XMLElement* element, std::strin
 	ss >> material.refraction_index;
 	ss >> material.roughness;
 	material.degamma = getBoolAttributeWithDefault(element, "degamma", false);
+	material.brdf = brdfs[brdf_id];	// Already 1-based indexing (0 for simple)
 }
 
 void readVec3FromSS(Vec3& out, std::stringstream& ss)

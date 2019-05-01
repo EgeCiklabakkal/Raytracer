@@ -32,6 +32,7 @@
 
 #include "util/happly.h"
 #include "util/tinyxml2.h"
+#include "BRDF.h"
 #include "bumpRecord.h"
 #include "BVH.h"
 #include "camera.h"
@@ -54,6 +55,7 @@
 #include "safeStack.h"
 #include "scene.h"
 #include "shape.h"
+#include "simpleBRDF.h"
 #include "simpleTexture.h"
 #include "sphere.h"
 #include "texture.h"

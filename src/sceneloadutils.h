@@ -46,6 +46,14 @@ int getTransformations(tinyxml2::XMLElement* element, std::stringstream& ss,
 // Read all texture images, create texture objects
 int getTextures(tinyxml2::XMLElement* element, std::stringstream& ss, const std::string& fname,
 			std::vector<Image*>& textureImages, std::vector<Texture*>& textures);
+
+// Read BRDFs
+int getBRDFs(tinyxml2::XMLElement* element, std::stringstream& ss, std::vector<BRDF*>& brdfs);
+
+// Read Materials
+int getMaterials(tinyxml2::XMLElement* element, std::stringstream& ss,
+			std::vector<Material>& materials, const std::vector<BRDF*>& brdfs);
+
 InterpolationMode getInterpolationMode(tinyxml2::XMLElement* element);
 DecalMode getDecalMode(tinyxml2::XMLElement* element);
 TextureMode getTextureModeWithDefault(tinyxml2::XMLElement* element, TextureMode _default);
@@ -94,7 +102,8 @@ void parseAreaLight(AreaLight* area_light, tinyxml2::XMLElement* element, std::s
 void parseDirectionalLight(DirectionalLight* directional_light,
 				tinyxml2::XMLElement* element, std::stringstream& ss);
 void parseSpotLight(SpotLight* spot_light, tinyxml2::XMLElement* element, std::stringstream& ss);
-void parseMaterial(Material& material, tinyxml2::XMLElement* element, std::stringstream& ss);
+void parseMaterial(Material& material, tinyxml2::XMLElement* element,
+			std::stringstream& ss, const std::vector<BRDF*>& brdfs);
 
 // SS reads
 void readVec3FromSS(Vec3& out, std::stringstream& ss);
