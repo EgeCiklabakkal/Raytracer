@@ -53,6 +53,8 @@ bool getSingleBRDF(tinyxml2::XMLElement* element, std::stringstream& ss,
 				std::vector<BRDF*>& brdfs);
 bool getOriginalPhongBRDF(tinyxml2::XMLElement* element, std::stringstream& ss,
 				std::vector<BRDF*>& brdfs);
+bool getModifiedPhongBRDF(tinyxml2::XMLElement* element, std::stringstream& ss,
+				std::vector<BRDF*>& brdfs);
 
 // Read Materials
 int getMaterials(tinyxml2::XMLElement* element, std::stringstream& ss,
