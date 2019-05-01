@@ -546,6 +546,11 @@ bool getSingleBRDF(tinyxml2::XMLElement* element, std::stringstream& ss,
 		getOriginalBlinnPhongBRDF(element, ss, brdfs);
 	}
 
+	else if(tag == "ModifiedBlinnPhong")
+	{
+		getModifiedBlinnPhongBRDF(element, ss, brdfs);
+	}
+
 	return true;
 }
 
@@ -585,6 +590,20 @@ bool getOriginalBlinnPhongBRDF(tinyxml2::XMLElement* element, std::stringstream&
 	ss >> exponent;
 
 	BRDF *brdf = new BlinnPhongBRDF(exponent);
+	brdfs.push_back(brdf);
+	return true;
+}
+
+bool getModifiedBlinnPhongBRDF(tinyxml2::XMLElement* element, std::stringstream& ss,
+				std::vector<BRDF*>& brdfs)
+{
+	float exponent;
+	bool normalized = getBoolAttributeWithDefault(element, "normalized", false);
+	tinyxml2::XMLElement *child = element->FirstChildElement("Exponent");
+	ss << child->GetText() << std::endl;
+	ss >> exponent;
+
+	BRDF *brdf = new ModifiedBlinnPhongBRDF(exponent, normalized);
 	brdfs.push_back(brdf);
 	return true;
 }

@@ -7,6 +7,7 @@
 #define STD_DEV 0.16666666666
 
 #define INV_PI 0.3183098861837906715377
+#define INV_8PI 0.039788735772973833942
 
 #include <random>
 #include <utility>

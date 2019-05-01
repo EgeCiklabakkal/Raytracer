@@ -46,6 +46,7 @@
 #include "macros.h"
 #include "material.h"
 #include "mesh.h"
+#include "modifiedBlinnPhongBRDF.h"
 #include "modifiedPhongBRDF.h"
 #include "ONB.h"
 #include "perlinNoise.h"
