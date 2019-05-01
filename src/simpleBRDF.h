@@ -7,7 +7,7 @@
 #include "shape.h"
 #include "light.h"
 
-class SimpleBRDF : public BRDF
+class SimpleBRDF : public BRDF	// This class isn't really a BRDF, it is blinn-phong shading model
 {
 	public:
 

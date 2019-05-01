@@ -7,6 +7,7 @@ ModifiedPhongBRDF::~ModifiedPhongBRDF() {}
 
 rgb ModifiedPhongBRDF::brdf(const Ray& r, const HitRecord& record, const SampleLight& slight) const
 {
+	static float exp_plus_2 = exponent + 2.0f;
 	float costheta_i = std::max(0.0f, dot(record.normal, slight.wi));
 	if(costheta_i > 0.0f)	// theta_i < 90°
 	{
@@ -22,7 +23,7 @@ rgb ModifiedPhongBRDF::brdf(const Ray& r, const HitRecord& record, const SampleL
 		float cosalpha_r = std::max(0.0f, dot(wr, wo));
 
 		if(normalized)
-			return kd * INV_PI + ks *(exponent + 2)*INV_2PI* pow(cosalpha_r, exponent);
+			return kd * INV_PI + ks * exp_plus_2 * INV_2PI * pow(cosalpha_r, exponent);
 		else
 			return kd + ks * pow(cosalpha_r, exponent);
 	}

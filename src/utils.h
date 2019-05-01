@@ -32,6 +32,7 @@
 
 #include "util/happly.h"
 #include "util/tinyxml2.h"
+#include "blinnPhongBRDF.h"
 #include "BRDF.h"
 #include "bumpRecord.h"
 #include "BVH.h"
