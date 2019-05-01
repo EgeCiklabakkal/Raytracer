@@ -6,7 +6,7 @@ PhongBRDF::~PhongBRDF() {}
 
 rgb PhongBRDF::brdf(const Ray& r, const HitRecord& record, const SampleLight& slight) const
 {
-	float costheta_i = dot(record.normal, record.normal);
+	float costheta_i = std::max(0.0f, dot(record.normal, slight.wi));
 	if(costheta_i > 0.0f)	// theta_i < 90°
 	{
 		rgb kd(record.material.diffuse);
@@ -29,7 +29,7 @@ rgb PhongBRDF::brdf(const Ray& r, const HitRecord& record, const SampleLight& sl
 rgb PhongBRDF::value(const Ray& r, const HitRecord& record, const SampleLight& slight) const
 {
 	rgb Li(slight.intensity);
-	float costheta_i = dot(record.normal, record.normal);
+	float costheta_i = std::max(0.0f, dot(record.normal, slight.wi));
 	rgb f = brdf(r, record, slight);
 
 	return (Li * f) * costheta_i;
