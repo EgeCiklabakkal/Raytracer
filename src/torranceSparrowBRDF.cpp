@@ -1,7 +1,8 @@
 #include "torranceSparrowBRDF.h"
 
-TorranceSparrowBRDF::TorranceSparrowBRDF(float _exponent, float _refractive_index) :
-exponent(_exponent), refractive_index(_refractive_index) {}
+TorranceSparrowBRDF::TorranceSparrowBRDF(float _exponent,
+						float _refractive_index, bool _kdfresnel) :
+exponent(_exponent), refractive_index(_refractive_index), kdfresnel(_kdfresnel) {}
 
 TorranceSparrowBRDF::~TorranceSparrowBRDF() {}
 
@@ -59,8 +60,9 @@ rgb TorranceSparrowBRDF::brdf(const Ray& r, const HitRecord& record,
 		float G = geometryTerm(wi, wo, n, h);
 		float F = fresnelReflection(std::max(0.0f, dot(wo, h)));
 		float cosphi = std::max(0.0f, dot(wo, n));
+		float f = (kdfresnel) ? (1.0f - F) : 1.0f;	// fresnel normalization
 
-		return kd * INV_PI + ks * ((D * F * G * one_over_four) / (costheta_i * cosphi));
+		return f * kd * INV_PI + ks * ((D * F * G * one_over_four) / (costheta_i * cosphi));
 	}
 
 	return rgb(0.0f);

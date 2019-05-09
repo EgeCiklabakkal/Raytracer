@@ -618,13 +618,15 @@ bool getTorranceSparrowBRDF(tinyxml2::XMLElement* element, std::stringstream& ss
 {
 	float exponent;
 	float refractive_index;
+	bool kdfresnel;
+	kdfresnel = getBoolAttributeWithDefault(element, "kdfresnel", false);
 	tinyxml2::XMLElement *child = element->FirstChildElement("Exponent");
 	ss << child->GetText() << std::endl;
 	child = element->FirstChildElement("RefractiveIndex");
 	ss << child->GetText() << std::endl;
 	ss >> exponent >> refractive_index;
 
-	BRDF *brdf = new TorranceSparrowBRDF(exponent, refractive_index);
+	BRDF *brdf = new TorranceSparrowBRDF(exponent, refractive_index, kdfresnel);
 	brdfs.push_back(brdf);
 	return true;
 }

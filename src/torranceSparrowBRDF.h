@@ -14,8 +14,9 @@ class TorranceSparrowBRDF : public BRDF
 
 	float exponent;
 	float refractive_index;
+	bool kdfresnel;
 
-	TorranceSparrowBRDF(float _exponent, float _refractive_index);
+	TorranceSparrowBRDF(float _exponent, float _refractive_index, bool _kdfresnel=false);
 
 	virtual ~TorranceSparrowBRDF();
 
