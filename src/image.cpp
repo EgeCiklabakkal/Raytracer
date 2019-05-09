@@ -36,6 +36,7 @@ bool Image::set(int x, int y, const rgb& color)
 
 void Image::imwrite(std::string fname, const Tonemap& tonemap) const
 {
+	std::string img_name;
 	size_t dot = fname.find_last_of(".");
 
 	if(fname.substr(dot + 1) == "exr")
@@ -43,14 +44,9 @@ void Image::imwrite(std::string fname, const Tonemap& tonemap) const
 		writeEXR(fname);
 	}
 
-	else
-	{
-		std::string img_name;
-
-		// force a png write
-		img_name = fname.substr(0, dot) + ".png";
-		writePNG(img_name, tonemap);
-	}
+	// force a png write
+	img_name = fname.substr(0, dot) + ".png";
+	writePNG(img_name, tonemap);
 }
 
 void Image::writeEXR(std::string fname) const
