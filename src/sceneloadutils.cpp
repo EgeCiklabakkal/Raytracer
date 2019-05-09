@@ -433,6 +433,7 @@ int getTextures(tinyxml2::XMLElement* element, std::stringstream& ss, const std:
 		{
 			float offset, scale;
 			rgb black, white;
+			bool dim3;
 
 			getrgbChildWithDefault(element_texture, ss, "BlackColor", rgb(), black);
 			getrgbChildWithDefault(element_texture, ss, "WhiteColor", rgb(1.0f), white);
@@ -442,12 +443,13 @@ int getTextures(tinyxml2::XMLElement* element, std::stringstream& ss, const std:
 							0.01f, offset);
 			getFloatChildWithDefault(element_texture, ss, "Normalizer",
 							1.0f, normalizer);
+			getBoolChildWithDefault(element_texture, "Dimension3", true, dim3);
 			decal_mode = getDecalMode(element_texture);
 
 			CBTexture *cbTexture = new CBTexture(offset, scale, normalizer,
 								black, white, decal_mode,
 								bumpmap, bumpmapMultiplier,
-								degamma);
+								degamma, dim3);
 
 			textures.push_back(cbTexture);
 		}
