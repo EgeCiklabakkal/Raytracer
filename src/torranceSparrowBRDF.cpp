@@ -71,7 +71,7 @@ rgb TorranceSparrowBRDF::brdf(const Ray& r, const HitRecord& record,
 rgb TorranceSparrowBRDF::value(const Ray& r, const HitRecord& record,
 				const SampleLight& slight) const
 {
-	rgb Li(slight.intensity);
+	rgb Li(slight.radiance);
 	float costheta_i = std::max(0.0f, dot(record.normal, slight.wi));
 	rgb f = brdf(r, record, slight);
 

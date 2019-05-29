@@ -17,16 +17,16 @@ class SampleLight
 {
 	public:
 
-	Vec3 intensity;
+	Vec3 radiance;
 	Vec3 wi;	// direction of incoming light, ie. light.position - p
 
 	SampleLight() {}
-	SampleLight(const Vec3& _intensity, const Vec3& _wi) :
-	intensity(_intensity), wi(_wi) {}
+	SampleLight(const Vec3& _radiance, const Vec3& _wi) :
+	radiance(_radiance), wi(_wi) {}
 
 	SampleLight& operator=(const SampleLight& rhs)
 	{
-		intensity  = rhs.intensity;
+		radiance   = rhs.radiance;
 		wi 	   = rhs.wi;
 
 		return *this;

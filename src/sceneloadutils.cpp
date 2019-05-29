@@ -1298,6 +1298,7 @@ void parseMaterial(Material& material, tinyxml2::XMLElement* element,
 	ss >> material.refraction_index;
 	ss >> material.roughness;
 	material.degamma = getBoolAttributeWithDefault(element, "degamma", false);
+	material.light = false;
 	material.brdf = brdfs[brdf_id];	// Already 1-based indexing (0 for simple)
 }
 

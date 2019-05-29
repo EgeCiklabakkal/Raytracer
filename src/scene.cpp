@@ -130,6 +130,11 @@ rgb Scene::rayColor(const Ray& r, int recursion_depth, const Tonemap& tonemap, c
 	{
 		if(!cullFace || !r.primary || (dot(r.direction(), record.normal) < 0))
 		{
+			if(record.material.light)	// ray hit a light object
+			{
+				return record.color;
+			}
+
 			// Handle texture
 			textured = handleTexture(record, decal_mode, rcolor);
 			handleTonemap(tonemap, record, rcolor);
@@ -202,7 +207,7 @@ rgb Scene::ambientColor(const HitRecord& record) const
 
 rgb Scene::diffuseColor(const Ray& r, const HitRecord& record, const SampleLight& slight) const
 {
-	rgb I(slight.intensity);
+	rgb I(slight.radiance);
 	rgb kd(record.material.diffuse);
 
 	float costheta = std::max(0.0f, dot(slight.wi, record.normal));
@@ -212,7 +217,7 @@ rgb Scene::diffuseColor(const Ray& r, const HitRecord& record, const SampleLight
 
 rgb Scene::specularColor(const Ray& r, const HitRecord& record, const SampleLight& slight) const
 {
-	rgb I(slight.intensity);
+	rgb I(slight.radiance);
 	rgb ks(record.material.specular);
 	float phong_exp = record.material.phong_exponent;
 

@@ -6,7 +6,7 @@ SimpleBRDF::~SimpleBRDF() {}
 
 rgb SimpleBRDF::diffuseColor(const HitRecord& record, const SampleLight& slight) const
 {
-	rgb I(slight.intensity);
+	rgb I(slight.radiance);
 	rgb kd(record.material.diffuse);
 
 	float costheta = std::max(0.0f, dot(slight.wi, record.normal));
@@ -17,7 +17,7 @@ rgb SimpleBRDF::diffuseColor(const HitRecord& record, const SampleLight& slight)
 rgb SimpleBRDF::specularColor(const Ray& r, const HitRecord& record,
 				const SampleLight& slight) const
 {
-	rgb I(slight.intensity);
+	rgb I(slight.radiance);
 	rgb ks(record.material.specular);
 	float phong_exp = record.material.phong_exponent;
 
