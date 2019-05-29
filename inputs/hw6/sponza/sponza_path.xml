@@ -1,0 +1,2303 @@
+<Scene>
+    <MaxRecursionDepth>3</MaxRecursionDepth>
+
+    <BackgroundColor>0 0 0</BackgroundColor>
+
+    <ShadowRayEpsilon>1e-3</ShadowRayEpsilon>
+
+    <IntersectionTestEpsilon>1e-3</IntersectionTestEpsilon>
+
+    <ZeroBasedIndexing>true</ZeroBasedIndexing>
+
+    <Cameras>
+        <Camera id="1">
+            <Position>90 10.593 -3.232</Position>
+            <Gaze>-1 0 0</Gaze>
+            <Up>0 1 0</Up>
+            <NearPlane>-0.0549423 0.0549423 -0.030905 0.030905</NearPlane>
+            <NearDistance>0.1</NearDistance>
+            <ImageResolution>800 450</ImageResolution>
+            <ImageName>sponza_path.exr</ImageName>
+            <NumSamples>1</NumSamples>
+            <!--<ClampSamples>500</ClampSamples>-->
+            <Tonemap>
+                <TMO>Photographic</TMO>
+                <!-- Parameters below represent the image key value and
+                     burn out percent. 1 means 1 percent of the pixels
+                     will be burned out to create a bloom-like effect -->
+                <TMOOptions>0.018 0</TMOOptions>
+                <Saturation>1.0</Saturation>
+                <Gamma>2.2</Gamma>
+            </Tonemap>
+            <Renderer>PathTracing</Renderer>
+            <RendererParams>NextEventEstimation</RendererParams>
+        </Camera>
+    </Cameras>
+
+    <Lights>
+        <PointLight id="1">
+            <Position>0 10.5928 -3.23188</Position>
+            <Intensity>1e+05 1e+05 1e+05</Intensity>
+        </PointLight>
+        <PointLight id="2">
+            <Position>-100 10.9 -3.232</Position>
+            <Intensity>1e+05 1e+05 1e+05</Intensity>
+        </PointLight>
+    </Lights>
+
+    <Materials>
+        <Material id="1" degamma="true">
+            <AmbientReflectance>0.1 0.1 0.1</AmbientReflectance>
+            <DiffuseReflectance>0.8 0.8 0.8</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+        </Material>
+        <Material id="2" degamma="true">
+            <AmbientReflectance>0.1 0.1 0.1</AmbientReflectance>
+            <DiffuseReflectance>0.8 0.8 0.8</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+        </Material>
+        <Material id="3" degamma="true">
+            <AmbientReflectance>0.1 0.1 0.1</AmbientReflectance>
+            <DiffuseReflectance>0.8 0.8 0.8</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+        </Material>
+        <Material id="4" degamma="true">
+            <AmbientReflectance>0.1 0.1 0.1</AmbientReflectance>
+            <DiffuseReflectance>0.8 0.8 0.8</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+        </Material>
+        <Material id="5" degamma="true">
+            <AmbientReflectance>0.1 0.1 0.1</AmbientReflectance>
+            <DiffuseReflectance>0.8 0.8 0.8</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+        </Material>
+        <Material id="6" degamma="true">
+            <AmbientReflectance>0.1 0.1 0.1</AmbientReflectance>
+            <DiffuseReflectance>0 0 0</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+        </Material>
+        <Material id="7" degamma="true">
+            <AmbientReflectance>0.1 0.1 0.1</AmbientReflectance>
+            <DiffuseReflectance>0.8 0.8 0.8</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+        </Material>
+        <Material id="8" degamma="true">
+            <AmbientReflectance>0.1 0.1 0.1</AmbientReflectance>
+            <DiffuseReflectance>0.8 0.8 0.8</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+        </Material>
+        <Material id="9" degamma="true">
+            <AmbientReflectance>0.1 0.1 0.1</AmbientReflectance>
+            <DiffuseReflectance>0.8 0.8 0.8</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+        </Material>
+        <Material id="10" degamma="true">
+            <AmbientReflectance>0.1 0.1 0.1</AmbientReflectance>
+            <DiffuseReflectance>0.8 0.8 0.8</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+        </Material>
+        <Material id="11" degamma="true">
+            <AmbientReflectance>0.1 0.1 0.1</AmbientReflectance>
+            <DiffuseReflectance>0.8 0.8 0.8</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+        </Material>
+        <Material id="12" degamma="true">
+            <AmbientReflectance>0.1 0.1 0.1</AmbientReflectance>
+            <DiffuseReflectance>0.8 0.8 0.8</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+        </Material>
+        <Material id="13" degamma="true">
+            <AmbientReflectance>0.1 0.1 0.1</AmbientReflectance>
+            <DiffuseReflectance>0.8 0.8 0.8</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+        </Material>
+        <Material id="14" degamma="true">
+            <AmbientReflectance>0.1 0.1 0.1</AmbientReflectance>
+            <DiffuseReflectance>0.8 0.8 0.8</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+        </Material>
+        <Material id="15" degamma="true">
+            <AmbientReflectance>0.1 0.1 0.1</AmbientReflectance>
+            <DiffuseReflectance>0.8 0.8 0.8</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+        </Material>
+        <Material id="16" degamma="true">
+            <AmbientReflectance>0.1 0.1 0.1</AmbientReflectance>
+            <DiffuseReflectance>0.8 0.8 0.8</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+        </Material>
+        <Material id="17" degamma="true">
+            <AmbientReflectance>0.1 0.1 0.1</AmbientReflectance>
+            <DiffuseReflectance>0.8 0.8 0.8</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+        </Material>
+        <Material id="18" degamma="true">
+            <AmbientReflectance>0.1 0.1 0.1</AmbientReflectance>
+            <DiffuseReflectance>0.8 0.8 0.8</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+        </Material>
+        <Material id="19" degamma="true">
+            <AmbientReflectance>0.1 0.1 0.1</AmbientReflectance>
+            <DiffuseReflectance>0.8 0.8 0.8</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+        </Material>
+        <Material id="20" degamma="true">
+            <AmbientReflectance>0.1 0.1 0.1</AmbientReflectance>
+            <DiffuseReflectance>0.8 0.8 0.8</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+        </Material>
+        <Material id="21" degamma="true">
+            <AmbientReflectance>0.1 0.1 0.1</AmbientReflectance>
+            <DiffuseReflectance>0.8 0.8 0.8</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+        </Material>
+        <Material id="22" degamma="true">
+            <AmbientReflectance>0.1 0.1 0.1</AmbientReflectance>
+            <DiffuseReflectance>0.4704 0.4704 0.4704</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+        </Material>
+        <Material id="23" degamma="true">
+            <AmbientReflectance>0.1 0.1 0.1</AmbientReflectance>
+            <DiffuseReflectance>0.8 0.8 0.8</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+        </Material>
+        <Material id="24" degamma="true">
+            <AmbientReflectance>0.1 0.1 0.1</AmbientReflectance>
+            <DiffuseReflectance>0.8 0.8 0.8</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+        </Material>
+        <Material id="25" degamma="true">
+            <AmbientReflectance>0.1 0.1 0.1</AmbientReflectance>
+            <DiffuseReflectance>0.8 0.8 0.8</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+        </Material>
+    </Materials>
+
+    <Textures>
+        <Texture id="1" degamma="true">
+            <ImageName>textures/sponza_column_b_diff_flip.png</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+        </Texture>
+        <Texture id="2" degamma="true">
+            <ImageName>textures/sponza_arch_diff_flip.png</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+        </Texture>
+        <Texture id="3" degamma="true">
+            <ImageName>textures/sponza_column_a_diff_flip.png</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+        </Texture>
+        <Texture id="4" degamma="true">
+            <ImageName>textures/sponza_thorn_diff_flip.png</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+        </Texture>
+        <Texture id="5" degamma="true">
+            <ImageName>textures/sponza_ceiling_a_diff_flip.png</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+        </Texture>
+        <Texture id="6" degamma="true">
+            <ImageName>textures/spnza_bricks_a_diff_flip.png</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+        </Texture>
+        <Texture id="7" degamma="true">
+            <ImageName>textures/sponza_column_c_diff_flip.png</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+        </Texture>
+        <Texture id="8" degamma="true">
+            <ImageName>textures/sponza_flagpole_diff_flip.png</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+        </Texture>
+        <Texture id="9" degamma="true">
+            <ImageName>textures/vase_dif_flip.png</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+        </Texture>
+        <Texture id="10" degamma="true">
+            <ImageName>textures/sponza_curtain_green_diff_flip.png</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+        </Texture>
+        <Texture id="11" degamma="true">
+            <ImageName>textures/sponza_fabric_diff_flip.png</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+        </Texture>
+        <Texture id="12" degamma="true">
+            <ImageName>textures/sponza_fabric_blue_diff_flip.png</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+        </Texture>
+        <Texture id="13" degamma="true">
+            <ImageName>textures/sponza_fabric_green_diff_flip.png</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+        </Texture>
+        <Texture id="14" degamma="true">
+            <ImageName>textures/vase_hanging_flip.png</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+        </Texture>
+        <Texture id="15" degamma="true">
+            <ImageName>textures/chain_texture_flip.png</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+        </Texture>
+        <Texture id="16" degamma="true">
+            <ImageName>textures/sponza_roof_diff_flip.png</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+        </Texture>
+        <Texture id="17" degamma="true">
+            <ImageName>textures/vase_plant_flip.png</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+        </Texture>
+        <Texture id="18" degamma="true">
+            <ImageName>textures/vase_round_flip.png</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+        </Texture>
+        <Texture id="19" degamma="true">
+            <ImageName>textures/sponza_curtain_diff_flip.png</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+        </Texture>
+        <Texture id="20" degamma="true">
+            <ImageName>textures/sponza_curtain_blue_diff_flip.png</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+        </Texture>
+        <Texture id="21" degamma="true">
+            <ImageName>textures/sponza_floor_a_diff_flip.png</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+        </Texture>
+        <!--
+        <Texture id="22">
+            <ImageName>textures/</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+        </Texture>
+        -->
+        <Texture id="23" degamma="true">
+            <ImageName>textures/lion_flip.png</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+        </Texture>
+        <Texture id="24" degamma="true">
+            <ImageName>textures/background_flip.png</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+        </Texture>
+        <Texture id="25" degamma="true">
+            <ImageName>textures/sponza_details_diff_flip.png</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+        </Texture>
+    </Textures>
+
+    <VertexData binaryFile="geometry/vertices.bin" />
+
+    <TexCoordData binaryFile="geometry/uvs.bin" />
+
+    <Objects>
+        <Mesh id="1" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/0_face.bin" />
+        </Mesh>
+        <Mesh id="2" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/1_face.bin" />
+        </Mesh>
+        <Mesh id="3" shadingMode="flat">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Faces binaryFile="geometry/2_face.bin" />
+        </Mesh>
+        <Mesh id="4" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/3_face.bin" />
+        </Mesh>
+        <Mesh id="5" shadingMode="flat">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Faces binaryFile="geometry/4_face.bin" />
+        </Mesh>
+        <Mesh id="6" shadingMode="flat">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Faces binaryFile="geometry/5_face.bin" />
+        </Mesh>
+        <Mesh id="7" shadingMode="flat">
+            <Material>3</Material>
+            <Texture>3</Texture>
+            <Faces binaryFile="geometry/6_face.bin" />
+        </Mesh>
+        <Mesh id="8" shadingMode="flat">
+            <Material>3</Material>
+            <Texture>3</Texture>
+            <Faces binaryFile="geometry/7_face.bin" />
+        </Mesh>
+        <Mesh id="9" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/8_face.bin" />
+        </Mesh>
+        <Mesh id="10" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/9_face.bin" />
+        </Mesh>
+        <Mesh id="11" shadingMode="flat">
+            <Material>4</Material>
+            <Texture>4</Texture>
+            <Faces binaryFile="geometry/10_face.bin" />
+        </Mesh>
+        <Mesh id="12" shadingMode="flat">
+            <Material>4</Material>
+            <Texture>4</Texture>
+            <Faces binaryFile="geometry/11_face.bin" />
+        </Mesh>
+        <Mesh id="13" shadingMode="flat">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Faces binaryFile="geometry/12_face.bin" />
+        </Mesh>
+        <Mesh id="14" shadingMode="flat">
+            <Material>5</Material>
+            <Texture>5</Texture>
+            <Faces binaryFile="geometry/13_face.bin" />
+        </Mesh>
+        <Mesh id="15" shadingMode="flat">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Faces binaryFile="geometry/14_face.bin" />
+        </Mesh>
+        <Mesh id="16" shadingMode="flat">
+            <Material>6</Material>
+            <Texture>6</Texture>
+            <Faces binaryFile="geometry/15_face.bin" />
+        </Mesh>
+        <Mesh id="17" shadingMode="flat">
+            <Material>5</Material>
+            <Texture>5</Texture>
+            <Faces binaryFile="geometry/16_face.bin" />
+        </Mesh>
+        <Mesh id="18" shadingMode="flat">
+            <Material>6</Material>
+            <Texture>6</Texture>
+            <Faces binaryFile="geometry/17_face.bin" />
+        </Mesh>
+        <Mesh id="19" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/18_face.bin" />
+        </Mesh>
+        <Mesh id="20" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/19_face.bin" />
+        </Mesh>
+        <Mesh id="21" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/20_face.bin" />
+        </Mesh>
+        <Mesh id="22" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/21_face.bin" />
+        </Mesh>
+        <Mesh id="23" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/22_face.bin" />
+        </Mesh>
+        <Mesh id="24" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/23_face.bin" />
+        </Mesh>
+        <Mesh id="25" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/24_face.bin" />
+        </Mesh>
+        <Mesh id="26" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/25_face.bin" />
+        </Mesh>
+        <Mesh id="27" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/26_face.bin" />
+        </Mesh>
+        <Mesh id="28" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/27_face.bin" />
+        </Mesh>
+        <Mesh id="29" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/28_face.bin" />
+        </Mesh>
+        <Mesh id="30" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/29_face.bin" />
+        </Mesh>
+        <Mesh id="31" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/30_face.bin" />
+        </Mesh>
+        <Mesh id="32" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/31_face.bin" />
+        </Mesh>
+        <Mesh id="33" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/32_face.bin" />
+        </Mesh>
+        <Mesh id="34" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/33_face.bin" />
+        </Mesh>
+        <Mesh id="35" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/34_face.bin" />
+        </Mesh>
+        <Mesh id="36" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/35_face.bin" />
+        </Mesh>
+        <Mesh id="37" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/36_face.bin" />
+        </Mesh>
+        <Mesh id="38" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/37_face.bin" />
+        </Mesh>
+        <Mesh id="39" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/38_face.bin" />
+        </Mesh>
+        <Mesh id="40" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/39_face.bin" />
+        </Mesh>
+        <Mesh id="41" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/40_face.bin" />
+        </Mesh>
+        <Mesh id="42" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/41_face.bin" />
+        </Mesh>
+        <Mesh id="43" shadingMode="flat">
+            <Material>9</Material>
+            <Texture>9</Texture>
+            <Faces binaryFile="geometry/42_face.bin" />
+        </Mesh>
+        <Mesh id="44" shadingMode="flat">
+            <Material>10</Material>
+            <Texture>10</Texture>
+            <Faces binaryFile="geometry/43_face.bin" />
+        </Mesh>
+        <Mesh id="45" shadingMode="flat">
+            <Material>11</Material>
+            <Texture>11</Texture>
+            <Faces binaryFile="geometry/44_face.bin" />
+        </Mesh>
+        <Mesh id="46" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/45_face.bin" />
+        </Mesh>
+        <Mesh id="47" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/46_face.bin" />
+        </Mesh>
+        <Mesh id="48" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/47_face.bin" />
+        </Mesh>
+        <Mesh id="49" shadingMode="flat">
+            <Material>4</Material>
+            <Texture>4</Texture>
+            <Faces binaryFile="geometry/48_face.bin" />
+        </Mesh>
+        <Mesh id="50" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/49_face.bin" />
+        </Mesh>
+        <Mesh id="51" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/50_face.bin" />
+        </Mesh>
+        <Mesh id="52" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/51_face.bin" />
+        </Mesh>
+        <Mesh id="53" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/52_face.bin" />
+        </Mesh>
+        <Mesh id="54" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/53_face.bin" />
+        </Mesh>
+        <Mesh id="55" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/54_face.bin" />
+        </Mesh>
+        <Mesh id="56" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/55_face.bin" />
+        </Mesh>
+        <Mesh id="57" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/56_face.bin" />
+        </Mesh>
+        <Mesh id="58" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/57_face.bin" />
+        </Mesh>
+        <Mesh id="59" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/58_face.bin" />
+        </Mesh>
+        <Mesh id="60" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/59_face.bin" />
+        </Mesh>
+        <Mesh id="61" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/60_face.bin" />
+        </Mesh>
+        <Mesh id="62" shadingMode="flat">
+            <Material>12</Material>
+            <Texture>12</Texture>
+            <Faces binaryFile="geometry/61_face.bin" />
+        </Mesh>
+        <Mesh id="63" shadingMode="flat">
+            <Material>13</Material>
+            <Texture>13</Texture>
+            <Faces binaryFile="geometry/62_face.bin" />
+        </Mesh>
+        <Mesh id="64" shadingMode="flat">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Faces binaryFile="geometry/63_face.bin" />
+        </Mesh>
+        <Mesh id="65" shadingMode="flat">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Faces binaryFile="geometry/64_face.bin" />
+        </Mesh>
+        <Mesh id="66" shadingMode="flat">
+            <Material>6</Material>
+            <Texture>6</Texture>
+            <Faces binaryFile="geometry/65_face.bin" />
+        </Mesh>
+        <Mesh id="67" shadingMode="flat">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Faces binaryFile="geometry/66_face.bin" />
+        </Mesh>
+        <Mesh id="68" shadingMode="flat">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Faces binaryFile="geometry/67_face.bin" />
+        </Mesh>
+        <Mesh id="69" shadingMode="flat">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Faces binaryFile="geometry/68_face.bin" />
+        </Mesh>
+        <Mesh id="70" shadingMode="flat">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Faces binaryFile="geometry/69_face.bin" />
+        </Mesh>
+        <Mesh id="71" shadingMode="flat">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Faces binaryFile="geometry/70_face.bin" />
+        </Mesh>
+        <Mesh id="72" shadingMode="flat">
+            <Material>6</Material>
+            <Texture>6</Texture>
+            <Faces binaryFile="geometry/71_face.bin" />
+        </Mesh>
+        <Mesh id="73" shadingMode="flat">
+            <Material>6</Material>
+            <Texture>6</Texture>
+            <Faces binaryFile="geometry/72_face.bin" />
+        </Mesh>
+        <Mesh id="74" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/73_face.bin" />
+        </Mesh>
+        <Mesh id="75" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/74_face.bin" />
+        </Mesh>
+        <Mesh id="76" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/75_face.bin" />
+        </Mesh>
+        <Mesh id="77" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/76_face.bin" />
+        </Mesh>
+        <Mesh id="78" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/77_face.bin" />
+        </Mesh>
+        <Mesh id="79" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/78_face.bin" />
+        </Mesh>
+        <Mesh id="80" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/79_face.bin" />
+        </Mesh>
+        <Mesh id="81" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/80_face.bin" />
+        </Mesh>
+        <Mesh id="82" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/81_face.bin" />
+        </Mesh>
+        <Mesh id="83" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/82_face.bin" />
+        </Mesh>
+        <Mesh id="84" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/83_face.bin" />
+        </Mesh>
+        <Mesh id="85" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/84_face.bin" />
+        </Mesh>
+        <Mesh id="86" shadingMode="flat">
+            <Material>14</Material>
+            <Texture>14</Texture>
+            <Faces binaryFile="geometry/85_face.bin" />
+        </Mesh>
+        <Mesh id="87" shadingMode="flat">
+            <Material>14</Material>
+            <Texture>14</Texture>
+            <Faces binaryFile="geometry/86_face.bin" />
+        </Mesh>
+        <Mesh id="88" shadingMode="flat">
+            <Material>14</Material>
+            <Texture>14</Texture>
+            <Faces binaryFile="geometry/87_face.bin" />
+        </Mesh>
+        <Mesh id="89" shadingMode="flat">
+            <Material>14</Material>
+            <Texture>14</Texture>
+            <Faces binaryFile="geometry/88_face.bin" />
+        </Mesh>
+        <Mesh id="90" shadingMode="flat">
+            <Material>15</Material>
+            <Texture>15</Texture>
+            <Faces binaryFile="geometry/89_face.bin" />
+        </Mesh>
+        <Mesh id="91" shadingMode="flat">
+            <Material>14</Material>
+            <Texture>14</Texture>
+            <Faces binaryFile="geometry/90_face.bin" />
+        </Mesh>
+        <Mesh id="92" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/91_face.bin" />
+        </Mesh>
+        <Mesh id="93" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/92_face.bin" />
+        </Mesh>
+        <Mesh id="94" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/93_face.bin" />
+        </Mesh>
+        <Mesh id="95" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/94_face.bin" />
+        </Mesh>
+        <Mesh id="96" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/95_face.bin" />
+        </Mesh>
+        <Mesh id="97" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/96_face.bin" />
+        </Mesh>
+        <Mesh id="98" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/97_face.bin" />
+        </Mesh>
+        <Mesh id="99" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/98_face.bin" />
+        </Mesh>
+        <Mesh id="100" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/99_face.bin" />
+        </Mesh>
+        <Mesh id="101" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/100_face.bin" />
+        </Mesh>
+        <Mesh id="102" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/101_face.bin" />
+        </Mesh>
+        <Mesh id="103" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/102_face.bin" />
+        </Mesh>
+        <Mesh id="104" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/103_face.bin" />
+        </Mesh>
+        <Mesh id="105" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/104_face.bin" />
+        </Mesh>
+        <Mesh id="106" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/105_face.bin" />
+        </Mesh>
+        <Mesh id="107" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/106_face.bin" />
+        </Mesh>
+        <Mesh id="108" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/107_face.bin" />
+        </Mesh>
+        <Mesh id="109" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/108_face.bin" />
+        </Mesh>
+        <Mesh id="110" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/109_face.bin" />
+        </Mesh>
+        <Mesh id="111" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/110_face.bin" />
+        </Mesh>
+        <Mesh id="112" shadingMode="flat">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Faces binaryFile="geometry/111_face.bin" />
+        </Mesh>
+        <Mesh id="113" shadingMode="flat">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Faces binaryFile="geometry/112_face.bin" />
+        </Mesh>
+        <Mesh id="114" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/113_face.bin" />
+        </Mesh>
+        <Mesh id="115" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/114_face.bin" />
+        </Mesh>
+        <Mesh id="116" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/115_face.bin" />
+        </Mesh>
+        <Mesh id="117" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/116_face.bin" />
+        </Mesh>
+        <Mesh id="118" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/117_face.bin" />
+        </Mesh>
+        <Mesh id="119" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/118_face.bin" />
+        </Mesh>
+        <Mesh id="120" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/119_face.bin" />
+        </Mesh>
+        <Mesh id="121" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/120_face.bin" />
+        </Mesh>
+        <Mesh id="122" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/121_face.bin" />
+        </Mesh>
+        <Mesh id="123" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/122_face.bin" />
+        </Mesh>
+        <Mesh id="124" shadingMode="flat">
+            <Material>6</Material>
+            <Texture>6</Texture>
+            <Faces binaryFile="geometry/123_face.bin" />
+        </Mesh>
+        <Mesh id="125" shadingMode="flat">
+            <Material>16</Material>
+            <Texture>16</Texture>
+            <Faces binaryFile="geometry/124_face.bin" />
+        </Mesh>
+        <Mesh id="126" shadingMode="flat">
+            <Material>16</Material>
+            <Texture>16</Texture>
+            <Faces binaryFile="geometry/125_face.bin" />
+        </Mesh>
+        <Mesh id="127" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/126_face.bin" />
+        </Mesh>
+        <Mesh id="128" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/127_face.bin" />
+        </Mesh>
+        <Mesh id="129" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/128_face.bin" />
+        </Mesh>
+        <Mesh id="130" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/129_face.bin" />
+        </Mesh>
+        <Mesh id="131" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/130_face.bin" />
+        </Mesh>
+        <Mesh id="132" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/131_face.bin" />
+        </Mesh>
+        <Mesh id="133" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/132_face.bin" />
+        </Mesh>
+        <Mesh id="134" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/133_face.bin" />
+        </Mesh>
+        <Mesh id="135" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/134_face.bin" />
+        </Mesh>
+        <Mesh id="136" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/135_face.bin" />
+        </Mesh>
+        <Mesh id="137" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/136_face.bin" />
+        </Mesh>
+        <Mesh id="138" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/137_face.bin" />
+        </Mesh>
+        <Mesh id="139" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/138_face.bin" />
+        </Mesh>
+        <Mesh id="140" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/139_face.bin" />
+        </Mesh>
+        <Mesh id="141" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/140_face.bin" />
+        </Mesh>
+        <Mesh id="142" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/141_face.bin" />
+        </Mesh>
+        <Mesh id="143" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/142_face.bin" />
+        </Mesh>
+        <Mesh id="144" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/143_face.bin" />
+        </Mesh>
+        <Mesh id="145" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/144_face.bin" />
+        </Mesh>
+        <Mesh id="146" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/145_face.bin" />
+        </Mesh>
+        <Mesh id="147" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/146_face.bin" />
+        </Mesh>
+        <Mesh id="148" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/147_face.bin" />
+        </Mesh>
+        <Mesh id="149" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/148_face.bin" />
+        </Mesh>
+        <Mesh id="150" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/149_face.bin" />
+        </Mesh>
+        <Mesh id="151" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/150_face.bin" />
+        </Mesh>
+        <Mesh id="152" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/151_face.bin" />
+        </Mesh>
+        <Mesh id="153" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/152_face.bin" />
+        </Mesh>
+        <Mesh id="154" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/153_face.bin" />
+        </Mesh>
+        <Mesh id="155" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/154_face.bin" />
+        </Mesh>
+        <Mesh id="156" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/155_face.bin" />
+        </Mesh>
+        <Mesh id="157" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/156_face.bin" />
+        </Mesh>
+        <Mesh id="158" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/157_face.bin" />
+        </Mesh>
+        <Mesh id="159" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/158_face.bin" />
+        </Mesh>
+        <Mesh id="160" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/159_face.bin" />
+        </Mesh>
+        <Mesh id="161" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/160_face.bin" />
+        </Mesh>
+        <Mesh id="162" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/161_face.bin" />
+        </Mesh>
+        <Mesh id="163" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/162_face.bin" />
+        </Mesh>
+        <Mesh id="164" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/163_face.bin" />
+        </Mesh>
+        <Mesh id="165" shadingMode="flat">
+            <Material>17</Material>
+            <Texture>17</Texture>
+            <Faces binaryFile="geometry/164_face.bin" />
+        </Mesh>
+        <Mesh id="166" shadingMode="flat">
+            <Material>18</Material>
+            <Texture>18</Texture>
+            <Faces binaryFile="geometry/165_face.bin" />
+        </Mesh>
+        <Mesh id="167" shadingMode="flat">
+            <Material>17</Material>
+            <Texture>17</Texture>
+            <Faces binaryFile="geometry/166_face.bin" />
+        </Mesh>
+        <Mesh id="168" shadingMode="flat">
+            <Material>18</Material>
+            <Texture>18</Texture>
+            <Faces binaryFile="geometry/167_face.bin" />
+        </Mesh>
+        <Mesh id="169" shadingMode="flat">
+            <Material>15</Material>
+            <Texture>15</Texture>
+            <Faces binaryFile="geometry/168_face.bin" />
+        </Mesh>
+        <Mesh id="170" shadingMode="flat">
+            <Material>14</Material>
+            <Texture>14</Texture>
+            <Faces binaryFile="geometry/169_face.bin" />
+        </Mesh>
+        <Mesh id="171" shadingMode="flat">
+            <Material>14</Material>
+            <Texture>14</Texture>
+            <Faces binaryFile="geometry/170_face.bin" />
+        </Mesh>
+        <Mesh id="172" shadingMode="flat">
+            <Material>14</Material>
+            <Texture>14</Texture>
+            <Faces binaryFile="geometry/171_face.bin" />
+        </Mesh>
+        <Mesh id="173" shadingMode="flat">
+            <Material>14</Material>
+            <Texture>14</Texture>
+            <Faces binaryFile="geometry/172_face.bin" />
+        </Mesh>
+        <Mesh id="174" shadingMode="flat">
+            <Material>14</Material>
+            <Texture>14</Texture>
+            <Faces binaryFile="geometry/173_face.bin" />
+        </Mesh>
+        <Mesh id="175" shadingMode="flat">
+            <Material>17</Material>
+            <Texture>17</Texture>
+            <Faces binaryFile="geometry/174_face.bin" />
+        </Mesh>
+        <Mesh id="176" shadingMode="flat">
+            <Material>18</Material>
+            <Texture>18</Texture>
+            <Faces binaryFile="geometry/175_face.bin" />
+        </Mesh>
+        <Mesh id="177" shadingMode="flat">
+            <Material>17</Material>
+            <Texture>17</Texture>
+            <Faces binaryFile="geometry/176_face.bin" />
+        </Mesh>
+        <Mesh id="178" shadingMode="flat">
+            <Material>18</Material>
+            <Texture>18</Texture>
+            <Faces binaryFile="geometry/177_face.bin" />
+        </Mesh>
+        <Mesh id="179" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/178_face.bin" />
+        </Mesh>
+        <Mesh id="180" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/179_face.bin" />
+        </Mesh>
+        <Mesh id="181" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/180_face.bin" />
+        </Mesh>
+        <Mesh id="182" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/181_face.bin" />
+        </Mesh>
+        <Mesh id="183" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/182_face.bin" />
+        </Mesh>
+        <Mesh id="184" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/183_face.bin" />
+        </Mesh>
+        <Mesh id="185" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/184_face.bin" />
+        </Mesh>
+        <Mesh id="186" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/185_face.bin" />
+        </Mesh>
+        <Mesh id="187" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/186_face.bin" />
+        </Mesh>
+        <Mesh id="188" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/187_face.bin" />
+        </Mesh>
+        <Mesh id="189" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/188_face.bin" />
+        </Mesh>
+        <Mesh id="190" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/189_face.bin" />
+        </Mesh>
+        <Mesh id="191" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/190_face.bin" />
+        </Mesh>
+        <Mesh id="192" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/191_face.bin" />
+        </Mesh>
+        <Mesh id="193" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/192_face.bin" />
+        </Mesh>
+        <Mesh id="194" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/193_face.bin" />
+        </Mesh>
+        <Mesh id="195" shadingMode="flat">
+            <Material>15</Material>
+            <Texture>15</Texture>
+            <Faces binaryFile="geometry/194_face.bin" />
+        </Mesh>
+        <Mesh id="196" shadingMode="flat">
+            <Material>15</Material>
+            <Texture>15</Texture>
+            <Faces binaryFile="geometry/195_face.bin" />
+        </Mesh>
+        <Mesh id="197" shadingMode="flat">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Faces binaryFile="geometry/196_face.bin" />
+        </Mesh>
+        <Mesh id="198" shadingMode="flat">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Faces binaryFile="geometry/197_face.bin" />
+        </Mesh>
+        <Mesh id="199" shadingMode="flat">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Faces binaryFile="geometry/198_face.bin" />
+        </Mesh>
+        <Mesh id="200" shadingMode="flat">
+            <Material>5</Material>
+            <Texture>5</Texture>
+            <Faces binaryFile="geometry/199_face.bin" />
+        </Mesh>
+        <Mesh id="201" shadingMode="flat">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Faces binaryFile="geometry/200_face.bin" />
+        </Mesh>
+        <Mesh id="202" shadingMode="flat">
+            <Material>5</Material>
+            <Texture>5</Texture>
+            <Faces binaryFile="geometry/201_face.bin" />
+        </Mesh>
+        <Mesh id="203" shadingMode="flat">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Faces binaryFile="geometry/202_face.bin" />
+        </Mesh>
+        <Mesh id="204" shadingMode="flat">
+            <Material>5</Material>
+            <Texture>5</Texture>
+            <Faces binaryFile="geometry/203_face.bin" />
+        </Mesh>
+        <Mesh id="205" shadingMode="flat">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Faces binaryFile="geometry/204_face.bin" />
+        </Mesh>
+        <Mesh id="206" shadingMode="flat">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Faces binaryFile="geometry/205_face.bin" />
+        </Mesh>
+        <Mesh id="207" shadingMode="flat">
+            <Material>15</Material>
+            <Texture>15</Texture>
+            <Faces binaryFile="geometry/206_face.bin" />
+        </Mesh>
+        <Mesh id="208" shadingMode="flat">
+            <Material>15</Material>
+            <Texture>15</Texture>
+            <Faces binaryFile="geometry/207_face.bin" />
+        </Mesh>
+        <Mesh id="209" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/208_face.bin" />
+        </Mesh>
+        <Mesh id="210" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/209_face.bin" />
+        </Mesh>
+        <Mesh id="211" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/210_face.bin" />
+        </Mesh>
+        <Mesh id="212" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/211_face.bin" />
+        </Mesh>
+        <Mesh id="213" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/212_face.bin" />
+        </Mesh>
+        <Mesh id="214" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/213_face.bin" />
+        </Mesh>
+        <Mesh id="215" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/214_face.bin" />
+        </Mesh>
+        <Mesh id="216" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/215_face.bin" />
+        </Mesh>
+        <Mesh id="217" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/216_face.bin" />
+        </Mesh>
+        <Mesh id="218" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/217_face.bin" />
+        </Mesh>
+        <Mesh id="219" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/218_face.bin" />
+        </Mesh>
+        <Mesh id="220" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/219_face.bin" />
+        </Mesh>
+        <Mesh id="221" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/220_face.bin" />
+        </Mesh>
+        <Mesh id="222" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/221_face.bin" />
+        </Mesh>
+        <Mesh id="223" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/222_face.bin" />
+        </Mesh>
+        <Mesh id="224" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/223_face.bin" />
+        </Mesh>
+        <Mesh id="225" shadingMode="flat">
+            <Material>6</Material>
+            <Texture>6</Texture>
+            <Faces binaryFile="geometry/224_face.bin" />
+        </Mesh>
+        <Mesh id="226" shadingMode="flat">
+            <Material>10</Material>
+            <Texture>10</Texture>
+            <Faces binaryFile="geometry/225_face.bin" />
+        </Mesh>
+        <Mesh id="227" shadingMode="flat">
+            <Material>19</Material>
+            <Texture>19</Texture>
+            <Faces binaryFile="geometry/226_face.bin" />
+        </Mesh>
+        <Mesh id="228" shadingMode="flat">
+            <Material>20</Material>
+            <Texture>20</Texture>
+            <Faces binaryFile="geometry/227_face.bin" />
+        </Mesh>
+        <Mesh id="229" shadingMode="flat">
+            <Material>10</Material>
+            <Texture>10</Texture>
+            <Faces binaryFile="geometry/228_face.bin" />
+        </Mesh>
+        <Mesh id="230" shadingMode="flat">
+            <Material>20</Material>
+            <Texture>20</Texture>
+            <Faces binaryFile="geometry/229_face.bin" />
+        </Mesh>
+        <Mesh id="231" shadingMode="flat">
+            <Material>19</Material>
+            <Texture>19</Texture>
+            <Faces binaryFile="geometry/230_face.bin" />
+        </Mesh>
+        <Mesh id="232" shadingMode="flat">
+            <Material>12</Material>
+            <Texture>12</Texture>
+            <Faces binaryFile="geometry/231_face.bin" />
+        </Mesh>
+        <Mesh id="233" shadingMode="flat">
+            <Material>19</Material>
+            <Texture>19</Texture>
+            <Faces binaryFile="geometry/232_face.bin" />
+        </Mesh>
+        <Mesh id="234" shadingMode="flat">
+            <Material>13</Material>
+            <Texture>13</Texture>
+            <Faces binaryFile="geometry/233_face.bin" />
+        </Mesh>
+        <Mesh id="235" shadingMode="flat">
+            <Material>12</Material>
+            <Texture>12</Texture>
+            <Faces binaryFile="geometry/234_face.bin" />
+        </Mesh>
+        <Mesh id="236" shadingMode="flat">
+            <Material>13</Material>
+            <Texture>13</Texture>
+            <Faces binaryFile="geometry/235_face.bin" />
+        </Mesh>
+        <Mesh id="237" shadingMode="flat">
+            <Material>11</Material>
+            <Texture>11</Texture>
+            <Faces binaryFile="geometry/236_face.bin" />
+        </Mesh>
+        <Mesh id="238" shadingMode="flat">
+            <Material>19</Material>
+            <Texture>19</Texture>
+            <Faces binaryFile="geometry/237_face.bin" />
+        </Mesh>
+        <Mesh id="239" shadingMode="flat">
+            <Material>20</Material>
+            <Texture>20</Texture>
+            <Faces binaryFile="geometry/238_face.bin" />
+        </Mesh>
+        <Mesh id="240" shadingMode="flat">
+            <Material>4</Material>
+            <Texture>4</Texture>
+            <Faces binaryFile="geometry/239_face.bin" />
+        </Mesh>
+        <Mesh id="241" shadingMode="flat">
+            <Material>4</Material>
+            <Texture>4</Texture>
+            <Faces binaryFile="geometry/240_face.bin" />
+        </Mesh>
+        <Mesh id="242" shadingMode="flat">
+            <Material>3</Material>
+            <Texture>3</Texture>
+            <Faces binaryFile="geometry/241_face.bin" />
+        </Mesh>
+        <Mesh id="243" shadingMode="flat">
+            <Material>3</Material>
+            <Texture>3</Texture>
+            <Faces binaryFile="geometry/242_face.bin" />
+        </Mesh>
+        <Mesh id="244" shadingMode="flat">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Faces binaryFile="geometry/243_face.bin" />
+        </Mesh>
+        <Mesh id="245" shadingMode="flat">
+            <Material>3</Material>
+            <Texture>3</Texture>
+            <Faces binaryFile="geometry/244_face.bin" />
+        </Mesh>
+        <Mesh id="246" shadingMode="flat">
+            <Material>3</Material>
+            <Texture>3</Texture>
+            <Faces binaryFile="geometry/245_face.bin" />
+        </Mesh>
+        <Mesh id="247" shadingMode="flat">
+            <Material>3</Material>
+            <Texture>3</Texture>
+            <Faces binaryFile="geometry/246_face.bin" />
+        </Mesh>
+        <Mesh id="248" shadingMode="flat">
+            <Material>3</Material>
+            <Texture>3</Texture>
+            <Faces binaryFile="geometry/247_face.bin" />
+        </Mesh>
+        <Mesh id="249" shadingMode="flat">
+            <Material>3</Material>
+            <Texture>3</Texture>
+            <Faces binaryFile="geometry/248_face.bin" />
+        </Mesh>
+        <Mesh id="250" shadingMode="flat">
+            <Material>5</Material>
+            <Texture>5</Texture>
+            <Faces binaryFile="geometry/249_face.bin" />
+        </Mesh>
+        <!--
+        <Mesh id="251" shadingMode="flat">
+            <Material>21</Material>
+            <Texture>21</Texture>
+            <Faces binaryFile="geometry/250_face.bin" />
+        </Mesh>
+        -->
+        <Mesh id="252" shadingMode="flat">
+            <Material>6</Material>
+            <Texture>6</Texture>
+            <Faces binaryFile="geometry/251_face.bin" />
+        </Mesh>
+        <Mesh id="253" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/252_face.bin" />
+        </Mesh>
+        <Mesh id="254" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/253_face.bin" />
+        </Mesh>
+        <Mesh id="255" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/254_face.bin" />
+        </Mesh>
+        <Mesh id="256" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/255_face.bin" />
+        </Mesh>
+        <Mesh id="257" shadingMode="flat">
+            <Material>22</Material>
+            <Faces binaryFile="geometry/256_face.bin" />
+        </Mesh>
+        <Mesh id="258" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/257_face.bin" />
+        </Mesh>
+        <Mesh id="259" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/258_face.bin" />
+        </Mesh>
+        <Mesh id="260" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/259_face.bin" />
+        </Mesh>
+        <Mesh id="261" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/260_face.bin" />
+        </Mesh>
+        <Mesh id="262" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/261_face.bin" />
+        </Mesh>
+        <Mesh id="263" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/262_face.bin" />
+        </Mesh>
+        <Mesh id="264" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/263_face.bin" />
+        </Mesh>
+        <Mesh id="265" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/264_face.bin" />
+        </Mesh>
+        <Mesh id="266" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/265_face.bin" />
+        </Mesh>
+        <Mesh id="267" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/266_face.bin" />
+        </Mesh>
+        <Mesh id="268" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/267_face.bin" />
+        </Mesh>
+        <Mesh id="269" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/268_face.bin" />
+        </Mesh>
+        <Mesh id="270" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/269_face.bin" />
+        </Mesh>
+        <Mesh id="271" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/270_face.bin" />
+        </Mesh>
+        <Mesh id="272" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/271_face.bin" />
+        </Mesh>
+        <Mesh id="273" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/272_face.bin" />
+        </Mesh>
+        <Mesh id="274" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/273_face.bin" />
+        </Mesh>
+        <Mesh id="275" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/274_face.bin" />
+        </Mesh>
+        <Mesh id="276" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/275_face.bin" />
+        </Mesh>
+        <Mesh id="277" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/276_face.bin" />
+        </Mesh>
+        <Mesh id="278" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/277_face.bin" />
+        </Mesh>
+        <Mesh id="279" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/278_face.bin" />
+        </Mesh>
+        <Mesh id="280" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/279_face.bin" />
+        </Mesh>
+        <Mesh id="281" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/280_face.bin" />
+        </Mesh>
+        <Mesh id="282" shadingMode="flat">
+            <Material>6</Material>
+            <Texture>6</Texture>
+            <Faces binaryFile="geometry/281_face.bin" />
+        </Mesh>
+        <Mesh id="283" shadingMode="flat">
+            <Material>23</Material>
+            <Texture>23</Texture>
+            <Faces binaryFile="geometry/282_face.bin" />
+        </Mesh>
+        <Mesh id="284" shadingMode="flat">
+            <Material>24</Material>
+            <Texture>24</Texture>
+            <Faces binaryFile="geometry/283_face.bin" />
+        </Mesh>
+        <Mesh id="285" shadingMode="flat">
+            <Material>23</Material>
+            <Texture>23</Texture>
+            <Faces binaryFile="geometry/284_face.bin" />
+        </Mesh>
+        <Mesh id="286" shadingMode="flat">
+            <Material>24</Material>
+            <Texture>24</Texture>
+            <Faces binaryFile="geometry/285_face.bin" />
+        </Mesh>
+        <Mesh id="287" shadingMode="flat">
+            <Material>9</Material>
+            <Texture>9</Texture>
+            <Faces binaryFile="geometry/286_face.bin" />
+        </Mesh>
+        <Mesh id="288" shadingMode="flat">
+            <Material>9</Material>
+            <Texture>9</Texture>
+            <Faces binaryFile="geometry/287_face.bin" />
+        </Mesh>
+        <Mesh id="289" shadingMode="flat">
+            <Material>9</Material>
+            <Texture>9</Texture>
+            <Faces binaryFile="geometry/288_face.bin" />
+        </Mesh>
+        <Mesh id="290" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/289_face.bin" />
+        </Mesh>
+        <Mesh id="291" shadingMode="flat">
+            <Material>17</Material>
+            <Texture>17</Texture>
+            <Faces binaryFile="geometry/290_face.bin" />
+        </Mesh>
+        <Mesh id="292" shadingMode="flat">
+            <Material>18</Material>
+            <Texture>18</Texture>
+            <Faces binaryFile="geometry/291_face.bin" />
+        </Mesh>
+        <Mesh id="293" shadingMode="flat">
+            <Material>17</Material>
+            <Texture>17</Texture>
+            <Faces binaryFile="geometry/292_face.bin" />
+        </Mesh>
+        <Mesh id="294" shadingMode="flat">
+            <Material>18</Material>
+            <Texture>18</Texture>
+            <Faces binaryFile="geometry/293_face.bin" />
+        </Mesh>
+        <Mesh id="295" shadingMode="flat">
+            <Material>17</Material>
+            <Texture>17</Texture>
+            <Faces binaryFile="geometry/294_face.bin" />
+        </Mesh>
+        <Mesh id="296" shadingMode="flat">
+            <Material>18</Material>
+            <Texture>18</Texture>
+            <Faces binaryFile="geometry/295_face.bin" />
+        </Mesh>
+        <Mesh id="297" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/296_face.bin" />
+        </Mesh>
+        <Mesh id="298" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/297_face.bin" />
+        </Mesh>
+        <Mesh id="299" shadingMode="flat">
+            <Material>8</Material>
+            <Texture>8</Texture>
+            <Faces binaryFile="geometry/298_face.bin" />
+        </Mesh>
+        <Mesh id="300" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/299_face.bin" />
+        </Mesh>
+        <Mesh id="301" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/300_face.bin" />
+        </Mesh>
+        <Mesh id="302" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/301_face.bin" />
+        </Mesh>
+        <Mesh id="303" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/302_face.bin" />
+        </Mesh>
+        <Mesh id="304" shadingMode="flat">
+            <Material>21</Material>
+            <Texture>21</Texture>
+            <Faces binaryFile="geometry/303_face.bin" />
+        </Mesh>
+        <Mesh id="305" shadingMode="flat">
+            <Material>6</Material>
+            <Texture>6</Texture>
+            <Faces binaryFile="geometry/304_face.bin" />
+        </Mesh>
+        <Mesh id="306" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/305_face.bin" />
+        </Mesh>
+        <Mesh id="307" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/306_face.bin" />
+        </Mesh>
+        <Mesh id="308" shadingMode="flat">
+            <Material>3</Material>
+            <Texture>3</Texture>
+            <Faces binaryFile="geometry/307_face.bin" />
+        </Mesh>
+        <Mesh id="309" shadingMode="flat">
+            <Material>3</Material>
+            <Texture>3</Texture>
+            <Faces binaryFile="geometry/308_face.bin" />
+        </Mesh>
+        <Mesh id="310" shadingMode="flat">
+            <Material>5</Material>
+            <Texture>5</Texture>
+            <Faces binaryFile="geometry/309_face.bin" />
+        </Mesh>
+        <Mesh id="311" shadingMode="flat">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Faces binaryFile="geometry/310_face.bin" />
+        </Mesh>
+        <Mesh id="312" shadingMode="flat">
+            <Material>5</Material>
+            <Texture>5</Texture>
+            <Faces binaryFile="geometry/311_face.bin" />
+        </Mesh>
+        <Mesh id="313" shadingMode="flat">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Faces binaryFile="geometry/312_face.bin" />
+        </Mesh>
+        <Mesh id="314" shadingMode="flat">
+            <Material>5</Material>
+            <Texture>5</Texture>
+            <Faces binaryFile="geometry/313_face.bin" />
+        </Mesh>
+        <Mesh id="315" shadingMode="flat">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Faces binaryFile="geometry/314_face.bin" />
+        </Mesh>
+        <Mesh id="316" shadingMode="flat">
+            <Material>5</Material>
+            <Texture>5</Texture>
+            <Faces binaryFile="geometry/315_face.bin" />
+        </Mesh>
+        <Mesh id="317" shadingMode="flat">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Faces binaryFile="geometry/316_face.bin" />
+        </Mesh>
+        <Mesh id="318" shadingMode="flat">
+            <Material>5</Material>
+            <Texture>5</Texture>
+            <Faces binaryFile="geometry/317_face.bin" />
+        </Mesh>
+        <Mesh id="319" shadingMode="flat">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Faces binaryFile="geometry/318_face.bin" />
+        </Mesh>
+        <Mesh id="320" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/319_face.bin" />
+        </Mesh>
+        <Mesh id="321" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/320_face.bin" />
+        </Mesh>
+        <Mesh id="322" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/321_face.bin" />
+        </Mesh>
+        <Mesh id="323" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/322_face.bin" />
+        </Mesh>
+        <Mesh id="324" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/323_face.bin" />
+        </Mesh>
+        <Mesh id="325" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/324_face.bin" />
+        </Mesh>
+        <Mesh id="326" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/325_face.bin" />
+        </Mesh>
+        <Mesh id="327" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/326_face.bin" />
+        </Mesh>
+        <Mesh id="328" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/327_face.bin" />
+        </Mesh>
+        <Mesh id="329" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/328_face.bin" />
+        </Mesh>
+        <Mesh id="330" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/329_face.bin" />
+        </Mesh>
+        <Mesh id="331" shadingMode="flat">
+            <Material>15</Material>
+            <Texture>15</Texture>
+            <Faces binaryFile="geometry/330_face.bin" />
+        </Mesh>
+        <Mesh id="332" shadingMode="flat">
+            <Material>14</Material>
+            <Texture>14</Texture>
+            <Faces binaryFile="geometry/331_face.bin" />
+        </Mesh>
+        <Mesh id="333" shadingMode="flat">
+            <Material>15</Material>
+            <Texture>15</Texture>
+            <Faces binaryFile="geometry/332_face.bin" />
+        </Mesh>
+        <Mesh id="334" shadingMode="flat">
+            <Material>15</Material>
+            <Texture>15</Texture>
+            <Faces binaryFile="geometry/333_face.bin" />
+        </Mesh>
+        <Mesh id="335" shadingMode="flat">
+            <Material>15</Material>
+            <Texture>15</Texture>
+            <Faces binaryFile="geometry/334_face.bin" />
+        </Mesh>
+        <Mesh id="336" shadingMode="flat">
+            <Material>15</Material>
+            <Texture>15</Texture>
+            <Faces binaryFile="geometry/335_face.bin" />
+        </Mesh>
+        <Mesh id="337" shadingMode="flat">
+            <Material>14</Material>
+            <Texture>14</Texture>
+            <Faces binaryFile="geometry/336_face.bin" />
+        </Mesh>
+        <Mesh id="338" shadingMode="flat">
+            <Material>14</Material>
+            <Texture>14</Texture>
+            <Faces binaryFile="geometry/337_face.bin" />
+        </Mesh>
+        <Mesh id="339" shadingMode="flat">
+            <Material>14</Material>
+            <Texture>14</Texture>
+            <Faces binaryFile="geometry/338_face.bin" />
+        </Mesh>
+        <Mesh id="340" shadingMode="flat">
+            <Material>14</Material>
+            <Texture>14</Texture>
+            <Faces binaryFile="geometry/339_face.bin" />
+        </Mesh>
+        <Mesh id="341" shadingMode="flat">
+            <Material>6</Material>
+            <Texture>6</Texture>
+            <Faces binaryFile="geometry/340_face.bin" />
+        </Mesh>
+        <Mesh id="342" shadingMode="flat">
+            <Material>2</Material>
+            <Texture>2</Texture>
+            <Faces binaryFile="geometry/341_face.bin" />
+        </Mesh>
+        <Mesh id="343" shadingMode="flat">
+            <Material>6</Material>
+            <Texture>6</Texture>
+            <Faces binaryFile="geometry/342_face.bin" />
+        </Mesh>
+        <Mesh id="344" shadingMode="flat">
+            <Material>24</Material>
+            <Texture>24</Texture>
+            <Faces binaryFile="geometry/343_face.bin" />
+        </Mesh>
+        <Mesh id="345" shadingMode="flat">
+            <Material>4</Material>
+            <Texture>4</Texture>
+            <Faces binaryFile="geometry/344_face.bin" />
+        </Mesh>
+        <Mesh id="346" shadingMode="flat">
+            <Material>17</Material>
+            <Texture>17</Texture>
+            <Faces binaryFile="geometry/345_face.bin" />
+        </Mesh>
+        <Mesh id="347" shadingMode="flat">
+            <Material>18</Material>
+            <Texture>18</Texture>
+            <Faces binaryFile="geometry/346_face.bin" />
+        </Mesh>
+        <Mesh id="348" shadingMode="flat">
+            <Material>5</Material>
+            <Texture>5</Texture>
+            <Faces binaryFile="geometry/347_face.bin" />
+        </Mesh>
+        <Mesh id="349" shadingMode="flat">
+            <Material>3</Material>
+            <Texture>3</Texture>
+            <Faces binaryFile="geometry/348_face.bin" />
+        </Mesh>
+        <Mesh id="350" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/349_face.bin" />
+        </Mesh>
+        <Mesh id="351" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/350_face.bin" />
+        </Mesh>
+        <Mesh id="352" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/351_face.bin" />
+        </Mesh>
+        <Mesh id="353" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/352_face.bin" />
+        </Mesh>
+        <Mesh id="354" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/353_face.bin" />
+        </Mesh>
+        <Mesh id="355" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/354_face.bin" />
+        </Mesh>
+        <Mesh id="356" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/355_face.bin" />
+        </Mesh>
+        <Mesh id="357" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/356_face.bin" />
+        </Mesh>
+        <Mesh id="358" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/357_face.bin" />
+        </Mesh>
+        <Mesh id="359" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/358_face.bin" />
+        </Mesh>
+        <Mesh id="360" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/359_face.bin" />
+        </Mesh>
+        <Mesh id="361" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/360_face.bin" />
+        </Mesh>
+        <Mesh id="362" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/361_face.bin" />
+        </Mesh>
+        <Mesh id="363" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/362_face.bin" />
+        </Mesh>
+        <Mesh id="364" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/363_face.bin" />
+        </Mesh>
+        <Mesh id="365" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/364_face.bin" />
+        </Mesh>
+        <Mesh id="366" shadingMode="flat">
+            <Material>25</Material>
+            <Texture>25</Texture>
+            <Faces binaryFile="geometry/365_face.bin" />
+        </Mesh>
+        <Mesh id="367" shadingMode="flat">
+            <Material>25</Material>
+            <Texture>25</Texture>
+            <Faces binaryFile="geometry/366_face.bin" />
+        </Mesh>
+        <Mesh id="368" shadingMode="flat">
+            <Material>6</Material>
+            <Texture>6</Texture>
+            <Faces binaryFile="geometry/367_face.bin" />
+        </Mesh>
+        <Mesh id="369" shadingMode="flat">
+            <Material>25</Material>
+            <Texture>25</Texture>
+            <Faces binaryFile="geometry/368_face.bin" />
+        </Mesh>
+        <Mesh id="370" shadingMode="flat">
+            <Material>6</Material>
+            <Texture>6</Texture>
+            <Faces binaryFile="geometry/369_face.bin" />
+        </Mesh>
+        <Mesh id="371" shadingMode="flat">
+            <Material>25</Material>
+            <Texture>25</Texture>
+            <Faces binaryFile="geometry/370_face.bin" />
+        </Mesh>
+        <Mesh id="372" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/371_face.bin" />
+        </Mesh>
+        <Mesh id="373" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/372_face.bin" />
+        </Mesh>
+        <Mesh id="374" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/373_face.bin" />
+        </Mesh>
+        <Mesh id="375" shadingMode="flat">
+            <Material>25</Material>
+            <Texture>25</Texture>
+            <Faces binaryFile="geometry/374_face.bin" />
+        </Mesh>
+        <Mesh id="376" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/375_face.bin" />
+        </Mesh>
+        <Mesh id="377" shadingMode="flat">
+            <Material>7</Material>
+            <Texture>7</Texture>
+            <Faces binaryFile="geometry/376_face.bin" />
+        </Mesh>
+        <Mesh id="378" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/377_face.bin" />
+        </Mesh>
+        <Mesh id="379" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/378_face.bin" />
+        </Mesh>
+        <Mesh id="380" shadingMode="flat">
+            <Material>15</Material>
+            <Texture>15</Texture>
+            <Faces binaryFile="geometry/379_face.bin" />
+        </Mesh>
+        <Mesh id="381" shadingMode="flat">
+            <Material>14</Material>
+            <Texture>14</Texture>
+            <Faces binaryFile="geometry/380_face.bin" />
+        </Mesh>
+        <Mesh id="382" shadingMode="flat">
+            <Material>15</Material>
+            <Texture>15</Texture>
+            <Faces binaryFile="geometry/381_face.bin" />
+        </Mesh>
+        <Mesh id="383" shadingMode="flat">
+            <Material>15</Material>
+            <Texture>15</Texture>
+            <Faces binaryFile="geometry/382_face.bin" />
+        </Mesh>
+        <Mesh id="384" shadingMode="flat">
+            <Material>14</Material>
+            <Texture>14</Texture>
+            <Faces binaryFile="geometry/383_face.bin" />
+        </Mesh>
+        <Mesh id="385" shadingMode="flat">
+            <Material>14</Material>
+            <Texture>14</Texture>
+            <Faces binaryFile="geometry/384_face.bin" />
+        </Mesh>
+        <Mesh id="386" shadingMode="flat">
+            <Material>14</Material>
+            <Texture>14</Texture>
+            <Faces binaryFile="geometry/385_face.bin" />
+        </Mesh>
+        <Mesh id="387" shadingMode="flat">
+            <Material>14</Material>
+            <Texture>14</Texture>
+            <Faces binaryFile="geometry/386_face.bin" />
+        </Mesh>
+        <Mesh id="388" shadingMode="flat">
+            <Material>15</Material>
+            <Texture>15</Texture>
+            <Faces binaryFile="geometry/387_face.bin" />
+        </Mesh>
+        <Mesh id="389" shadingMode="flat">
+            <Material>15</Material>
+            <Texture>15</Texture>
+            <Faces binaryFile="geometry/388_face.bin" />
+        </Mesh>
+        <Mesh id="390" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/389_face.bin" />
+        </Mesh>
+        <Mesh id="391" shadingMode="flat">
+            <Material>4</Material>
+            <Texture>4</Texture>
+            <Faces binaryFile="geometry/390_face.bin" />
+        </Mesh>
+        <Mesh id="392" shadingMode="flat">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces binaryFile="geometry/391_face.bin" />
+        </Mesh>
+        <Mesh id="393" shadingMode="flat">
+            <Material>4</Material>
+            <Texture>4</Texture>
+            <Faces binaryFile="geometry/392_face.bin" />
+        </Mesh>
+    </Objects>
+</Scene>

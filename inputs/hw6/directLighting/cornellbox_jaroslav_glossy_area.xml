@@ -1,0 +1,132 @@
+<Scene>
+    <MaxRecursionDepth>6</MaxRecursionDepth>
+
+    <BackgroundColor>0 0 0</BackgroundColor>
+
+    <Cameras>
+        <Camera id="1" type="lookAt" handedness="right">
+            <Position>-0.0439815 -4.12529 0.222539</Position>
+            <Gaze>0.00688625 0.998505 -0.0542161</Gaze>
+            <Up>3.73896e-4 0.0542148 0.998529</Up>
+            <FovY>45</FovY>
+            <NearDistance>0.1</NearDistance>
+            <ImageResolution>512 512</ImageResolution>
+            <NumSamples>100</NumSamples>
+            <ImageName>cornellbox_jaroslav_glossy_area.exr</ImageName>
+            <Tonemap>
+                <TMO>Photographic</TMO>
+                <TMOOptions>0.18 1</TMOOptions>
+                <Saturation>1.0</Saturation>
+                <Gamma>2.2</Gamma>
+            </Tonemap>
+        </Camera>
+    </Cameras>
+
+	<BRDFs>
+        <ModifiedPhong id="1" normalized="true">
+            <Exponent>90</Exponent>
+        </ModifiedPhong>
+        <ModifiedPhong id="2" normalized="true">
+            <Exponent>200</Exponent>
+        </ModifiedPhong>
+        <ModifiedPhong id="3" normalized="true">
+            <Exponent>600</Exponent>
+        </ModifiedPhong>
+    </BRDFs>
+
+    <Materials>
+        <Material id="1"> <!-- For the light -->
+            <AmbientReflectance>0 0 0</AmbientReflectance>
+            <DiffuseReflectance>0 0 0</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <PhongExponent>1</PhongExponent>
+        </Material>
+        <Material id="2" BRDF="1"> <!-- White floor, back wall, and possibly ceiling -->
+            <AmbientReflectance>0 0 0</AmbientReflectance>
+            <DiffuseReflectance>0.401961 0.401961 0.401961</DiffuseReflectance>
+            <SpecularReflectance>0.5 0.5 0.5</SpecularReflectance>
+        </Material>
+        <Material id="3" BRDF="1"> <!-- Green left wall -->
+            <AmbientReflectance>0 0 0</AmbientReflectance>
+            <DiffuseReflectance>0.0784315 0.401961 0.0862745</DiffuseReflectance>
+            <SpecularReflectance>0.5 0.5 0.5</SpecularReflectance>
+        </Material>
+        <Material id="4" BRDF="1"> <!-- Red right wall -->
+            <AmbientReflectance>0 0 0</AmbientReflectance>
+            <DiffuseReflectance>0.401961 0.0764705 0.0764705</DiffuseReflectance>
+            <SpecularReflectance>0.5 0.5 0.5</SpecularReflectance>
+        </Material>
+        <Material id="5" BRDF="2"> <!-- Yellow sphere -->
+            <AmbientReflectance>0 0 0</AmbientReflectance>
+            <DiffuseReflectance>0.401961 0.401961 0.0764705</DiffuseReflectance>
+            <SpecularReflectance>0.7 0.7 0.7</SpecularReflectance>
+        </Material>
+        <Material id="6" BRDF="3"> <!-- Blue sphere -->
+            <AmbientReflectance>0 0 0</AmbientReflectance>
+            <DiffuseReflectance>0.0764705 0.0764705 0.401961</DiffuseReflectance>
+            <SpecularReflectance>0.7 0.7 0.7</SpecularReflectance>
+        </Material>
+    </Materials>
+
+    <VertexData>
+		-1.27029  1.30455 -1.28002
+		 1.28975  1.30455 -1.28002
+		 1.28975  1.30455  1.28002
+		-1.27029  1.30455  1.28002
+		-1.27029 -1.25549 -1.28002
+		 1.28975 -1.25549 -1.28002
+		 1.28975 -1.25549  1.28002
+		-1.27029 -1.25549  1.28002
+        -0.53885  0.02453 -0.78002
+		 0.55831  0.66454 -0.78002
+    </VertexData>
+
+    <Objects>
+        <Mesh id="1"> <!-- Floor -->
+            <Material>2</Material>
+            <Faces vertexOffset="1">
+				0 4 5
+				5 1 0
+            </Faces>
+        </Mesh>
+        <Mesh id="2"> <!-- Left wall -->
+            <Material>3</Material>
+            <Faces vertexOffset="1">
+				3 7 4
+				4 0 3
+            </Faces>
+        </Mesh>
+        <Mesh id="3"> <!-- Right wall -->
+            <Material>4</Material>
+            <Faces vertexOffset="1">
+				1 5 6
+				6 2 1
+            </Faces>
+        </Mesh>
+        <Mesh id="4"> <!-- Back wall -->
+            <Material>2</Material>
+            <Faces vertexOffset="1">
+				0 1 2
+				2 3 0
+            </Faces>
+        </Mesh>
+        <LightMesh id="1"> <!-- Ceiling is a light -->
+            <Material>1</Material>
+            <Radiance>1.21 1.21 1.21</Radiance>
+            <Faces vertexOffset="1">
+				2 6 7
+				7 3 2
+            </Faces>
+        </LightMesh>
+        <Sphere id="1">
+            <Material>5</Material>
+            <Center>9</Center>
+            <Radius>0.5</Radius>
+        </Sphere>
+        <Sphere id="2">
+            <Material>6</Material>
+            <Center>10</Center>
+            <Radius>0.5</Radius>
+        </Sphere>
+    </Objects>
+</Scene>

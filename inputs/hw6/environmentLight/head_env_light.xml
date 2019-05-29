@@ -1,0 +1,91 @@
+<Scene>
+    <BackgroundColor>0 0 0</BackgroundColor>
+
+    <MaxRecursionDepth>6</MaxRecursionDepth>
+
+    <!--
+    <ShadowRayEpsilon>1e-4</ShadowRayEpsilon>
+
+    <IntersectionTestEpsilon>1e-8</IntersectionTestEpsilon>
+    -->
+
+    <Cameras>
+        <Camera id="1" type="lookAt" handedness="left">
+            <Position>0.322839 0.0534825 0.504299</Position>
+            <GazePoint>-0.140808 -0.162727 -0.35493</GazePoint>
+            <Up>0.0355799 0.964444 -0.261882</Up>
+            <FovY>30</FovY>
+            <NearDistance>1</NearDistance>
+            <ImageResolution>800 450</ImageResolution>
+            <ImageName>head_env_light.exr</ImageName>
+            <NumSamples>900</NumSamples>
+            <Tonemap>
+                <TMO>Photographic</TMO>
+                <TMOOptions>0.18 1</TMOOptions>
+                <Saturation>1.0</Saturation>
+                <Gamma>2.2</Gamma>
+            </Tonemap>
+        </Camera>
+    </Cameras>
+
+    <Lights>
+        <SphericalDirectionalLight id="1">
+            <EnvMapName>textures/pisa_latlong.exr</EnvMapName>
+        </SphericalDirectionalLight>
+    </Lights>
+
+    <Transformations>
+        <Scaling id="1">-1 1 1</Scaling>
+        <Rotation id="1">90 -1 0 0</Rotation>
+        <Rotation id="2">90 0 0 1</Rotation>
+    </Transformations>
+
+    <VertexData>
+        -1000 -1000 0
+        1000 -1000 0
+        1000 1000 0
+        -1000 1000 0
+    </VertexData>
+
+    <Materials>
+        <Material id="1" BRDF="1">
+            <AmbientReflectance>1 1 1</AmbientReflectance>
+            <DiffuseReflectance>1 1 1</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+        </Material>
+        <!--
+        <Material id="2">
+            <AmbientReflectance>0 0 0</AmbientReflectance>
+            <DiffuseReflectance>0.1 0.1 0.1</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <PhongExponent>0</PhongExponent>
+        </Material>
+        <Material id="3">
+            <AmbientReflectance>0 0 0</AmbientReflectance>
+            <DiffuseReflectance>0 0 0</DiffuseReflectance>
+            <SpecularReflectance>0 0 0</SpecularReflectance>
+            <PhongExponent>1</PhongExponent>
+            <MirrorReflectance>0 0 0</MirrorReflectance>
+            <Roughness>0</Roughness>
+            <Transparency>0.75 1 0.75</Transparency>
+            <RefractionIndex>1.3</RefractionIndex>
+        </Material>
+        -->
+    </Materials>
+
+    <Textures>
+        <Texture id="1">
+            <ImageName>textures/head_albedomap_flip.png</ImageName>
+            <Interpolation>bilinear</Interpolation>
+            <DecalMode>replace_kd</DecalMode>
+        </Texture>
+    </Textures>
+
+    <Objects>
+        <Mesh id="1" shadingMode="smooth">
+            <Material>1</Material>
+            <Texture>1</Texture>
+            <Faces plyFile="ply/head.ply" />
+        </Mesh>
+    </Objects>
+</Scene>
