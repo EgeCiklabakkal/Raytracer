@@ -37,6 +37,8 @@ class Light
 {
 	public:
 
+	bool object = false;	// Is light an object?
+
 	virtual ~Light() {};
 
 	virtual bool sampleLight(const Scene* scene, const Ray& r,

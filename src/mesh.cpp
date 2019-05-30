@@ -2,7 +2,7 @@
 
 Vec2 Mesh::texCoord(int x) const
 {
-	if(x < (int)scene_texCoord_data->size())
+	if(x >= 0 && x < (int)scene_texCoord_data->size())
 	{
 		return (*scene_texCoord_data)[x];
 	}

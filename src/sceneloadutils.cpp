@@ -244,13 +244,72 @@ int getCameras(tinyxml2::XMLElement* element, std::stringstream& ss, std::vector
 	return cameraCount;
 }
 
+int getLightSpheres(tinyxml2::XMLElement* element, std::stringstream& ss,
+			std::vector<Light*>&	      lights,
+			std::vector<Shape*>& 	      shapes,
+                        const std::vector<Vertex>&    vertex_data,
+                        const std::vector<Material>&  materials,
+                        const std::vector<glm::mat4>& translations,
+                        const std::vector<glm::mat4>& scalings,
+                        const std::vector<glm::mat4>& rotations,
+                        const std::vector<glm::mat4>& composites)
+{
+	int lightSphereCount = 0;
+	tinyxml2::XMLElement *child;
+
+	element = element->FirstChildElement("LightSphere");
+        while(element)
+        {
+                Material material;
+                Vec3 center;
+		Vec3 radiance;
+                float radius;
+                int itemp;
+		lightSphereCount++;
+
+                child = element->FirstChildElement("Material");
+                ss << child->GetText() << std::endl;
+                ss >> itemp;
+                material = materials[itemp - 1];
+
+                child = element->FirstChildElement("Center");
+                ss << child->GetText() << std::endl;
+                ss >> itemp;
+                center = vertex_data[itemp - 1].position;
+
+                child = element->FirstChildElement("Radius");
+                ss << child->GetText() << std::endl;
+                ss >> radius;
+
+		getVec3ChildWithDefault(element, ss, "Radiance", Vec3(), radiance);
+
+                LightSphere *lightSphere_ptr = new LightSphere(center, radius, material, radiance);
+
+                // Set Transformation
+                glm::mat4 transMat(1.0f);
+		setTransformOfShape(lightSphere_ptr, element, ss, transMat,
+                                        translations, scalings, rotations, composites);
+
+		// Set Motion Blur
+                setMotionBlurOfShape(lightSphere_ptr, element, ss);
+
+                lights.push_back((Light*)lightSphere_ptr);
+                shapes.push_back((Shape*)lightSphere_ptr);
+                element = element->NextSiblingElement("LightSphere");
+	}
+
+	return lightSphereCount;
+}
+
 int getLights(tinyxml2::XMLNode* node, tinyxml2::XMLElement* element,
 		std::stringstream& ss, std::vector<Light*>& lights)
 {
 	int lightcount = 0;
 
-	// PointLights
 	element = node->FirstChildElement("Lights");
+	if(!element)	return 0;
+
+	// PointLights
 	element = element->FirstChildElement("PointLight");
 	while(element)
 	{
@@ -809,6 +868,7 @@ void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,
 	tinyxml2::XMLElement *child = element->FirstChildElement("Position");
 	ss << child->GetText() << std::endl;
 	child = element->FirstChildElement("GazePoint");
+	if(!child) child = element->FirstChildElement("Gaze");
 	ss << child->GetText() << std::endl;
 	child = element->FirstChildElement("Up");
 	ss << child->GetText() << std::endl;
@@ -1182,11 +1242,15 @@ bool setMotionBlurOfShape(Shape* shape_ptr, tinyxml2::XMLElement* element, std::
 
 void parseAmbientLight(Vec3& amblight, tinyxml2::XMLElement* element, std::stringstream& ss)
 {
-	tinyxml2::XMLElement *child;
+	if(element)
+	{
+		getVec3ChildWithDefault(element, ss, "AmbientLight", Vec3(), amblight);
+	}
 
-        child = element->FirstChildElement("AmbientLight");
-        ss << child->GetText() << std::endl;
-        ss >> amblight[0] >> amblight[1] >> amblight[2];
+	else
+	{
+		amblight = Vec3();
+	}
 }
 
 void parsePointLight(PointLight* point_light, tinyxml2::XMLElement* element, std::stringstream& ss)

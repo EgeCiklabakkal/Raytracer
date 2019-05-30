@@ -376,7 +376,8 @@ Scene::~Scene()
 	// Free lights
 	for(Light* light : lights)
 	{
-		delete light;
+		// Object lights will be freed in BVH
+		if(!light->object) delete light;
 	}
 	lights.clear();
 

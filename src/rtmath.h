@@ -11,6 +11,7 @@
 
 #include <random>
 #include <utility>
+#include <float.h>
 #include <glm/mat4x4.hpp>
 #include <glm/vec4.hpp>
 

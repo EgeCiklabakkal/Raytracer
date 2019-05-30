@@ -32,6 +32,17 @@ float getFloatAttributeWithDefault(tinyxml2::XMLElement* element, std::string na
 // Read cameras
 int getCameras(tinyxml2::XMLElement* element, std::stringstream& ss, std::vector<Camera>& cameras);
 
+// Read Light Spheres
+int getLightSpheres(tinyxml2::XMLElement* element, std::stringstream& ss,
+			std::vector<Light*>&	      lights,
+			std::vector<Shape*>& 	      shapes,
+			const std::vector<Vertex>&    vertex_data,
+			const std::vector<Material>&  materials,
+			const std::vector<glm::mat4>& translations,
+                        const std::vector<glm::mat4>& scalings,
+                        const std::vector<glm::mat4>& rotations,
+			const std::vector<glm::mat4>& composites);
+
 // Read lights
 int getLights(tinyxml2::XMLNode* node, tinyxml2::XMLElement* element,
 		std::stringstream& ss, std::vector<Light*>& lights);

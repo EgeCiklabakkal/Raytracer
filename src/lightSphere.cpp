@@ -4,18 +4,20 @@ LightSphere::LightSphere(const Vec3& _center, float _radius,
 				const Material& _material, const Vec3& _radiance) :
 Sphere{_center, _radius, _material}, radiance(_radiance)
 {
+	object = true;
 	material.light = true;
 }
 
 bool LightSphere::sampleLight(const Scene* scene, const Ray& r,
 				const HitRecord& record, SampleLight& sampledLight) const
 {
-	// These events take place in world coordinates
-	// Center of the sphere should be transformed
-	// Radius can't be transformed properly
-	Vec3 tcenter = rtmath::transformLoc(M, center);
-	Vec3 d(tcenter - record.p);
-	float sintheta_max = radius / d.length();
+	// Apply the sampling in local coordinates
+	Vec3 localp = rtmath::transformLoc(N, record.p);
+	Vec3 d(center - localp);
+	float len_d = d.length();
+	if(len_d < radius) return false;
+
+	float sintheta_max = radius / len_d;
 	float costheta_max = sqrt(1.0f - sintheta_max * sintheta_max);
 
 	// Construct the ONB along the d vector
@@ -35,16 +37,14 @@ bool LightSphere::sampleLight(const Scene* scene, const Ray& r,
 
 	// Compute emitting point
 	HitRecord lightRecord;
-	Ray sampleRay(record.p, l);
-	float isHit = hit(sampleRay, 0.0f, 100000.0f, 0.0f, lightRecord); // Change tmin/tmax
-
-	if(!isHit)	// This shouldn't be the case as we are sampling the sphere already
+	Ray sampleRay(record.p, rtmath::transformVec(M, l));
+	if(hit(sampleRay, 0.00001f, FLT_MAX, 0.0f, lightRecord)) // Change tmin/tmax
 	{
-		return false;	// just in case
+		PointLight plight(lightRecord.p + lightRecord.normal * 0.001f, radiance / pw);
+		return plight.sampleLight(scene, r, record, sampledLight);
 	}
 
-	PointLight plight(lightRecord.p, radiance / pw);
-	return plight.sampleLight(scene, r, record, sampledLight);
+	return false;
 }
 
 bool LightSphere::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const

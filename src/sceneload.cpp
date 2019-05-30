@@ -336,6 +336,12 @@ void Scene::loadFromXML(const std::string& fname)
 		element = element->NextSiblingElement("Sphere");
 	}
 
+	// LightSpheres
+	element = scene_element->FirstChildElement("Objects");
+	getLightSpheres(element, ss, lights, shapes,
+			vertex_data, materials,
+			translations, scalings, rotations, composites);
+
 	// Pre-compute vertex normals if Smooth Shading
 	for(Vertex& v : vertex_data)
 	{
