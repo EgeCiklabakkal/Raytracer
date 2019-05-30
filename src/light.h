@@ -41,8 +41,8 @@ class Light
 
 	virtual ~Light() {};
 
-	virtual bool sampleLight(const Scene* scene, const Ray& r,
-					const HitRecord& record, SampleLight& sampledLight) const=0;
+	virtual bool sampleLight(const Scene* scene, const Ray& r, const HitRecord& record,
+					SampleLight& sampledLight, bool nonluminous=false) const=0;
 };
 
 class PointLight : public Light
@@ -57,8 +57,8 @@ class PointLight : public Light
 	virtual ~PointLight() {}
 	PointLight(const PointLight& pl) { *this = pl; }
 
-	virtual bool sampleLight(const Scene* scene, const Ray& r,
-					const HitRecord& record, SampleLight& sampledLight) const;
+	virtual bool sampleLight(const Scene* scene, const Ray& r, const HitRecord& record,
+					SampleLight& sampledLight, bool nonluminous) const;
 };
 
 class AreaLight : public Light
@@ -73,8 +73,8 @@ class AreaLight : public Light
 	AreaLight() {}
 	virtual ~AreaLight() {}
 
-	virtual bool sampleLight(const Scene* scene, const Ray& r,
-					const HitRecord& record, SampleLight& sampledLight) const;
+	virtual bool sampleLight(const Scene* scene, const Ray& r, const HitRecord& record,
+					SampleLight& sampledLight, bool nonluminous) const;
 };
 
 class DirectionalLight : public Light
@@ -88,8 +88,8 @@ class DirectionalLight : public Light
 	DirectionalLight(const Vec3& direction, const Vec3& radiance);
 	virtual ~DirectionalLight() {}
 
-	virtual bool sampleLight(const Scene* scene, const Ray& r,
-					const HitRecord& record, SampleLight& sampledLight) const;
+	virtual bool sampleLight(const Scene* scene, const Ray& r, const HitRecord& record,
+					SampleLight& sampledLight, bool nonluminous) const;
 };
 
 class SpotLight : public Light
@@ -107,8 +107,8 @@ class SpotLight : public Light
 			float _alpha, float _beta);
 	virtual ~SpotLight() {}
 
-	virtual bool sampleLight(const Scene* scene, const Ray& r,
-					const HitRecord& record, SampleLight& sampledLight) const;
+	virtual bool sampleLight(const Scene* scene, const Ray& r, const HitRecord& record,
+					SampleLight& sampledLight, bool nonluminous) const;
 	float falloff(const Vec3& wi) const;
 };
 

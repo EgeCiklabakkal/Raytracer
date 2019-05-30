@@ -41,7 +41,8 @@ Triangle::Triangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2,
 	│c  f  i│ │ t │   │ l │
 	└       ┘ └   ┘   └   ┘
 */
-bool Triangle::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const
+bool Triangle::hit(const Ray& r, float tmin, float tmax,
+			float time, HitRecord& record, bool nonluminous) const
 {
 	Ray tray = transformRayToLocal(r);
 
@@ -99,7 +100,7 @@ bool Triangle::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& 
 	return false;
 }
 
-bool Triangle::shadowHit(const Ray& r, float tmin, float tmax, float time) const
+bool Triangle::shadowHit(const Ray& r, float tmin, float tmax, float time, bool nonluminous) const
 {
 	Ray tray = transformRayToLocal(r);
 

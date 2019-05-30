@@ -23,8 +23,10 @@ class BVH : public Shape
 	}
 
 	Shape* buildBranch(Shape** shapes, int n, int axis, float time0, float time1);
-	bool hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const;
-	bool shadowHit(const Ray& r, float tmin, float tmax, float time) const;
+	bool hit(const Ray& r, float tmin, float tmax,
+			float time, HitRecord& record, bool nonluminous=false) const;
+	bool shadowHit(const Ray& r, float tmin, float tmax,
+			float time, bool nonluminous=false) const;
 	bool boundingBox(float time0, float time1, BBox& _box) const;
 	int partitionBySpace(Shape** shapes, int n, int axis);
 };

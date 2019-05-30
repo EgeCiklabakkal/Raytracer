@@ -88,7 +88,7 @@ void Scene::raytrace_routine(Scene* scene, const Camera* cam, Image* img,
 		for(const Ray& r : sampledRays)
 		{
 			rgb raycolor = scene->rayColor(r, scene->max_recursion_depth,
-							cam->tonemap, Vec2(i, j));
+							cam->tonemap, false, Vec2(i, j));
 
 			weightsum += r.weight;
 			pixel_color += raycolor * r.weight;
@@ -111,12 +111,13 @@ void Scene::raytrace_singleSample(Scene* scene, const Camera* cam, Image* img,
 
 		Ray r = cam->getRay(i, j, true);
 		rgb raycolor = scene->rayColor(r, scene->max_recursion_depth,
-						cam->tonemap, Vec2(i, j));
+						cam->tonemap, false, Vec2(i, j));
 		img->set(i, j, raycolor);
 	}
 }
 
-rgb Scene::rayColor(const Ray& r, int recursion_depth, const Tonemap& tonemap, const Vec2& ij) const
+rgb Scene::rayColor(const Ray& r, int recursion_depth,
+			const Tonemap& tonemap, bool nonluminous, const Vec2& ij) const
 {
 	rgb rcolor(0.0f, 0.0f, 0.0f);
 	float tmax = 100000.0f;		// Note: tmax, tmin, time can be made an argument
@@ -126,7 +127,7 @@ rgb Scene::rayColor(const Ray& r, int recursion_depth, const Tonemap& tonemap, c
 	DecalMode decal_mode;
 	bool textured;
 
-	if(bvh->hit(r, tmin, tmax, time, record))
+	if(bvh->hit(r, tmin, tmax, time, record, nonluminous))
 	{
 		if(!cullFace || !r.primary || (dot(r.direction(), record.normal) < 0))
 		{
@@ -151,8 +152,8 @@ rgb Scene::rayColor(const Ray& r, int recursion_depth, const Tonemap& tonemap, c
 			for(const Light* light_ptr : this->lights)
 			{
 				SampleLight sampledLight;
-				bool notShadow = light_ptr->sampleLight(this, r,
-									record, sampledLight);
+				bool notShadow = light_ptr->sampleLight(this, r, record,
+									sampledLight, nonluminous);
 
 				if(notShadow)
 				{

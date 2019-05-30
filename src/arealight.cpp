@@ -1,7 +1,7 @@
 #include "light.h"
 
-bool AreaLight::sampleLight(const Scene* scene, const Ray& r,
-				const HitRecord& record, SampleLight& sampledLight) const
+bool AreaLight::sampleLight(const Scene* scene, const Ray& r, const HitRecord& record,
+				SampleLight& sampledLight, bool nonluminous) const
 {
 	float tlight, e1, e2, declination;
 	ONB onb;
@@ -15,7 +15,7 @@ bool AreaLight::sampleLight(const Scene* scene, const Ray& r,
 	Ray shadow_ray(r.shadowRay(record, ls, scene->shadow_ray_epsilon));
 	tlight = shadow_ray.parameterAtPoint(ls);
 
-	if(scene->bvh->shadowHit(shadow_ray, 0.0f, tlight, r.time))	// In shadow
+	if(scene->bvh->shadowHit(shadow_ray, 0.0f, tlight, r.time, nonluminous)) // In shadow
 	{
 		return false;
 	}

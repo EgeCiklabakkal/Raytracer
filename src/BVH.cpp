@@ -106,14 +106,17 @@ Shape* BVH::buildBranch(Shape** shapes, int n, int axis, float time0, float time
 	}
 }
 
-bool BVH::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const
+bool BVH::hit(const Ray& r, float tmin, float tmax,
+		float time, HitRecord& record, bool nonluminous) const
 {
 	if(box.hit(r, tmin, tmax))
 	{
 		HitRecord leftRecord, rightRecord;
 
-		bool hitLeft  = left ? left->hit(r, tmin, tmax, time, leftRecord) : false;
-		bool hitRight = right ? right->hit(r, tmin, tmax, time, rightRecord) : false;
+		bool hitLeft  = left ? left->hit(r, tmin, tmax,
+							time, leftRecord, nonluminous) : false;
+		bool hitRight = right ? right->hit(r, tmin, tmax,
+							time, rightRecord, nonluminous) : false;
 
 		if(hitLeft && hitRight)		// Both hit, get closest
 		{
@@ -142,16 +145,16 @@ bool BVH::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& recor
 	return false;
 }
 
-bool BVH::shadowHit(const Ray& r, float tmin, float tmax, float time) const
+bool BVH::shadowHit(const Ray& r, float tmin, float tmax, float time, bool nonluminous) const
 {
 	if(box.hit(r, tmin, tmax))
 	{
-		if(left && left->shadowHit(r, tmin, tmax, time))
+		if(left && left->shadowHit(r, tmin, tmax, time, nonluminous))
 		{
 			return true;
 		}
 
-		return right ? right->shadowHit(r, tmin, tmax, time) : false;	
+		return right ? right->shadowHit(r, tmin, tmax, time, nonluminous) : false;	
 	}
 
 	return false;

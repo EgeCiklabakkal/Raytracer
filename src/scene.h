@@ -55,7 +55,7 @@ class Scene
 			SafeStack<std::pair<float, float>>* pixels);
 
 	rgb rayColor(const Ray& r, int recursion_depth, const Tonemap& tonemap,
-			const Vec2& ij=Vec2()) const;
+			bool nonluminous=false, const Vec2& ij=Vec2()) const;
 	rgb backgroundColor(const Vec2 ij) const;
 	rgb ambientColor(const HitRecord& record) const;
 	rgb diffuseColor(const Ray& r, const HitRecord& record, const SampleLight& slight) const;

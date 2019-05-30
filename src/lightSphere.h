@@ -16,9 +16,12 @@ class LightSphere : public Light, public Sphere
 			const Material& _material, const Vec3& _radiance);
 	virtual ~LightSphere() {}
 
-	virtual bool sampleLight(const Scene* scene, const Ray& r,
-                                        const HitRecord& record, SampleLight& sampledLight) const;
-	bool hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const;
+	virtual bool sampleLight(const Scene* scene, const Ray& r, const HitRecord& record,
+					SampleLight& sampledLight, bool nonluminous) const;
+	bool hit(const Ray& r, float tmin, float tmax,
+			float time, HitRecord& record, bool nonluminous) const;
+	bool shadowHit(const Ray& r, float tmin, float tmax,
+			float time, bool nonluminous) const;
 };
 
 #endif

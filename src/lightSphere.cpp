@@ -8,8 +8,8 @@ Sphere{_center, _radius, _material}, radiance(_radiance)
 	material.light = true;
 }
 
-bool LightSphere::sampleLight(const Scene* scene, const Ray& r,
-				const HitRecord& record, SampleLight& sampledLight) const
+bool LightSphere::sampleLight(const Scene* scene, const Ray& r, const HitRecord& record,
+				SampleLight& sampledLight, bool nonluminous) const
 {
 	// Apply the sampling in local coordinates
 	Vec3 localp = rtmath::transformLoc(N, record.p);
@@ -37,20 +37,32 @@ bool LightSphere::sampleLight(const Scene* scene, const Ray& r,
 
 	// Compute emitting point
 	HitRecord lightRecord;
-	Ray sampleRay(record.p, rtmath::transformVec(M, l));
-	if(hit(sampleRay, 0.00001f, FLT_MAX, 0.0f, lightRecord)) // Change tmin/tmax
+	Ray sampleRay(record.p, unitVector(rtmath::transformVec(M, l)));
+	if(hit(sampleRay, 0.00001f, FLT_MAX, 0.0f, lightRecord, false)) // Change tmin/tmax
 	{
-		PointLight plight(lightRecord.p + lightRecord.normal * 0.001f, radiance / pw);
-		return plight.sampleLight(scene, r, record, sampledLight);
+		// nonluminous = true, so that light object will get ignored
+		PointLight plight(lightRecord.p, radiance / pw);
+		return plight.sampleLight(scene, r, record, sampledLight, true);
 	}
 
 	return false;
 }
 
-bool LightSphere::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const
+bool LightSphere::hit(const Ray& r, float tmin, float tmax,
+			float time, HitRecord& record, bool nonluminous) const
 {
-	bool isHit = Sphere::hit(r, tmin, tmax, time, record);
+	if(nonluminous)	return false;
+
+	bool isHit = Sphere::hit(r, tmin, tmax, time, record, nonluminous);
 
 	record.color = radiance;
 	return isHit;
+}
+
+bool LightSphere::shadowHit(const Ray& r, float tmin, float tmax,
+				float time, bool nonluminous) const
+{
+	if(nonluminous) return false;
+
+	return Sphere::shadowHit(r, tmin, tmax, time, nonluminous);
 }

@@ -3,13 +3,13 @@
 SpotLight::SpotLight(const Vec3& _position, const Vec3& _direction, const Vec3& _intensity,                                     float _alpha, float _beta) :
 position(_position), direction(_direction), intensity(_intensity), alpha(_alpha), beta(_beta) {}
 
-bool SpotLight::sampleLight(const Scene* scene, const Ray& r,
-				const HitRecord& record, SampleLight& sampledLight) const
+bool SpotLight::sampleLight(const Scene* scene, const Ray& r, const HitRecord& record,
+				SampleLight& sampledLight, bool nonluminous) const
 {
 	Ray shadow_ray(r.shadowRay(record, position, scene->shadow_ray_epsilon));
 	float tlight = shadow_ray.parameterAtPoint(position);
 
-	if(scene->bvh->shadowHit(shadow_ray, 0.0f, tlight, r.time))
+	if(scene->bvh->shadowHit(shadow_ray, 0.0f, tlight, r.time, nonluminous))
 	{
 		return false;
 	}

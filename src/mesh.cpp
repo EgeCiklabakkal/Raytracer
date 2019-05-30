@@ -10,7 +10,8 @@ Vec2 Mesh::texCoord(int x) const
 	return Vec2();	// dummy
 }
 
-bool MeshTriangle::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record) const
+bool MeshTriangle::hit(const Ray& r, float tmin, float tmax,
+			float time, HitRecord& record, bool nonluminous) const
 {
 	Ray tray = transformRayToLocal(r);
 
@@ -83,7 +84,8 @@ bool MeshTriangle::hit(const Ray& r, float tmin, float tmax, float time, HitReco
         return false;
 }
 
-bool MeshTriangle::shadowHit(const Ray& r, float tmin, float tmax, float time) const
+bool MeshTriangle::shadowHit(const Ray& r, float tmin, float tmax,
+				float time, bool nonluminous) const
 {
 	Ray tray = transformRayToLocal(r);
 
