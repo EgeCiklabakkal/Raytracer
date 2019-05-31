@@ -131,7 +131,7 @@ rgb Scene::rayColor(const Ray& r, int recursion_depth,
 	{
 		if(!cullFace || !r.primary || (dot(r.direction(), record.normal) < 0))
 		{
-			if(record.material.light)	// ray hit a light object
+			if(record.material.luminous)	// ray hit a luminous object
 			{
 				return record.color;
 			}

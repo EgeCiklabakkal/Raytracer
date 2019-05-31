@@ -5,7 +5,7 @@ LightSphere::LightSphere(const Vec3& _center, float _radius,
 Sphere{_center, _radius, _material}, radiance(_radiance)
 {
 	object = true;
-	material.light = true;
+	material.luminous = true;
 }
 
 bool LightSphere::sampleLight(const Scene* scene, const Ray& r, const HitRecord& record,

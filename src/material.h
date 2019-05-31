@@ -18,7 +18,7 @@ class Material
 	float refraction_index;
 	float roughness;
 	bool degamma;
-	bool light;	// Is the object a light?
+	bool luminous;	// Is the object a luminous?
 	BRDF *brdf;
 };
 
