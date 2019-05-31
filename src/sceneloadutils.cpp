@@ -301,6 +301,96 @@ int getLightSpheres(tinyxml2::XMLElement* element, std::stringstream& ss,
 	return lightSphereCount;
 }
 
+int getLightMeshes(tinyxml2::XMLElement* element, std::stringstream& ss, std::string fname,
+			std::vector<Light*>& 	      lights,
+			std::vector<Shape*>& 	      shapes,
+			std::vector<Mesh*>& 	      meshes,
+			std::vector<Shape*>& 	      primMeshBVHs,
+			std::vector<Vertex>& 	      vertex_data,
+			std::vector<Vec2>& 	      texCoord_data,
+			const std::vector<Material>&  materials,
+			const std::vector<glm::mat4>& translations,
+                        const std::vector<glm::mat4>& scalings,
+                        const std::vector<glm::mat4>& rotations,
+			const std::vector<glm::mat4>& composites)
+{
+	int lightMeshCount = 0;
+	tinyxml2::XMLElement *child;
+
+	element = element->FirstChildElement("LightMesh");
+	while(element)
+	{
+		std::string plyname;
+		int mesh_type = getMeshType(element, plyname);
+		std::vector<Shape*> meshTriangles;
+		Material meshMaterial;
+		Vec3 radiance;
+		bool _transformed;
+		tinyxml2::XMLElement *trans_element;
+		glm::mat4 transMatInstance(1.0f);
+		int itemp;
+		lightMeshCount++;
+
+		getVec3ChildWithDefault(element, ss, "Radiance", Vec3(), radiance);
+
+		if(mesh_type == MESH_SIMPLE)
+		{
+			child = element->FirstChildElement("Material");
+			ss << child->GetText() << std::endl;
+			ss >> itemp;
+			meshMaterial = materials[itemp - 1];
+			Mesh *mesh = new Mesh(&vertex_data, &texCoord_data, meshMaterial);
+			meshes.push_back(mesh);
+
+			child = element->FirstChildElement("Faces");
+			ss << child->GetText() << std::endl;
+			int shadingMode  = getMeshShadingMode(element);
+			int vertexOffset = getIntAttributeWithDefault(child, "vertexOffset", 0);
+			int textureOffset = getIntAttributeWithDefault(child, "textureOffset", 0);
+			pushFacesOfMesh(meshTriangles, mesh, vertex_data,
+						shadingMode, vertexOffset, textureOffset, ss);
+		}
+
+		else if(mesh_type == MESH_PLY)
+		{
+			child = element->FirstChildElement("Material");
+			ss << child->GetText() << std::endl;
+			ss >> itemp;
+			meshMaterial = materials[itemp - 1];
+			Mesh *mesh = new Mesh(&vertex_data, &texCoord_data, meshMaterial);
+			meshes.push_back(mesh);
+			int shadingMode = getMeshShadingMode(element);
+
+			pushFacesOfPlyMesh(meshTriangles, mesh, vertex_data, texCoord_data,
+						shadingMode, fname, plyname);
+		}
+
+		ss.clear();
+		BVH *meshBVH = new BVH(meshTriangles.data(), (int)meshTriangles.size(),
+					0, 0.0f, 0.0f);
+		primMeshBVHs.push_back(meshBVH);
+
+		// Apply Mesh/Instance Transformations
+		trans_element = element->FirstChildElement("Transformations");
+		_transformed = applyTransforms(trans_element, ss, transMatInstance,
+					translations, scalings, rotations, composites);
+
+		// Create instance
+		LightMesh *lightMesh_ptr = new LightMesh(transMatInstance, meshBVH,
+									meshMaterial,
+									radiance,
+									_transformed);
+		// Set Motion Blur
+		setMotionBlurOfShape(lightMesh_ptr, element, ss);
+
+                lights.push_back((Light*)lightMesh_ptr);
+		shapes.push_back((Shape*)lightMesh_ptr);
+		element = element->NextSiblingElement("LightMesh");
+	}
+
+	return lightMeshCount;
+}
+
 int getLights(tinyxml2::XMLNode* node, tinyxml2::XMLElement* element,
 		std::stringstream& ss, std::vector<Light*>& lights)
 {

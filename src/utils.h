@@ -42,6 +42,7 @@
 #include "imageTexture.h"
 #include "instance.h"
 #include "light.h"
+#include "lightMesh.h"
 #include "lightSphere.h"
 #include "macros.h"
 #include "material.h"

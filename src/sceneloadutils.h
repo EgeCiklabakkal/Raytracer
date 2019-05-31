@@ -43,6 +43,20 @@ int getLightSpheres(tinyxml2::XMLElement* element, std::stringstream& ss,
                         const std::vector<glm::mat4>& rotations,
 			const std::vector<glm::mat4>& composites);
 
+// Read Light Meshes
+int getLightMeshes(tinyxml2::XMLElement* element, std::stringstream& ss, std::string fname,
+			std::vector<Light*>& 	      lights,
+			std::vector<Shape*>& 	      shapes,
+			std::vector<Mesh*>& 	      meshes,
+			std::vector<Shape*>& 	      primMeshBVHs,
+			std::vector<Vertex>&          vertex_data,
+			std::vector<Vec2>&            texCoord_data,
+			const std::vector<Material>&  materials,
+			const std::vector<glm::mat4>& translations,
+                        const std::vector<glm::mat4>& scalings,
+                        const std::vector<glm::mat4>& rotations,
+			const std::vector<glm::mat4>& composites);
+
 // Read lights
 int getLights(tinyxml2::XMLNode* node, tinyxml2::XMLElement* element,
 		std::stringstream& ss, std::vector<Light*>& lights);

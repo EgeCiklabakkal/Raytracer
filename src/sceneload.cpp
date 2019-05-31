@@ -342,6 +342,14 @@ void Scene::loadFromXML(const std::string& fname)
 			vertex_data, materials,
 			translations, scalings, rotations, composites);
 
+	// LightMeshes
+	element = scene_element->FirstChildElement("Objects");
+	getLightMeshes( element, ss, fname,
+			lights, shapes,
+			meshes, primMeshBVHs,
+			vertex_data, texCoord_data, materials,
+			translations, scalings, rotations, composites);
+
 	// Pre-compute vertex normals if Smooth Shading
 	for(Vertex& v : vertex_data)
 	{
