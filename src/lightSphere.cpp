@@ -40,9 +40,19 @@ bool LightSphere::sampleLight(const Scene* scene, const Ray& r, const HitRecord&
 	Ray sampleRay(record.p, unitVector(rtmath::transformVec(M, l)));
 	if(hit(sampleRay, 0.00001f, FLT_MAX, 0.0f, lightRecord, false)) // Change tmin/tmax
 	{
+		Ray shadow_ray(r.shadowRay(record, lightRecord.p, scene->shadow_ray_epsilon));
+		float tlight = shadow_ray.parameterAtPoint(lightRecord.p);
+
 		// nonluminous = true, so that light object will get ignored
-		PointLight plight(lightRecord.p, radiance / pw);
-		return plight.sampleLight(scene, r, record, sampledLight, true);
+		if(scene->bvh->shadowHit(shadow_ray, 0.0f, tlight, r.time, true))
+		{
+			return false;
+		}
+
+		Vec3 wi(lightRecord.p - record.p);
+
+		sampledLight = SampleLight(radiance / pw, unitVector(wi));
+		return true;
 	}
 
 	return false;
