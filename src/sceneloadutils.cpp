@@ -377,9 +377,10 @@ int getLightMeshes(tinyxml2::XMLElement* element, std::stringstream& ss, std::st
 
 		// Create instance
 		LightMesh *lightMesh_ptr = new LightMesh(transMatInstance, meshBVH,
-									meshMaterial,
-									radiance,
-									_transformed);
+								meshMaterial,
+								meshTriangles,
+								radiance,
+								_transformed);
 		// Set Motion Blur
 		setMotionBlurOfShape(lightMesh_ptr, element, ss);
 

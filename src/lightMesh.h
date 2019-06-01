@@ -1,6 +1,7 @@
 #ifndef _LIGHTMESH_H_
 #define _LIGHTMESH_H_
 
+#include "BTree.h"
 #include "light.h"
 #include "instance.h"
 #include "material.h"
@@ -10,9 +11,11 @@ class LightMesh : public Light, public ObjectInstance
 {
 	public:
 
+	BTree cdf;
 	Vec3 radiance;
 
 	LightMesh(const glm::mat4& trans, Shape* _prim, const Material& _material,
+			const std::vector<Shape*>& meshTriangles,
 			const Vec3& _radiance, bool _transformed=false);
 	virtual ~LightMesh() {}
 

@@ -33,6 +33,7 @@
 #include "util/tinyxml2.h"
 #include "blinnPhongBRDF.h"
 #include "BRDF.h"
+#include "BTree.h"
 #include "bumpRecord.h"
 #include "BVH.h"
 #include "camera.h"

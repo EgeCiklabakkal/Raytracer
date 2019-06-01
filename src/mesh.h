@@ -78,6 +78,7 @@ class MeshTriangle : public Shape
 	int ib() const { return p[1]; }
 	int ic() const { return p[2]; }
 
+	float area(const glm::mat4& trans=glm::mat4(1.0f)) const;
 	BumpRecord bump() const;
 };
 

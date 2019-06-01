@@ -154,6 +154,18 @@ Vec2 MeshTriangle::textureUV(float beta, float gamma) const
 	return (tca + beta*(tcb - tca) + gamma*(tcc - tca));
 }
 
+float MeshTriangle::area(const glm::mat4& trans) const
+{
+	Vec3 a = rtmath::transformLoc(trans, this->a());
+	Vec3 b = rtmath::transformLoc(trans, this->b());
+	Vec3 c = rtmath::transformLoc(trans, this->c());
+
+	Vec3 u = b - a;
+	Vec3 v = c - a;
+
+	return cross(u, v).length() / 2.0f;
+}
+
 BumpRecord MeshTriangle::bump() const
 {
 	float a, b, c, d, invDet;
