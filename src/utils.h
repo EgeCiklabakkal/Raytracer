@@ -62,6 +62,7 @@
 #include "scene.h"
 #include "shape.h"
 #include "simpleBRDF.h"
+#include "simpleCDF.h"
 #include "simpleTexture.h"
 #include "sphere.h"
 #include "texture.h"

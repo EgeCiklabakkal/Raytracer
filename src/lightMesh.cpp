@@ -28,12 +28,12 @@ bool LightMesh::sampleLight(const Scene* scene, const Ray& r, const HitRecord& r
 	Ray sampleRay(record.p, unitVector(Vec3(q - record.p)));
 	if(hit(sampleRay, 0.0f, FLT_MAX, 0.0f, lightRecord, false)) // Change tmin/tmax
 	{
-		Vec3 wi(lightRecord.p - record.p);
+		Vec3 wi(q - record.p);
 		float costheta = dot(lightRecord.normal, -wi);
 		float r2 = std::max(0.000001f, wi.squaredLength());
 
-		Ray shadow_ray(r.shadowRay(record, lightRecord.p, scene->shadow_ray_epsilon));
-		float tlight = shadow_ray.parameterAtPoint(lightRecord.p);
+		Ray shadow_ray(r.shadowRay(record, q, scene->shadow_ray_epsilon));
+		float tlight = shadow_ray.parameterAtPoint(q);
 
 		// nonluminous = true, so that light object will get ignored
 		if(scene->bvh->shadowHit(shadow_ray, 0.0f, tlight, r.time, true))

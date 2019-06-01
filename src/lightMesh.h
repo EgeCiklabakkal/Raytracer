@@ -1,17 +1,17 @@
 #ifndef _LIGHTMESH_H_
 #define _LIGHTMESH_H_
 
-#include "BTree.h"
 #include "light.h"
 #include "instance.h"
 #include "material.h"
 #include "rtmath.h"
+#include "simpleCDF.h"
 
 class LightMesh : public Light, public ObjectInstance
 {
 	public:
 
-	BTree cdf;
+	SimpleCDF cdf;
 	Vec3 radiance;
 
 	LightMesh(const glm::mat4& trans, Shape* _prim, const Material& _material,
