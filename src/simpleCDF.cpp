@@ -25,14 +25,13 @@ SimpleCDF::SimpleCDF(const std::vector<Shape*>& meshTriangles, const glm::mat4& 
 
 MeshTriangle* SimpleCDF::query(float key) const
 {
-	unsigned int limit = (n) ? (n - 1) : 0;
-	for(unsigned int i = 0; i < limit; i++)
+	for(unsigned int i = 0; i < n; i++)
 	{
-		if(area_data[i + 1] > key)
+		if(key <= area_data[i])
 		{
 			return ptr_data[i];
 		}
 	}
 
-	return ptr_data[limit];
+	return ptr_data[n];
 }

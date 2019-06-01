@@ -26,12 +26,9 @@ bool LightMesh::sampleLight(const Scene* scene, const Ray& r, const HitRecord& r
 
 	HitRecord lightRecord;
 	Ray sampleRay(record.p, unitVector(Vec3(q - record.p)));
-	if(hit(sampleRay, 0.0f, FLT_MAX, 0.0f, lightRecord, false)) // Change tmin/tmax
+	if(triangle_ptr->hit(sampleRay, 0.0f, FLT_MAX, 0.0f, lightRecord, false))
 	{
 		Vec3 wi(q - record.p);
-		float costheta = dot(lightRecord.normal, -wi);
-		float r2 = std::max(0.000001f, wi.squaredLength());
-
 		Ray shadow_ray(r.shadowRay(record, q, scene->shadow_ray_epsilon));
 		float tlight = shadow_ray.parameterAtPoint(q);
 
@@ -41,6 +38,15 @@ bool LightMesh::sampleLight(const Scene* scene, const Ray& r, const HitRecord& r
 			return false;
 		}
 
+		// nonluminous = false, check if the luminous object is blocking the light
+		tlight = shadow_ray.parameterAtPoint(q - wi * scene->shadow_ray_epsilon);
+		if(scene->bvh->shadowHit(shadow_ray, 0.0f, tlight, r.time, false))
+		{
+			return false;
+		}
+
+		float r2 = std::max(0.000001f, wi.squaredLength());
+		float costheta = std::max(0.0f, dot(lightRecord.normal, -wi));
 		wi.makeUnitVector();
 		float pw_1 = (cdf.area * costheta) / r2; // 1 / p(w)
 		sampledLight = SampleLight(radiance * pw_1, wi);
