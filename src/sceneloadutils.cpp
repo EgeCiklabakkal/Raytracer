@@ -190,6 +190,18 @@ int getIntAttributeWithDefault(tinyxml2::XMLElement* element, std::string name, 
 	return _default;
 }
 
+bool getHandedness(tinyxml2::XMLElement* element)
+{
+	const char *attr = element->Attribute("handedness");
+	if(attr)
+	{
+		std::string sattr(attr);
+		if(sattr == "left") { return false; }
+	}
+
+	return true; // defaults to right handed
+}
+
 bool getBoolAttributeWithDefault(tinyxml2::XMLElement* element, std::string name, bool _default)
 {
 	const char *attr = element->Attribute(name.data());
@@ -301,7 +313,7 @@ int getLightSpheres(tinyxml2::XMLElement* element, std::stringstream& ss,
 	return lightSphereCount;
 }
 
-int getLightMeshes(tinyxml2::XMLElement* element, std::stringstream& ss, std::string fname,
+int getLightMeshes(tinyxml2::XMLElement* element, std::stringstream& ss, const std::string& fname,
 			std::vector<Light*>& 	      lights,
 			std::vector<Shape*>& 	      shapes,
 			std::vector<Mesh*>& 	      meshes,
@@ -392,13 +404,13 @@ int getLightMeshes(tinyxml2::XMLElement* element, std::stringstream& ss, std::st
 	return lightMeshCount;
 }
 
-int getLights(tinyxml2::XMLNode* node, tinyxml2::XMLElement* element,
+int getLights(tinyxml2::XMLNode* node, tinyxml2::XMLElement* element, const std::string& fname,
 		std::stringstream& ss, std::vector<Light*>& lights)
 {
 	int lightcount = 0;
 
 	element = node->FirstChildElement("Lights");
-	if(!element)	return 0;
+	if(!element) { return 0; }
 
 	// PointLights
 	element = element->FirstChildElement("PointLight");
@@ -449,6 +461,19 @@ int getLights(tinyxml2::XMLNode* node, tinyxml2::XMLElement* element,
 
 		lights.push_back(spot_light);
 		element = element->NextSiblingElement("SpotLight");
+	}
+
+	// SphericalDirectionalLights
+	element = node->FirstChildElement("Lights");
+	element = element->FirstChildElement("SphericalDirectionalLight");
+	while(element)
+	{
+		lightcount++;
+		SphericalDirectionalLight *sd_light = nullptr;
+		parseSphericalDirectionalLight(sd_light, element, ss, fname);
+
+		lights.push_back(sd_light);
+		element = element->NextSiblingElement("SphericalDirectionalLight");
 	}
 
 	return lightcount;
@@ -1010,6 +1035,10 @@ void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,
 	child = element->FirstChildElement("Tonemap");
 	getTonemap(child, ss, tonemap);
 
+	// Handedness
+	bool rightHanded = getHandedness(element);
+	gaze = (rightHanded) ? (gaze) : (-gaze);
+
 	cameras.push_back(Camera(pos, gaze, up, near_plane, near_distance,
 		 focus_distance, aperture_size, w, h, img_name, num_samples, tonemap));
 }
@@ -1059,6 +1088,10 @@ void pushCameraSimple(tinyxml2::XMLElement* element, std::stringstream& ss,
 	Tonemap tonemap;
 	child = element->FirstChildElement("Tonemap");
 	getTonemap(child, ss, tonemap);
+
+	// Handedness
+	bool rightHanded = getHandedness(element);
+	gaze = (rightHanded) ? (gaze) : (-gaze);
 
 	cameras.push_back(Camera(pos, gaze, up, near_plane, near_distance,
 		 focus_distance, aperture_size, w, h, img_name, num_samples, tonemap));
@@ -1423,6 +1456,20 @@ void parseSpotLight(SpotLight* spot_light, tinyxml2::XMLElement* element, std::s
 		>> spot_light->intensity[2];
 	ss >> spot_light->alpha;
 	ss >> spot_light->beta;
+}
+
+void parseSphericalDirectionalLight(SphericalDirectionalLight*& sd_light,
+				tinyxml2::XMLElement* element, std::stringstream& ss,
+				const std::string& fname)
+{
+	std::size_t pos = fname.find_last_of("/");
+	std::string fpath(fname.substr(0, pos+1));
+
+	tinyxml2::XMLElement *child = element->FirstChildElement("EnvMapName");
+	std::string textureName(child->GetText());
+
+	Image *image = new Image(fpath + textureName);
+	sd_light = new SphericalDirectionalLight(image);
 }
 
 void parseMaterial(Material& material, tinyxml2::XMLElement* element,

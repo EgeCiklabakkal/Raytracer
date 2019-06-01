@@ -26,6 +26,7 @@ int getCameraType(tinyxml2::XMLElement* element);
 int getMeshType(tinyxml2::XMLElement* element, std::string& ply_path);
 int getMeshShadingMode(tinyxml2::XMLElement* element);
 int getIntAttributeWithDefault(tinyxml2::XMLElement* element, std::string name, int _default);
+bool getHandedness(tinyxml2::XMLElement* element); // Returns true if camera is right handed
 bool getBoolAttributeWithDefault(tinyxml2::XMLElement* element, std::string name, bool _default);
 float getFloatAttributeWithDefault(tinyxml2::XMLElement* element, std::string name, float _default);
 
@@ -44,7 +45,7 @@ int getLightSpheres(tinyxml2::XMLElement* element, std::stringstream& ss,
 			const std::vector<glm::mat4>& composites);
 
 // Read Light Meshes
-int getLightMeshes(tinyxml2::XMLElement* element, std::stringstream& ss, std::string fname,
+int getLightMeshes(tinyxml2::XMLElement* element, std::stringstream& ss, const std::string& fname,
 			std::vector<Light*>& 	      lights,
 			std::vector<Shape*>& 	      shapes,
 			std::vector<Mesh*>& 	      meshes,
@@ -58,7 +59,7 @@ int getLightMeshes(tinyxml2::XMLElement* element, std::stringstream& ss, std::st
 			const std::vector<glm::mat4>& composites);
 
 // Read lights
-int getLights(tinyxml2::XMLNode* node, tinyxml2::XMLElement* element,
+int getLights(tinyxml2::XMLNode* node, tinyxml2::XMLElement* element, const std::string& fname,
 		std::stringstream& ss, std::vector<Light*>& lights);
 
 // Read All transformations into appropriate vectors as Matrices
@@ -139,6 +140,9 @@ void parseAreaLight(AreaLight* area_light, tinyxml2::XMLElement* element, std::s
 void parseDirectionalLight(DirectionalLight* directional_light,
 				tinyxml2::XMLElement* element, std::stringstream& ss);
 void parseSpotLight(SpotLight* spot_light, tinyxml2::XMLElement* element, std::stringstream& ss);
+void parseSphericalDirectionalLight(SphericalDirectionalLight*& sd_light,
+				tinyxml2::XMLElement* element, std::stringstream& ss,
+				const std::string& fname);
 void parseMaterial(Material& material, tinyxml2::XMLElement* element,
 			std::stringstream& ss, const std::vector<BRDF*>& brdfs);
 

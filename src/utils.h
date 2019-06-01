@@ -65,6 +65,7 @@
 #include "simpleCDF.h"
 #include "simpleTexture.h"
 #include "sphere.h"
+#include "sphericalDirectionalLight.h"
 #include "texture.h"
 #include "tonemap.h"
 #include "torranceSparrowBRDF.h"

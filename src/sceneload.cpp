@@ -51,7 +51,7 @@ void Scene::loadFromXML(const std::string& fname)
 	// Lights
 	element = scene_element->FirstChildElement("Lights");
 	parseAmbientLight(ambient_light, element, ss);
-	getLights(scene_element, element, ss, lights);	
+	getLights(scene_element, element, fname, ss, lights);
 
 	// Transformations
 	std::vector<glm::mat4> translations;
