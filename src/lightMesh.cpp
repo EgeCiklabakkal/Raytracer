@@ -30,16 +30,9 @@ bool LightMesh::sampleLight(const Scene* scene, const Ray& r, const HitRecord& r
 	{
 		Vec3 wi(q - record.p);
 		Ray shadow_ray(r.shadowRay(record, q, scene->shadow_ray_epsilon));
-		float tlight = shadow_ray.parameterAtPoint(q);
-
-		// nonluminous = true, so that light object will get ignored
-		if(scene->bvh->shadowHit(shadow_ray, 0.0f, tlight, r.time, true))
-		{
-			return false;
-		}
 
 		// nonluminous = false, check if the luminous object is blocking the light
-		tlight = shadow_ray.parameterAtPoint(q - wi * scene->shadow_ray_epsilon);
+		float tlight = shadow_ray.parameterAtPoint(q - wi * scene->shadow_ray_epsilon);
 		if(scene->bvh->shadowHit(shadow_ray, 0.0f, tlight, r.time, false))
 		{
 			return false;
