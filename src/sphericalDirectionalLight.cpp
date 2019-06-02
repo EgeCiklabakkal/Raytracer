@@ -12,7 +12,8 @@ bool SphericalDirectionalLight::sampleLight(const Scene* scene, const Ray& r,
 				const HitRecord& record, SampleLight& sampledLight,
 				bool nonluminous) const
 {
-	float phi = 2.0f * M_PI * rtmath::randf();
+	static float _PI_2 = 2.0f * M_PI;
+	float phi = _PI_2 * rtmath::randf();
 	float theta = acos(rtmath::randf());
 
 	ONB onb;
@@ -30,7 +31,7 @@ bool SphericalDirectionalLight::sampleLight(const Scene* scene, const Ray& r,
 
 	Vec3 L = value(l).asVec3();
 
-	sampledLight = SampleLight(L * INV_2PI, l);
+	sampledLight = SampleLight(L * _PI_2, l);
 	return true;
 }
 

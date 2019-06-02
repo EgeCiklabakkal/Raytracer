@@ -1043,10 +1043,10 @@ void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,
 
 	// Handedness
 	bool rightHanded = getHandedness(element);
-	gaze = (rightHanded) ? (gaze) : (-gaze);
 
-	cameras.push_back(Camera(pos, gaze, up, near_plane, near_distance,
-		 focus_distance, aperture_size, w, h, img_name, num_samples, tonemap));
+	cameras.push_back(Camera(pos, gaze, up, near_plane, near_distance, focus_distance,
+					aperture_size, w, h, img_name,
+					num_samples, tonemap, rightHanded));
 }
 
 void pushCameraSimple(tinyxml2::XMLElement* element, std::stringstream& ss,
@@ -1097,10 +1097,10 @@ void pushCameraSimple(tinyxml2::XMLElement* element, std::stringstream& ss,
 
 	// Handedness
 	bool rightHanded = getHandedness(element);
-	gaze = (rightHanded) ? (gaze) : (-gaze);
 
-	cameras.push_back(Camera(pos, gaze, up, near_plane, near_distance,
-		 focus_distance, aperture_size, w, h, img_name, num_samples, tonemap));
+	cameras.push_back(Camera(pos, gaze, up, near_plane, near_distance, focus_distance,
+					aperture_size, w, h, img_name,
+					num_samples, tonemap, rightHanded));
 }
 
 int getMeshType(tinyxml2::XMLElement* element, std::string& ply_path)

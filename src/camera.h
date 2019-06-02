@@ -36,7 +36,7 @@ class Camera
 	Camera(Vec3 _position, Vec3 _gaze, Vec3 _up, std::array<float, 4> _near_plane, 
 		float _near_distance, float _focus_distance, float _aperture_size,
 		int _image_width, int _image_height, std::string _image_name,
-		int _num_samples, const Tonemap& _tonemap) :
+		int _num_samples, const Tonemap& _tonemap, bool rightHanded) :
 	position(_position), gaze(_gaze), up(_up), near_plane(_near_plane), 
 	near_distance(_near_distance), focus_distance(_focus_distance), 
 	aperture_size(_aperture_size), image_width(_image_width), 
@@ -47,6 +47,9 @@ class Camera
 		across =  uvw.u();
 		up     =  uvw.v();
 		gaze   = -uvw.w();
+
+		// Handedness
+		across = (rightHanded) ? across : -across;
 
 		pw = (near_plane[1] - near_plane[0]) / image_width;
 		ph = (near_plane[3] - near_plane[2]) / image_height;
