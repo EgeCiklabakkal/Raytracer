@@ -176,26 +176,31 @@ rgb Scene::rayColor(const Ray& r, int recursion_depth,
 
 	else if(r.primary)
 	{
-		return backgroundColor(ij);
+		return backgroundColor(ij, r.direction());
 	}
 
 	return rgb();
 }
 
-rgb Scene::backgroundColor(const Vec2 ij) const
+rgb Scene::backgroundColor(const Vec2& ij, const Vec3& direction) const
 {
-	if(!hasBackgroundTexture)
+	if(hasBackgroundTexture)
 	{
-		return background_color;
+		int i = int(ij[0]) % background_texture.nx;
+		int j = int(ij[1]) % background_texture.ny;
+
+		rgb color;
+		background_texture.get(i, j, color);
+
+		return color;
 	}
 
-	int i = int(ij[0]) % background_texture.nx;
-	int j = int(ij[1]) % background_texture.ny;
+	if(hasSphericalDirectionalLight)
+	{
+		return sd_light->value(direction);
+	}
 
-	rgb color;
-	background_texture.get(i, j, color);
-
-	return color;	
+	return background_color;
 }
 
 rgb Scene::ambientColor(const HitRecord& record) const

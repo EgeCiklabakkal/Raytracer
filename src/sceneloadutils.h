@@ -58,8 +58,13 @@ int getLightMeshes(tinyxml2::XMLElement* element, std::stringstream& ss, const s
                         const std::vector<glm::mat4>& rotations,
 			const std::vector<glm::mat4>& composites);
 
+// Read Spherical Directional Light
+bool getSphericalDirectionalLight(tinyxml2::XMLElement* element, std::stringstream& ss,
+					std::vector<Light*>& lights, const std::string& fname,
+					SphericalDirectionalLight*& sd_light);
+
 // Read lights
-int getLights(tinyxml2::XMLNode* node, tinyxml2::XMLElement* element, const std::string& fname,
+int getLights(tinyxml2::XMLNode* node, tinyxml2::XMLElement* element,
 		std::stringstream& ss, std::vector<Light*>& lights);
 
 // Read All transformations into appropriate vectors as Matrices

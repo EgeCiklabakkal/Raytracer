@@ -404,7 +404,26 @@ int getLightMeshes(tinyxml2::XMLElement* element, std::stringstream& ss, const s
 	return lightMeshCount;
 }
 
-int getLights(tinyxml2::XMLNode* node, tinyxml2::XMLElement* element, const std::string& fname,
+bool getSphericalDirectionalLight(tinyxml2::XMLElement* element, std::stringstream& ss,
+					std::vector<Light*>& lights, const std::string& fname,
+					SphericalDirectionalLight*& sd_light)
+{
+	if(!element) { return false; }
+
+	element = element->FirstChildElement("SphericalDirectionalLight");
+	if(element)
+	{
+		parseSphericalDirectionalLight(sd_light, element, ss, fname);
+		lights.push_back(sd_light);
+
+		return true;
+	}
+
+	sd_light = nullptr;
+	return false;
+}
+
+int getLights(tinyxml2::XMLNode* node, tinyxml2::XMLElement* element,
 		std::stringstream& ss, std::vector<Light*>& lights)
 {
 	int lightcount = 0;
@@ -461,19 +480,6 @@ int getLights(tinyxml2::XMLNode* node, tinyxml2::XMLElement* element, const std:
 
 		lights.push_back(spot_light);
 		element = element->NextSiblingElement("SpotLight");
-	}
-
-	// SphericalDirectionalLights
-	element = node->FirstChildElement("Lights");
-	element = element->FirstChildElement("SphericalDirectionalLight");
-	while(element)
-	{
-		lightcount++;
-		SphericalDirectionalLight *sd_light = nullptr;
-		parseSphericalDirectionalLight(sd_light, element, ss, fname);
-
-		lights.push_back(sd_light);
-		element = element->NextSiblingElement("SphericalDirectionalLight");
 	}
 
 	return lightcount;

@@ -19,6 +19,7 @@
 
 class Light;
 class BRDF;
+class SphericalDirectionalLight;
 
 class Scene
 {
@@ -26,7 +27,9 @@ class Scene
 
 	rgb background_color;
 	Image background_texture;
+	SphericalDirectionalLight *sd_light;
 	bool hasBackgroundTexture;
+	bool hasSphericalDirectionalLight;
 	float shadow_ray_epsilon;
 	float intersection_test_epsilon;
 	int max_recursion_depth;
@@ -56,7 +59,7 @@ class Scene
 
 	rgb rayColor(const Ray& r, int recursion_depth, const Tonemap& tonemap,
 			bool nonluminous=false, const Vec2& ij=Vec2()) const;
-	rgb backgroundColor(const Vec2 ij) const;
+	rgb backgroundColor(const Vec2& ij, const Vec3& direction) const;
 	rgb ambientColor(const HitRecord& record) const;
 	rgb diffuseColor(const Ray& r, const HitRecord& record, const SampleLight& slight) const;
 	rgb specularColor(const Ray& r, const HitRecord& record, const SampleLight& slight) const;

@@ -6,6 +6,8 @@
 #include "imageTexture.h"
 #include "rtmath.h"
 
+class Scene;
+
 class SphericalDirectionalLight : public Light
 {
 	public:
