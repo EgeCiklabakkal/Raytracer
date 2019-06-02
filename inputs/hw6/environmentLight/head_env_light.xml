@@ -48,7 +48,7 @@
     </VertexData>
 
     <Materials>
-        <Material id="1" BRDF="1">
+        <Material id="1">
             <AmbientReflectance>1 1 1</AmbientReflectance>
             <DiffuseReflectance>1 1 1</DiffuseReflectance>
             <SpecularReflectance>0 0 0</SpecularReflectance>
