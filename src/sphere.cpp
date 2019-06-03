@@ -46,12 +46,14 @@ bool Sphere::hit(const Ray& r, float tmin, float tmax,
 		ONB _uvw;
 		_uvw.initFromW(record.normal);
 		record.uvw	 = _uvw;
+		record.uvw_local = _uvw;
 		record.color  	 = color;
 		record.material  = material;
 		record.time      = r.time;
 		record.texture   = texture;
 		record.uv	 = textureUV(record.p);
 		record.bump	 = bump(record);
+		record.M	 = M;
 
 		record = transformRecordToWorld(record);
 		return true;
@@ -143,7 +145,7 @@ BumpRecord Sphere::bump(const HitRecord& record) const
 		Vec3 dpdu = Vec3(dxdu, dydu, dzdu);
 		Vec3 dpdv = Vec3(dxdv, dydv, dzdv);
 
-		return BumpRecord(dpdu, dpdv, M);
+		return BumpRecord(dpdu, dpdv);
 	}
 
 	return BumpRecord();

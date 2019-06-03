@@ -31,12 +31,6 @@ bool ObjectInstance::hit(const Ray& r, float tmin, float tmax,
 		record.material = material;
 		record.texture  = texture;
 
-		// Bump transform
-		Vec3 blurDistance = (motionBlurred) ? velocity * time : Vec3(0.0f);
-		glm::mat4 currBlur = glm::translate(glm::mat4(1.0f), glm::vec3( blurDistance[0],
-										blurDistance[1],
-										blurDistance[2]));
-		record.bump.M = currBlur * M;
 		return true;
 	}
 

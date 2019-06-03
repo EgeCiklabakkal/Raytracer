@@ -69,13 +69,14 @@ bool MeshTriangle::hit(const Ray& r, float tmin, float tmax,
 
 		ONB _uvw;
 		_uvw.initFromW(record.normal);
-		record.uvw	= _uvw;
-		record.color 	= color;
-		record.material = parent_mesh->material;
-		record.time 	= r.time;		
-		record.texture  = parent_mesh->texture;
-		record.uv	= textureUV(beta, gamma);
-		record.bump     = bump();
+		record.uvw	 = _uvw;
+		record.uvw_local = _uvw;
+		record.color 	 = color;
+		record.material  = parent_mesh->material;
+		record.time 	 = r.time;
+		record.texture   = parent_mesh->texture;
+		record.uv	 = textureUV(beta, gamma);
+		record.bump      = bump();
 
 		record = transformRecordToWorld(record);
                 return true;

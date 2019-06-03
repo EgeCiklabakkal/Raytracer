@@ -87,6 +87,7 @@ bool Triangle::hit(const Ray& r, float tmin, float tmax,
 		ONB _uvw;
 		_uvw.initFromW(normal);
 		record.uvw	 = _uvw;
+		record.uvw_local = _uvw;
 		record.color 	 = color;
 		record.material  = material;
 		record.time	 = r.time;

@@ -10,17 +10,15 @@ class BumpRecord
 
 	Vec3 dpdu;
 	Vec3 dpdv;
-	glm::mat4 M;	// Transform
 
 	BumpRecord() {}
-	BumpRecord(const Vec3& _dpdu, const Vec3& _dpdv, const glm::mat4& _M=glm::mat4(1.0f)) :
-	dpdu(_dpdu), dpdv(_dpdv), M(_M) {}
+	BumpRecord(const Vec3& _dpdu, const Vec3& _dpdv) :
+	dpdu(_dpdu), dpdv(_dpdv) {}
 
 	BumpRecord& operator=(const BumpRecord& rhs)
 	{
 		dpdu 	= rhs.dpdu;
 		dpdv 	= rhs.dpdv;
-		M	= rhs.M;
 
 		return *this;
 	}

@@ -336,8 +336,8 @@ bool RaytracingIntegrator::handleTexture(HitRecord& record, DecalMode& decal_mod
 
 	if(texture->bumpmap)
 	{
-		Vec3 dpdu = rtmath::transformVec(record.bump.M, record.bump.dpdu);
-		Vec3 dpdv = rtmath::transformVec(record.bump.M, record.bump.dpdv);
+		Vec3 dpdu = rtmath::transformVec(record.M, record.bump.dpdu);
+		Vec3 dpdv = rtmath::transformVec(record.M, record.bump.dpdv);
 		record.normal = texture->bumpNormal(record.uv, record.p, record.normal, dpdu, dpdv);
 	}
 

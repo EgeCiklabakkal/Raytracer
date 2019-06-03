@@ -27,11 +27,13 @@ class HitRecord
 	Vec2 uv;	// uv coordinates of texture
 	Vec3 normal;
 	ONB uvw;	// w is the outward normal
+	ONB uvw_local;	// uvw but no transform is applied
 	rgb color;
 	Material material;
 	Texture *texture = nullptr;
 	BumpRecord bump;
 	float time;
+	glm::mat4 M;	// transformation
 
 	// Constructors
 	HitRecord() {}
@@ -43,16 +45,18 @@ class HitRecord
 
 	HitRecord& operator=(const HitRecord& rhs)
 	{
-		t 	 = rhs.t;
-		p	 = rhs.p;
-		uv	 = rhs.uv;
-		normal 	 = rhs.normal;
-		color 	 = rhs.color;
-		uvw 	 = rhs.uvw;
-		material = rhs.material;
-		time     = rhs.time;
-		texture  = rhs.texture;
-		bump     = rhs.bump;
+		t 	  = rhs.t;
+		p	  = rhs.p;
+		uv	  = rhs.uv;
+		normal 	  = rhs.normal;
+		color 	  = rhs.color;
+		uvw 	  = rhs.uvw;
+		uvw_local = rhs.uvw_local;
+		material  = rhs.material;
+		time      = rhs.time;
+		texture   = rhs.texture;
+		bump      = rhs.bump;
+		M	  = rhs.M;
 
 		return *this;
 	}
