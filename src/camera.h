@@ -1,13 +1,15 @@
 #ifndef _CAMERA_H_
 #define _CAMERA_H_
 
+#include <array>
+#include <string>
+#include <vector>
+
 #include "ray.h"
 #include "ONB.h"
 #include "rtmath.h"
 #include "tonemap.h"
-#include <array>
-#include <string>
-#include <vector>
+#include "integrator.h"
 
 class Camera
 {
@@ -26,6 +28,7 @@ class Camera
 	std::string image_name;
 	int num_samples;
 	Tonemap tonemap;
+	Integrator *integrator;
 
 	ONB uvw;
 	float pw, ph;				// pixel width/height
@@ -36,12 +39,12 @@ class Camera
 	Camera(Vec3 _position, Vec3 _gaze, Vec3 _up, std::array<float, 4> _near_plane, 
 		float _near_distance, float _focus_distance, float _aperture_size,
 		int _image_width, int _image_height, std::string _image_name,
-		int _num_samples, const Tonemap& _tonemap, bool rightHanded) :
+		int _num_samples, const Tonemap& _tonemap, bool rightHanded, Integrator* _integrator) :
 	position(_position), gaze(_gaze), up(_up), near_plane(_near_plane), 
 	near_distance(_near_distance), focus_distance(_focus_distance), 
 	aperture_size(_aperture_size), image_width(_image_width), 
 	image_height(_image_height), image_name(_image_name),
-	num_samples(_num_samples), tonemap(_tonemap)
+	num_samples(_num_samples), tonemap(_tonemap), integrator(_integrator)
 	{
 		uvw.initFromWV(-gaze, up);
 		across =  uvw.u();
@@ -57,6 +60,8 @@ class Camera
 		q  = position + near_distance*gaze + near_plane[0]*across + near_plane[2]*up;
 	}
 
+	~Camera() { delete integrator; }
+
 	Ray getRay(float x, float y, bool primary=true) const
 	{
 		Vec3 s = q + (pw*x + pw/2)*across + (ph*y + ph/2)*up;
@@ -69,6 +74,7 @@ class Camera
 	// num_samples should be perfect square(even if it isn't it is "cast" to lower ps)
 	void sampleRays(float x, float y, std::vector<Ray>& rays, int num_samples=64) const;
 	void sampleDOFRays(float x, float y, std::vector<Ray>& rays, int num_samples=64) const;
+	void render(const Scene* scene, Image* img, int threadCount, bool showProgress) const;
 };
 
 #endif

@@ -230,7 +230,7 @@ float getFloatAttributeWithDefault(tinyxml2::XMLElement* element, std::string na
 	return _default;
 }
 
-int getCameras(tinyxml2::XMLElement* element, std::stringstream& ss, std::vector<Camera>& cameras)
+int getCameras(tinyxml2::XMLElement* element, std::stringstream& ss, std::vector<Camera*>& cameras)
 {
 	int cameraCount = 0;	
 
@@ -985,7 +985,7 @@ bool getTonemap(tinyxml2::XMLElement* element, std::stringstream& ss, Tonemap& t
 }
 
 void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,
-			std::vector<Camera>& cameras)
+			std::vector<Camera*>& cameras)
 {
 	tinyxml2::XMLElement *child = element->FirstChildElement("Position");
 	ss << child->GetText() << std::endl;
@@ -1044,13 +1044,16 @@ void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,
 	// Handedness
 	bool rightHanded = getHandedness(element);
 
-	cameras.push_back(Camera(pos, gaze, up, near_plane, near_distance, focus_distance,
+	// Integrator
+	Integrator* integrator = new RaytracingIntegrator();
+
+	cameras.push_back(new Camera(pos, gaze, up, near_plane, near_distance, focus_distance,
 					aperture_size, w, h, img_name,
-					num_samples, tonemap, rightHanded));
+					num_samples, tonemap, rightHanded, integrator));
 }
 
 void pushCameraSimple(tinyxml2::XMLElement* element, std::stringstream& ss,
-			std::vector<Camera>& cameras)
+			std::vector<Camera*>& cameras)
 {
 	tinyxml2::XMLElement *child = element->FirstChildElement("Position");
 	ss << child->GetText() << std::endl;
@@ -1098,9 +1101,12 @@ void pushCameraSimple(tinyxml2::XMLElement* element, std::stringstream& ss,
 	// Handedness
 	bool rightHanded = getHandedness(element);
 
-	cameras.push_back(Camera(pos, gaze, up, near_plane, near_distance, focus_distance,
+	// Integrator
+	Integrator *integrator = new RaytracingIntegrator();
+
+	cameras.push_back(new Camera(pos, gaze, up, near_plane, near_distance, focus_distance,
 					aperture_size, w, h, img_name,
-					num_samples, tonemap, rightHanded));
+					num_samples, tonemap, rightHanded, integrator));
 }
 
 int getMeshType(tinyxml2::XMLElement* element, std::string& ply_path)

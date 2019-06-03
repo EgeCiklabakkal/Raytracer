@@ -1,4 +1,4 @@
-#include "utils.h"
+#include "helperUtils.h"
 
 void utils::displayProgressBar(SafeStack<std::pair<float, float>>& pixels)
 {
@@ -23,7 +23,7 @@ void utils::displayProgressBar(SafeStack<std::pair<float, float>>& pixels)
 		std::cout.flush();
 
 		// we don't want this thread to hog the CPU, sleep
-		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		std::this_thread::sleep_for(std::chrono::milliseconds(PROGRESS_BAR_UPDATE_WAIT));
 
 		progress = float(pixels.progress) / size;
 	}

@@ -31,7 +31,7 @@ bool getBoolAttributeWithDefault(tinyxml2::XMLElement* element, std::string name
 float getFloatAttributeWithDefault(tinyxml2::XMLElement* element, std::string name, float _default);
 
 // Read cameras
-int getCameras(tinyxml2::XMLElement* element, std::stringstream& ss, std::vector<Camera>& cameras);
+int getCameras(tinyxml2::XMLElement* element, std::stringstream& ss, std::vector<Camera*>& cameras);
 
 // Read Light Spheres
 int getLightSpheres(tinyxml2::XMLElement* element, std::stringstream& ss,
@@ -122,9 +122,9 @@ bool setMotionBlurOfShape(Shape* shape_ptr, tinyxml2::XMLElement* element, std::
 
 bool getTonemap(tinyxml2::XMLElement* element, std::stringstream& ss, Tonemap& tonemap);
 void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,
-                        std::vector<Camera>& cameras);
+                        std::vector<Camera*>& cameras);
 void pushCameraSimple(tinyxml2::XMLElement* element, std::stringstream& ss,
-                        std::vector<Camera>& cameras);
+                        std::vector<Camera*>& cameras);
 void pushFacesOfPlyMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Vertex>& vertex_data,
                         std::vector<Vec2>& texCoord_data,
 			int shadingMode, const std::string& fname, const std::string& plyname);

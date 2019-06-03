@@ -5,65 +5,26 @@ void Scene::renderImages(int threadCount, bool showProgress)
 	int width, height;
 	HitRecord record;
 
-	for(const Camera& cam: cameras)
+	for(const Camera* cam: cameras)
         {
-		int i, j;
 		auto const prior = std::chrono::system_clock::now();
 
-                width  = cam.image_width;
-                height = cam.image_height;
+                width  = cam->image_width;
+                height = cam->image_height;
 
-                Image img(width, height);	
+		Image img(width, height);
 
-                // Determine the pixels;
-                SafeStack<std::pair<float, float>> pixels(width * height);
-                for(i = 0; i < width; i++)
-                {
-                        for(j = 0; j < height; j++)
-                        {
-                                pixels.sstack.push_back(std::make_pair((float)i, (float)j));
-                        }
-                } 
+                cam->render(this, &img, threadCount, showProgress);
 
-		// Create threads
-		std::vector<std::thread> threads;
-
-		for(i = 0; i < threadCount; i++)
-		{
-			if(cam.num_samples == 1)	// Single Sample
-			{
-				threads.push_back(std::thread(raytrace_singleSample, 
-						this, &cam, &img, &pixels));
-			}
-
-			else
-			{
-				threads.push_back(std::thread(raytrace_routine, 
-						this, &cam, &img, &pixels, cam.num_samples));
-			}
-
-		}
-
-		if(showProgress)
-		{
-			utils::displayProgressBar(pixels);
-		}
-
-		// Wait for them to complete
-		for(i = 0; i < threadCount; i++)
-		{
-			threads[i].join();
-		}
-
-                img.imwrite(cam.image_name, cam.tonemap);
+                img.imwrite(cam->image_name, cam->tonemap);
 
 		// Time Duration Print
 		auto const latter = std::chrono::system_clock::now();
-		utils::printTimingInfo(cam.image_name, prior, latter);
+		utils::printTimingInfo(cam->image_name, prior, latter);
         }
 }
 
-void Scene::raytrace_routine(Scene* scene, const Camera* cam, Image* img, 
+void Scene::raytrace_routine(const Scene* scene, const Camera* cam, Image* img,
 		SafeStack<std::pair<float, float>>* pixels, int num_samples)
 {
 	std::pair<float, float> currPixel;
@@ -99,7 +60,7 @@ void Scene::raytrace_routine(Scene* scene, const Camera* cam, Image* img,
 	}
 }
 
-void Scene::raytrace_singleSample(Scene* scene, const Camera* cam, Image* img, 
+void Scene::raytrace_singleSample(const Scene* scene, const Camera* cam, Image* img,
 		SafeStack<std::pair<float, float>>* pixels)
 {
 	std::pair<float, float> currPixel;
@@ -386,6 +347,13 @@ Scene::~Scene()
 		if(!light->object) delete light;
 	}
 	lights.clear();
+
+	// Free cameras
+	for(Camera* cam : cameras)
+	{
+		delete cam;
+	}
+	cameras.clear();
 
 	// Free BRDFs
 	for(BRDF* brdf : brdfs)

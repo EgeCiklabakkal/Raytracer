@@ -1,5 +1,10 @@
 #include "camera.h"
 
+void Camera::render(const Scene *scene, Image *img, int threadCount, bool showProgress) const
+{
+	integrator->render(scene, img, this, threadCount, showProgress);
+}
+
 // Jittered multisampling
 void Camera::sampleRays(float x, float y, std::vector<Ray>& rays, int num_samples) const
 {

@@ -8,7 +8,6 @@
 #include "vector2.h"
 #include "vertex.h"
 #include "rgb.h"
-#include "camera.h"
 #include "light.h"
 #include "safeStack.h"
 #include "mesh.h"
@@ -20,6 +19,7 @@
 class Light;
 class BRDF;
 class SphericalDirectionalLight;
+class Camera;
 
 class Scene
 {
@@ -34,7 +34,7 @@ class Scene
 	float intersection_test_epsilon;
 	int max_recursion_depth;
 	bool cullFace;
-	std::vector<Camera> cameras;
+	std::vector<Camera*> cameras;
 	Vec3 ambient_light;
 	std::vector<Light*> lights;
 	std::vector<BRDF*> brdfs;	// brdfs[0] is always simpleBRDF
@@ -52,9 +52,9 @@ class Scene
 	// Methods
 	void loadFromXML(const std::string& fname);
 	void renderImages(int threadCount, bool showProgress=true);
-	static void raytrace_routine(Scene* scene, const Camera* cam, Image* img, 
+	static void raytrace_routine(const Scene* scene, const Camera* cam, Image* img,
 			SafeStack<std::pair<float, float>>* pixels, int num_samples);
-	static void raytrace_singleSample(Scene* scene, const Camera* cam, Image* img,
+	static void raytrace_singleSample(const Scene* scene, const Camera* cam, Image* img,
 			SafeStack<std::pair<float, float>>* pixels);
 
 	rgb rayColor(const Ray& r, int recursion_depth, const Tonemap& tonemap,
