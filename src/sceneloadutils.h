@@ -122,6 +122,10 @@ bool setTransformOfShape(Shape* shape_ptr, tinyxml2::XMLElement* element, std::s
 bool setMotionBlurOfShape(Shape* shape_ptr, tinyxml2::XMLElement* element, std::stringstream& ss);
 
 bool getTonemap(tinyxml2::XMLElement* element, std::stringstream& ss, Tonemap& tonemap);
+void getIntegrator(tinyxml2::XMLElement* element, std::stringstream& ss,
+			const Scene* scene, Integrator*& integrator);
+void getRendererParams(tinyxml2::XMLElement* element, std::stringstream& ss,
+			bool& nextEventEstimation, bool& importanceSampling, bool& russianRoulette);
 void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,
                         const Scene* scene, std::vector<Camera*>& cameras);
 void pushCameraSimple(tinyxml2::XMLElement* element, std::stringstream& ss,

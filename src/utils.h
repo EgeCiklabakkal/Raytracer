@@ -50,6 +50,7 @@
 #include "modifiedBlinnPhongBRDF.h"
 #include "modifiedPhongBRDF.h"
 #include "ONB.h"
+#include "pathtracingIntegrator.h"
 #include "perlinNoise.h"
 #include "perlinTexture.h"
 #include "phongBRDF.h"

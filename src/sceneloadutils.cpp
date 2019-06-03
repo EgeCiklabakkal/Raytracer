@@ -985,6 +985,54 @@ bool getTonemap(tinyxml2::XMLElement* element, std::stringstream& ss, Tonemap& t
 	return true;
 }
 
+void getIntegrator(tinyxml2::XMLElement* element, std::stringstream& ss,
+			const Scene* scene, Integrator*& integrator)
+{
+	tinyxml2::XMLElement *child = element->FirstChildElement("Renderer");
+	if(child)	// Renderer specified
+	{
+		std::string sRenderer(child->GetText());
+		if(sRenderer == "PathTracing")
+		{
+			bool nextEventEstimation;
+			bool importanceSampling;
+			bool russianRoulette;
+			getRendererParams(element, ss, nextEventEstimation,
+						importanceSampling, russianRoulette);
+
+			integrator = new PathtracingIntegrator(scene, nextEventEstimation,
+							importanceSampling, russianRoulette);
+			return;
+		}
+	}
+
+	// Defaults to Ray Tracing
+	integrator = new RaytracingIntegrator(scene);
+}
+
+void getRendererParams(tinyxml2::XMLElement* element, std::stringstream& ss,
+			bool& nextEventEstimation, bool& importanceSampling, bool& russianRoulette)
+{
+	// Defaults to false
+	nextEventEstimation = false;
+	importanceSampling  = false;
+	russianRoulette	    = false;
+
+	tinyxml2::XMLElement *child = element->FirstChildElement("RendererParams");
+	if(child)	// Params specified
+	{
+		std::string sParam;
+		ss << child->GetText();
+		while(ss >> sParam)
+		{
+			if(sParam == "NextEventEstimation")     { nextEventEstimation = true; }
+			else if(sParam == "ImportanceSampling") { importanceSampling = true; }
+			else if(sParam == "RussianRoulette")    { russianRoulette = true; }
+		}
+		ss.clear();
+	}
+}
+
 void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,
 			const Scene* scene, std::vector<Camera*>& cameras)
 {
@@ -1046,11 +1094,12 @@ void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,
 	bool rightHanded = getHandedness(element);
 
 	// Integrator
-	Integrator* integrator = new RaytracingIntegrator(scene);
+	Integrator *integrator = nullptr;
+	getIntegrator(element, ss, scene, integrator);
 
 	cameras.push_back(new Camera(pos, gaze, up, near_plane, near_distance, focus_distance,
-					aperture_size, w, h, img_name,
-					num_samples, tonemap, rightHanded, integrator));
+					aperture_size, w, h, img_name, num_samples,
+					tonemap, rightHanded, integrator));
 }
 
 void pushCameraSimple(tinyxml2::XMLElement* element, std::stringstream& ss,
@@ -1103,11 +1152,12 @@ void pushCameraSimple(tinyxml2::XMLElement* element, std::stringstream& ss,
 	bool rightHanded = getHandedness(element);
 
 	// Integrator
-	Integrator *integrator = new RaytracingIntegrator(scene);
+	Integrator *integrator = nullptr;
+	getIntegrator(element, ss, scene, integrator);
 
 	cameras.push_back(new Camera(pos, gaze, up, near_plane, near_distance, focus_distance,
-					aperture_size, w, h, img_name,
-					num_samples, tonemap, rightHanded, integrator));
+					aperture_size, w, h, img_name, num_samples,
+					tonemap, rightHanded, integrator));
 }
 
 int getMeshType(tinyxml2::XMLElement* element, std::string& ply_path)
