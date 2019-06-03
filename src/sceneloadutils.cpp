@@ -230,7 +230,8 @@ float getFloatAttributeWithDefault(tinyxml2::XMLElement* element, std::string na
 	return _default;
 }
 
-int getCameras(tinyxml2::XMLElement* element, std::stringstream& ss, std::vector<Camera*>& cameras)
+int getCameras(tinyxml2::XMLElement* element, std::stringstream& ss,
+		const Scene* scene, std::vector<Camera*>& cameras)
 {
 	int cameraCount = 0;	
 
@@ -242,12 +243,12 @@ int getCameras(tinyxml2::XMLElement* element, std::stringstream& ss, std::vector
 
 		if(cam_type == CAM_SIMPLE)
 		{
-			pushCameraSimple(element, ss, cameras);
+			pushCameraSimple(element, ss, scene, cameras);
 		}
 
 		else if(cam_type == CAM_LOOKAT)
 		{
-			pushCameraLookAt(element, ss, cameras);
+			pushCameraLookAt(element, ss, scene, cameras);
 		}
 
 		element = element->NextSiblingElement("Camera");
@@ -985,7 +986,7 @@ bool getTonemap(tinyxml2::XMLElement* element, std::stringstream& ss, Tonemap& t
 }
 
 void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,
-			std::vector<Camera*>& cameras)
+			const Scene* scene, std::vector<Camera*>& cameras)
 {
 	tinyxml2::XMLElement *child = element->FirstChildElement("Position");
 	ss << child->GetText() << std::endl;
@@ -1045,7 +1046,7 @@ void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,
 	bool rightHanded = getHandedness(element);
 
 	// Integrator
-	Integrator* integrator = new RaytracingIntegrator();
+	Integrator* integrator = new RaytracingIntegrator(scene);
 
 	cameras.push_back(new Camera(pos, gaze, up, near_plane, near_distance, focus_distance,
 					aperture_size, w, h, img_name,
@@ -1053,7 +1054,7 @@ void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,
 }
 
 void pushCameraSimple(tinyxml2::XMLElement* element, std::stringstream& ss,
-			std::vector<Camera*>& cameras)
+			const Scene* scene, std::vector<Camera*>& cameras)
 {
 	tinyxml2::XMLElement *child = element->FirstChildElement("Position");
 	ss << child->GetText() << std::endl;
@@ -1102,7 +1103,7 @@ void pushCameraSimple(tinyxml2::XMLElement* element, std::stringstream& ss,
 	bool rightHanded = getHandedness(element);
 
 	// Integrator
-	Integrator *integrator = new RaytracingIntegrator();
+	Integrator *integrator = new RaytracingIntegrator(scene);
 
 	cameras.push_back(new Camera(pos, gaze, up, near_plane, near_distance, focus_distance,
 					aperture_size, w, h, img_name,

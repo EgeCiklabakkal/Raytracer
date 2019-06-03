@@ -1,8 +1,8 @@
 #include "camera.h"
 
-void Camera::render(const Scene *scene, Image *img, int threadCount, bool showProgress) const
+void Camera::render(Image *img, int threadCount, bool showProgress) const
 {
-	integrator->render(scene, img, this, threadCount, showProgress);
+	integrator->render(img, this, threadCount, showProgress);
 }
 
 // Jittered multisampling

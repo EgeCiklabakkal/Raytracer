@@ -10,9 +10,12 @@ class Integrator
 {
 	public:
 
+	const Scene *scene;
+
+	Integrator(const Scene* _scene) : scene(_scene) {}
 	virtual ~Integrator() = 0;
 
-	virtual void render(const Scene* scene, Image* img, const Camera* cam,
+	virtual void render(Image* img, const Camera* cam,
 				int threadCount, bool showProgress) const=0;
 };
 

@@ -46,7 +46,7 @@ void Scene::loadFromXML(const std::string& fname)
 	
 	// Cameras
 	element = scene_element->FirstChildElement("Cameras");
-	getCameras(element, ss, cameras);
+	getCameras(element, ss, this, cameras);
 
 	// Lights
 	element = scene_element->FirstChildElement("Lights");

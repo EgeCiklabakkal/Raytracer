@@ -9,7 +9,6 @@
 #include "vertex.h"
 #include "rgb.h"
 #include "light.h"
-#include "safeStack.h"
 #include "mesh.h"
 #include "BVH.h"
 #include "image.h"
@@ -52,23 +51,6 @@ class Scene
 	// Methods
 	void loadFromXML(const std::string& fname);
 	void renderImages(int threadCount, bool showProgress=true);
-	static void raytrace_routine(const Scene* scene, const Camera* cam, Image* img,
-			SafeStack<std::pair<float, float>>* pixels, int num_samples);
-	static void raytrace_singleSample(const Scene* scene, const Camera* cam, Image* img,
-			SafeStack<std::pair<float, float>>* pixels);
-
-	rgb rayColor(const Ray& r, int recursion_depth, const Tonemap& tonemap,
-			bool nonluminous=false, const Vec2& ij=Vec2()) const;
-	rgb backgroundColor(const Vec2& ij, const Vec3& direction) const;
-	rgb ambientColor(const HitRecord& record) const;
-	rgb diffuseColor(const Ray& r, const HitRecord& record, const SampleLight& slight) const;
-	rgb specularColor(const Ray& r, const HitRecord& record, const SampleLight& slight) const;
-	rgb reflectionColor(const Ray& r, const HitRecord& record,
-				int recursion_depth, const Tonemap& tonemap) const;
-	rgb refractionColor(const Ray& r, const HitRecord& record,
-				int recursion_depth, const Tonemap& tonemap) const;
-	bool handleTexture(HitRecord& record, DecalMode& decal_mode, rgb& color) const;
-	bool handleTonemap(const Tonemap& tonemap, HitRecord& record, rgb& color) const;
 };
 
 #endif
