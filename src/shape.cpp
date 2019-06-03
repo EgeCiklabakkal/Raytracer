@@ -51,7 +51,8 @@ HitRecord Shape::transformRecordToWorld(const HitRecord& record) const
 
 	if(!transformed && !motionBlurred)
 	{
-		return record;
+		transformedRecord.M	 = glm::mat4(1.0f);
+		return transformedRecord;
 	}
 
 	else if(!transformed && motionBlurred)
@@ -65,7 +66,7 @@ HitRecord Shape::transformRecordToWorld(const HitRecord& record) const
 		transformedRecord.p      = rtmath::transformLoc(currBlur, record.p);
 		transformedRecord.normal = unitVector(rtmath::transformVec(
 							glm::transpose(invCurrBlur), record.normal));
-		transformedRecord.M	 = currBlur * M ;
+		transformedRecord.M	 = currBlur * M;
 	}
 
 	else if(transformed && !motionBlurred)
@@ -73,7 +74,7 @@ HitRecord Shape::transformRecordToWorld(const HitRecord& record) const
 		transformedRecord.p      = rtmath::transformLoc(M, record.p);
 		transformedRecord.normal = unitVector(rtmath::transformVec(glm::transpose(N), 
 										record.normal));
-		transformedRecord.M	 = M ;
+		transformedRecord.M	 = M;
 	}
 
 	else
@@ -88,7 +89,7 @@ HitRecord Shape::transformRecordToWorld(const HitRecord& record) const
 		transformedRecord.normal = unitVector(rtmath::transformVec(
 								glm::transpose(N * invCurrBlur), 
 								record.normal));
-		transformedRecord.M	 = currBlur * M ;
+		transformedRecord.M	 = currBlur * M;
 	}
 	
 	ONB _uvw;

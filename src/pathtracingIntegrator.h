@@ -31,7 +31,12 @@ class PathtracingIntegrator : public Integrator
 					SafeStack<std::pair<float, float>>* pixels);
 
 	rgb rayColor(const Ray& r, int recursion_depth, const Tonemap& tonemap,
-			bool nonluminous=false, const Vec2& ij=Vec2()) const;
+			bool nonluminous=false, const Vec2& ij=Vec2(), bool indirect=false) const;
+	rgb directLightingColor(const Scene* scene, const Ray& r,
+				const HitRecord& record, bool nonluminous) const;
+	rgb indirectLightingColor(const Scene* scene, const Ray& r, const HitRecord& record,
+					int recursion_depth, const Tonemap& tonemap,
+					bool nonluminous, const Vec2& ij) const;
 	rgb backgroundColor(const Vec2& ij, const Vec3& direction) const;
 	rgb ambientColor(const HitRecord& record) const;
 	rgb diffuseColor(const Ray& r, const HitRecord& record, const SampleLight& slight) const;

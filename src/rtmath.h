@@ -16,12 +16,17 @@
 #include <glm/vec4.hpp>
 
 #include "vector3.h"
+#include "ONB.h"
 
 namespace rtmath
 {
 	float randf(float start=0.0f, float end=1.0f);
 	float gaussianPDF(float x, float m=0.0f, float s=1.0f);
 	float gaussian2D(float x, float y, float s=1.0f);
+
+	// Random sample direction over hemisphere
+	Vec3 randSampleOverHemisphere(const ONB& uvw, bool importanceSampling,
+					const glm::mat4& trans=glm::mat4(1.0f));
 
 	// Transform helpers
 	Vec3 transformLoc(const glm::mat4& left_op, const Vec3& right_op);

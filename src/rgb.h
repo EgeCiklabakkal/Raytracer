@@ -63,10 +63,11 @@ class rgb
 	Vec3 asVec3() const;
 	float grayscale() const;
 	bool hasNegatives() const;
+	bool isBlack() const;
 };
 
 // Constructors
-inline rgb::rgb() : _r(0), _g(0), _b(0) {}
+inline rgb::rgb() : _r(0.0f), _g(0.0f), _b(0.0f) {}
 
 inline rgb::rgb(float value) : _r(value), _g(value), _b(value) {}
 
@@ -209,6 +210,11 @@ inline float rgb::grayscale() const
 inline bool rgb::hasNegatives() const
 {
 	return (_r < 0.0f) || (_g < 0.0f) || (_b < 0.0f);
+}
+
+inline bool rgb::isBlack() const
+{
+	return (!_r) && (!_g) && (!_b);
 }
 
 #endif

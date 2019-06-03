@@ -78,7 +78,6 @@ bool MeshTriangle::hit(const Ray& r, float tmin, float tmax,
 		record.uv	 = textureUV(beta, gamma);
 		record.bump      = bump();
 
-		record = transformRecordToWorld(record);
                 return true;
         }
 

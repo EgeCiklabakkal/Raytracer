@@ -32,8 +32,8 @@ bool LightSphere::sampleLight(const Scene* scene, const Ray& r, const HitRecord&
 	float theta = acos(1.0f - e2 + e2 * costheta_max);
 
 	Vec3 l = cos(theta) * onb.W +
-		 sin(theta) * cos(phi) * onb.V +
-		 sin(theta) * sin(phi) * onb.U;
+		 sin(theta) * cos(phi) * onb.U +
+		 sin(theta) * sin(phi) * onb.V;
 
 	// Compute emitting point
 	HitRecord lightRecord;

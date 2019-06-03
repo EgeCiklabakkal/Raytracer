@@ -106,7 +106,8 @@ void PathtracingIntegrator::pathtrace_singleSample(const PathtracingIntegrator* 
 }
 
 rgb PathtracingIntegrator::rayColor(const Ray& r, int recursion_depth,
-			const Tonemap& tonemap, bool nonluminous, const Vec2& ij) const
+					const Tonemap& tonemap, bool nonluminous,
+					const Vec2& ij, bool indirect) const
 {
 	rgb rcolor(0.0f, 0.0f, 0.0f);
 	float tmax = FLT_MAX;		// Note: tmax, tmin, time can be made an argument
@@ -122,7 +123,8 @@ rgb PathtracingIntegrator::rayColor(const Ray& r, int recursion_depth,
 		{
 			if(record.material.luminous)	// ray hit a luminous object
 			{
-				return record.color;
+				// return 0 radiance for indirect rays that hit a luminaire
+				return (indirect) ? rgb() : record.color;
 			}
 
 			// Handle texture
@@ -137,20 +139,12 @@ rgb PathtracingIntegrator::rayColor(const Ray& r, int recursion_depth,
 
 			rcolor = ambientColor(record);
 
-			// Loop over lights
-			for(const Light* light_ptr : scene->lights)
-			{
-				SampleLight sampledLight;
-				bool notShadow = light_ptr->sampleLight(scene, r, record,
-									sampledLight, nonluminous);
+			// Add color from direct lighting
+			rcolor += directLightingColor(scene, r, record, nonluminous);
 
-				if(notShadow)
-				{
-					// Diffuse and Specular shading
-					rcolor += record.material.brdf->value(r, record,
-										sampledLight);
-				}
-			}
+			// Add color from indirect lighting
+			rcolor += indirectLightingColor(scene, r, record, recursion_depth,
+							tonemap, nonluminous, ij);
 
 			// Add color from reflections
 			rcolor += reflectionColor(r, record, recursion_depth, tonemap);
@@ -168,6 +162,51 @@ rgb PathtracingIntegrator::rayColor(const Ray& r, int recursion_depth,
 	}
 
 	return rgb();
+}
+
+rgb PathtracingIntegrator::directLightingColor(const Scene* scene, const Ray& r,
+						const HitRecord& record, bool nonluminous) const
+{
+	rgb color(0.0f);
+
+	// Loop over lights
+	for(const Light* light_ptr : scene->lights)
+	{
+		SampleLight sampledLight;
+		bool notShadow = light_ptr->sampleLight(scene, r, record,
+							sampledLight, nonluminous);
+
+		if(notShadow)
+		{
+			// Diffuse and Specular shading
+			color += record.material.brdf->value(r, record, sampledLight);
+		}
+	}
+
+	return color;
+}
+
+rgb PathtracingIntegrator::indirectLightingColor(const Scene* scene, const Ray& r,
+				const HitRecord& record, int recursion_depth,
+				const Tonemap& tonemap, bool nonluminous, const Vec2& ij) const
+{
+	if(!recursion_depth) { return rgb(); }
+
+	rgb color(0.0f);
+	static const float _2pi = 2.0f * M_PI;
+	Vec3 wi(rtmath::randSampleOverHemisphere(record.uvw_local, importanceSampling, record.M));
+	Ray sample(record.p + record.normal * scene->shadow_ray_epsilon, wi);
+
+	// Trace indirect ray
+	rgb indirectRadiance = rayColor(sample, recursion_depth - 1, tonemap, nonluminous, ij, true);
+
+	if(!indirectRadiance.isBlack())
+	{
+		SampleLight indirectLight(indirectRadiance.asVec3(), wi);
+		color = record.material.brdf->value(r, record, indirectLight);
+	}
+
+	return color * _2pi;
 }
 
 rgb PathtracingIntegrator::backgroundColor(const Vec2& ij, const Vec3& direction) const
@@ -344,7 +383,8 @@ bool PathtracingIntegrator::handleTexture(HitRecord& record, DecalMode& decal_mo
 	return true;
 }
 
-bool PathtracingIntegrator::handleTonemap(const Tonemap& tonemap, HitRecord& record, rgb& color) const
+bool PathtracingIntegrator::handleTonemap(const Tonemap& tonemap,
+						HitRecord& record, rgb& color) const
 {
 	if(tonemap.tonemap_mode == TonemapMode::NOTONEMAP)
 	{
