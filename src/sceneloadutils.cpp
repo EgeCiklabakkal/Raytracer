@@ -230,6 +230,61 @@ float getFloatAttributeWithDefault(tinyxml2::XMLElement* element, std::string na
 	return _default;
 }
 
+int getVertexData(tinyxml2::XMLElement* element, std::stringstream& ss,
+			std::vector<Vertex>& vertex_data, const std::string& fname)
+{
+	if(element)
+        {
+		const char *binName = element->Attribute("binaryFile");
+
+		if(!binName) // Regular vertex data
+		{
+			ss << element->GetText() << std::endl;
+			Vertex vertex;
+			while(!(ss >> vertex.position[0]).eof())
+			{
+				ss >> vertex.position[1] >> vertex.position[2];
+				vertex_data.push_back(vertex);
+			}
+			ss.clear();
+		}
+
+		else
+		{
+			std::size_t pos = fname.find_last_of("/");
+			std::string fpath(fname.substr(0, pos+1));
+			getVertexDataFromBinFile(vertex_data, fpath + std::string(binName));
+		}
+        }
+
+	return vertex_data.size();
+}
+
+int getVertexDataFromBinFile(std::vector<Vertex>& vertex_data, const std::string& fpath)
+{
+	std::ifstream fileStream(fpath.data(), std::ifstream::binary);
+
+	int n(0);
+	fileStream.read(reinterpret_cast<char*>(&n), sizeof(int));
+
+	float data[3];
+	for(int i = 0; i < n; i++)
+	{
+		Vertex vertex;
+		fileStream.read(reinterpret_cast<char*>(data)    , sizeof(float));
+		fileStream.read(reinterpret_cast<char*>(data + 1), sizeof(float));
+		fileStream.read(reinterpret_cast<char*>(data + 2), sizeof(float));
+
+		vertex.position[0] = data[0];
+		vertex.position[1] = data[1];
+		vertex.position[2] = data[2];
+
+		vertex_data.push_back(vertex);
+	}
+
+	return n;
+}
+
 int getCameras(tinyxml2::XMLElement* element, std::stringstream& ss,
 		const Scene* scene, std::vector<Camera*>& cameras)
 {

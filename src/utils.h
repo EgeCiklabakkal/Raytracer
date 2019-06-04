@@ -14,6 +14,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <chrono>
+#include <fstream>
 #include <iostream>
 #include <limits>
 #include <map>

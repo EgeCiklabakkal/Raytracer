@@ -30,6 +30,11 @@ bool getHandedness(tinyxml2::XMLElement* element); // Returns true if camera is 
 bool getBoolAttributeWithDefault(tinyxml2::XMLElement* element, std::string name, bool _default);
 float getFloatAttributeWithDefault(tinyxml2::XMLElement* element, std::string name, float _default);
 
+// Read Vertex Data
+int getVertexData(tinyxml2::XMLElement* element, std::stringstream& ss,
+			std::vector<Vertex>& vertex_data, const std::string& fname);
+int getVertexDataFromBinFile(std::vector<Vertex>& vertex_data, const std::string& fpath);
+
 // Read cameras
 int getCameras(tinyxml2::XMLElement* element, std::stringstream& ss,
 		const Scene* scene, std::vector<Camera*>& cameras);

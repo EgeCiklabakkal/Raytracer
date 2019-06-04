@@ -80,17 +80,7 @@ void Scene::loadFromXML(const std::string& fname)
 
 	// VertexData
 	element = scene_element->FirstChildElement("VertexData");
-	if(element)
-	{
-		ss << element->GetText() << std::endl;
-		Vertex vertex;
-		while(!(ss >> vertex.position[0]).eof())
-		{
-			ss >> vertex.position[1] >> vertex.position[2];
-			vertex_data.push_back(vertex);
-		}
-		ss.clear();
-	}
+	getVertexData(element, ss, vertex_data, fname);
 
 	// TexCoordData
 	element = scene_element->FirstChildElement("TexCoordData");
