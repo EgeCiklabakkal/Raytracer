@@ -123,8 +123,9 @@ rgb PathtracingIntegrator::rayColor(const Ray& r, int recursion_depth,
 		{
 			if(record.material.luminous)	// ray hit a luminous object
 			{
+				// if nextEventEstimation is applied,
 				// return 0 radiance for indirect rays that hit a luminaire
-				return (indirect) ? rgb() : record.color;
+				return (indirect && nextEventEstimation) ? rgb() : record.color;
 			}
 
 			// Handle texture
@@ -139,8 +140,11 @@ rgb PathtracingIntegrator::rayColor(const Ray& r, int recursion_depth,
 
 			rcolor = ambientColor(record);
 
-			// Add color from direct lighting
-			rcolor += directLightingColor(scene, r, record, nonluminous);
+			// if nextEventEstimation is applied, add color from direct lighting
+			if(nextEventEstimation)
+			{
+				rcolor += directLightingColor(scene, r, record, nonluminous);
+			}
 
 			// Add color from indirect lighting
 			rcolor += indirectLightingColor(scene, r, record, recursion_depth,
@@ -193,8 +197,9 @@ rgb PathtracingIntegrator::indirectLightingColor(const Scene* scene, const Ray& 
 	if(!recursion_depth) { return rgb(); }
 
 	rgb color(0.0f);
-	static const float _2pi = 2.0f * M_PI;
-	Vec3 wi(rtmath::randSampleOverHemisphere(record.uvw_local, importanceSampling, record.M));
+	float pdf;
+	Vec3 wi(rtmath::randSampleOverHemisphere(record.uvw_local,
+							importanceSampling, pdf, record.M));
 	Ray sample(record.p + record.normal * scene->shadow_ray_epsilon, wi);
 
 	// Trace indirect ray
@@ -206,7 +211,7 @@ rgb PathtracingIntegrator::indirectLightingColor(const Scene* scene, const Ray& 
 		color = record.material.brdf->value(r, record, indirectLight);
 	}
 
-	return color * _2pi;
+	return color / pdf;
 }
 
 rgb PathtracingIntegrator::backgroundColor(const Vec2& ij, const Vec3& direction) const

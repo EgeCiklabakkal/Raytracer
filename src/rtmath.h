@@ -26,7 +26,7 @@ namespace rtmath
 
 	// Random sample direction over hemisphere
 	Vec3 randSampleOverHemisphere(const ONB& uvw, bool importanceSampling,
-					const glm::mat4& trans=glm::mat4(1.0f));
+					float& pdf, const glm::mat4& trans=glm::mat4(1.0f));
 
 	// Transform helpers
 	Vec3 transformLoc(const glm::mat4& left_op, const Vec3& right_op);

@@ -28,7 +28,7 @@ float rtmath::gaussian2D(float x, float y, float s)
 }
 
 Vec3 rtmath::randSampleOverHemisphere(const ONB& uvw, bool importanceSampling,
-					const glm::mat4& trans)
+					float& pdf, const glm::mat4& trans)
 {
 	// w is along the surface normal
 	static const float _2pi = 2.0f * M_PI;
@@ -43,6 +43,7 @@ Vec3 rtmath::randSampleOverHemisphere(const ONB& uvw, bool importanceSampling,
 		      sin(theta) * sin(phi) * uvw.V;
 	sample = transformVec(trans, unitVector(sample));
 
+	pdf = (importanceSampling) ? cos(theta) * INV_PI : INV_2PI;
 	return unitVector(sample);
 }
 
