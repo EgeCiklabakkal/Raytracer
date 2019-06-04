@@ -285,7 +285,7 @@ rgb PathtracingIntegrator::reflectionColor(const Ray& r, const HitRecord& record
 {
 	rgb km(record.material.mirror);
 
-	if(!recursion_depth)
+	if(recursion_depth <= 0)
 	{
 		return rgb();
 	}
@@ -305,7 +305,7 @@ rgb PathtracingIntegrator::refractionColor(const Ray& r, const HitRecord& record
 {
 	Vec3 transparency = record.material.transparency;
 
-	if(!recursion_depth)
+	if(recursion_depth <= 0)
 	{
 		return rgb();
 	}
