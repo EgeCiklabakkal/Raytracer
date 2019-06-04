@@ -76,7 +76,8 @@ void PathtracingIntegrator::pathtrace_routine(const PathtracingIntegrator* integ
 		for(const Ray& r : sampledRays)
 		{
 			rgb raycolor = integrator->rayColor(r, scene->max_recursion_depth,
-								cam->tonemap, false, Vec2(i, j));
+								cam->tonemap, Vec3(1.0f, 1.0f, 1.0f),
+								false, Vec2(i, j), false);
 
 			weightsum += r.weight;
 			pixel_color += raycolor * r.weight;
@@ -100,13 +101,14 @@ void PathtracingIntegrator::pathtrace_singleSample(const PathtracingIntegrator* 
 
 		Ray r = cam->getRay(i, j, true);
 		rgb raycolor = integrator->rayColor(r, scene->max_recursion_depth,
-							cam->tonemap, false, Vec2(i, j));
+							cam->tonemap, Vec3(1.0f, 1.0f, 1.0f),
+							false, Vec2(i, j), false);
 		img->set(i, j, raycolor);
 	}
 }
 
-rgb PathtracingIntegrator::rayColor(const Ray& r, int recursion_depth,
-					const Tonemap& tonemap, bool nonluminous,
+rgb PathtracingIntegrator::rayColor(const Ray& r, int recursion_depth, const Tonemap& tonemap,
+					const Vec3& potential, bool nonluminous,
 					const Vec2& ij, bool indirect) const
 {
 	rgb rcolor(0.0f, 0.0f, 0.0f);
@@ -148,14 +150,14 @@ rgb PathtracingIntegrator::rayColor(const Ray& r, int recursion_depth,
 
 			// Add color from indirect lighting
 			rcolor += indirectLightingColor(scene, r, record, recursion_depth,
-							tonemap, nonluminous, ij);
+							tonemap, potential, nonluminous, ij);
 
 			// Add color from reflections
-			rcolor += reflectionColor(r, record, recursion_depth, tonemap);
+			rcolor += reflectionColor(r, record, recursion_depth, tonemap, potential);
 		}
 
 		// Add color from refractions
-		rcolor += refractionColor(r, record, recursion_depth, tonemap);
+		rcolor += refractionColor(r, record, recursion_depth, tonemap, potential);
 
 		return rcolor;
 	}
@@ -192,18 +194,25 @@ rgb PathtracingIntegrator::directLightingColor(const Scene* scene, const Ray& r,
 
 rgb PathtracingIntegrator::indirectLightingColor(const Scene* scene, const Ray& r,
 				const HitRecord& record, int recursion_depth,
-				const Tonemap& tonemap, bool nonluminous, const Vec2& ij) const
+				const Tonemap& tonemap, const Vec3& potential,
+				bool nonluminous, const Vec2& ij) const
 {
-	if(!recursion_depth) { return rgb(); }
+	if(!russianRoulette && !recursion_depth) { return rgb(); }
+
+	// If the ray is killed by russian roulette, 0 radiance is returned
+	float radianceFactor;
+	Vec3 newPotential; // ray's potential after absorbtion
+	if(!handleRussianRoulette(record, potential, radianceFactor, newPotential)) { return rgb(); }
 
 	rgb color(0.0f);
 	float pdf;
-	Vec3 wi(rtmath::randSampleOverHemisphere(record.uvw_local,
-							importanceSampling, pdf, record.M));
+	Vec3 wi(rtmath::randSampleOverHemisphere(record.uvw_local, importanceSampling,
+							pdf, record.M));
 	Ray sample(record.p + record.normal * scene->shadow_ray_epsilon, wi);
 
 	// Trace indirect ray
-	rgb indirectRadiance = rayColor(sample, recursion_depth - 1, tonemap, nonluminous, ij, true);
+	rgb indirectRadiance = radianceFactor * rayColor(sample, recursion_depth - 1, tonemap,
+								newPotential, nonluminous, ij, true);
 
 	if(!indirectRadiance.isBlack())
 	{
@@ -271,7 +280,8 @@ rgb PathtracingIntegrator::specularColor(const Ray& r, const HitRecord& record,
 }
 
 rgb PathtracingIntegrator::reflectionColor(const Ray& r, const HitRecord& record,
-						int recursion_depth, const Tonemap& tonemap) const
+						int recursion_depth, const Tonemap& tonemap,
+						const Vec3& potential) const
 {
 	rgb km(record.material.mirror);
 
@@ -286,11 +296,12 @@ rgb PathtracingIntegrator::reflectionColor(const Ray& r, const HitRecord& record
 	}
 
 	return km * rayColor(r.reflectionRay(record, scene->shadow_ray_epsilon),
-				recursion_depth - 1, tonemap);
+				recursion_depth - 1, tonemap, potential);
 }
 
 rgb PathtracingIntegrator::refractionColor(const Ray& r, const HitRecord& record,
-						int recursion_depth, const Tonemap& tonemap) const
+						int recursion_depth, const Tonemap& tonemap,
+						const Vec3& potential) const
 {
 	Vec3 transparency = record.material.transparency;
 
@@ -332,7 +343,7 @@ rgb PathtracingIntegrator::refractionColor(const Ray& r, const HitRecord& record
 			{
 				return rgb(k) * rayColor(reflectionRay,
 							 recursion_depth - 1,
-							 tonemap);
+							 tonemap, potential);
 			}
 		}
 
@@ -342,10 +353,11 @@ rgb PathtracingIntegrator::refractionColor(const Ray& r, const HitRecord& record
 		Ray transmissionRay(r.transmissionRay(nrecord, transmissionDirection,
 					scene->intersection_test_epsilon));
 
-		return rgb(k) * (R * rayColor(reflectionRay, recursion_depth - 1, tonemap)
+		return rgb(k) * (R * rayColor(reflectionRay, recursion_depth - 1, tonemap, potential)
 					+ (1.0f - R) * rayColor(transmissionRay,
 								recursion_depth - 1,
-								tonemap));
+								tonemap,
+								potential));
 	}
 
 	return rgb();
@@ -408,6 +420,42 @@ bool PathtracingIntegrator::handleTonemap(const Tonemap& tonemap,
 	{
 		color = rgb(color.asVec3().comppow(tonemap.gamma));
 	}
+
+	return true;
+}
+
+bool PathtracingIntegrator::handleRussianRoulette(const HitRecord& record, const Vec3& potential,
+							float& factor, Vec3& newPotential) const
+{
+	// return true : ray survives, return false : ray is killed
+	// If russianRoulette is false, then ray is not killed with factor = 1.0f
+	// If russianRoulette is true, then factor = 1.0f / maxPotential
+	if(!russianRoulette)
+	{
+		// No change in variables
+		factor = 1.0f;
+		newPotential = potential;
+
+		return true;
+	}
+
+	Vec3 surfaceReflectance(maxVec(record.material.diffuse, record.material.specular));
+	surfaceReflectance = maxVec(surfaceReflectance, record.material.mirror);
+	newPotential = Vec3(surfaceReflectance.x() * potential.x(),
+				surfaceReflectance.y() * potential.y(),
+				surfaceReflectance.z() * potential.z());
+	float maxPotential = newPotential.maxComponent();
+
+	if(rtmath::randf() > maxPotential)	// Terminate path
+	{
+		factor = 0.0f;
+		newPotential = Vec3();
+
+		return false;
+	}
+
+	// Continue path
+	factor = 1.0f / maxPotential;
 
 	return true;
 }

@@ -31,22 +31,26 @@ class PathtracingIntegrator : public Integrator
 					SafeStack<std::pair<float, float>>* pixels);
 
 	rgb rayColor(const Ray& r, int recursion_depth, const Tonemap& tonemap,
-			bool nonluminous=false, const Vec2& ij=Vec2(), bool indirect=false) const;
+			const Vec3& potential=Vec3(1.0f, 1.0f, 1.0f), bool nonluminous=false,
+			const Vec2& ij=Vec2(), bool indirect=false) const;
 	rgb directLightingColor(const Scene* scene, const Ray& r,
 				const HitRecord& record, bool nonluminous) const;
 	rgb indirectLightingColor(const Scene* scene, const Ray& r, const HitRecord& record,
 					int recursion_depth, const Tonemap& tonemap,
-					bool nonluminous, const Vec2& ij) const;
+					const Vec3& potential, bool nonluminous,
+					const Vec2& ij) const;
 	rgb backgroundColor(const Vec2& ij, const Vec3& direction) const;
 	rgb ambientColor(const HitRecord& record) const;
 	rgb diffuseColor(const Ray& r, const HitRecord& record, const SampleLight& slight) const;
 	rgb specularColor(const Ray& r, const HitRecord& record, const SampleLight& slight) const;
-	rgb reflectionColor(const Ray& r, const HitRecord& record,
-				int recursion_depth, const Tonemap& tonemap) const;
-	rgb refractionColor(const Ray& r, const HitRecord& record,
-				int recursion_depth, const Tonemap& tonemap) const;
+	rgb reflectionColor(const Ray& r, const HitRecord& record, int recursion_depth,
+				const Tonemap& tonemap, const Vec3& potential) const;
+	rgb refractionColor(const Ray& r, const HitRecord& record, int recursion_depth,
+				const Tonemap& tonemap, const Vec3& potential) const;
 	bool handleTexture(HitRecord& record, DecalMode& decal_mode, rgb& color) const;
 	bool handleTonemap(const Tonemap& tonemap, HitRecord& record, rgb& color) const;
+	bool handleRussianRoulette(const HitRecord& record, const Vec3& potential,
+					float& factor, Vec3& newPotential) const;
 };
 
 #endif
