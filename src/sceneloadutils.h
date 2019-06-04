@@ -23,7 +23,7 @@ bool getrgbChildWithDefault(tinyxml2::XMLElement* element, std::stringstream& ss
 				std::string name, const rgb& _default, rgb& val);
 
 int getCameraType(tinyxml2::XMLElement* element);
-int getMeshType(tinyxml2::XMLElement* element, std::string& ply_path);
+int getMeshType(tinyxml2::XMLElement* element, std::string& file_path);
 int getMeshShadingMode(tinyxml2::XMLElement* element);
 int getIntAttributeWithDefault(tinyxml2::XMLElement* element, std::string name, int _default);
 bool getHandedness(tinyxml2::XMLElement* element); // Returns true if camera is right handed
@@ -34,6 +34,11 @@ float getFloatAttributeWithDefault(tinyxml2::XMLElement* element, std::string na
 int getVertexData(tinyxml2::XMLElement* element, std::stringstream& ss,
 			std::vector<Vertex>& vertex_data, const std::string& fname);
 int getVertexDataFromBinFile(std::vector<Vertex>& vertex_data, const std::string& fpath);
+
+// Read Texture Coordinate Data
+int getTexCoordData(tinyxml2::XMLElement* element, std::stringstream& ss,
+			std::vector<Vec2>& texCoord_data, const std::string& fname);
+int getTexCoordDataFromBinFile(std::vector<Vec2>& texCoord_data, const std::string& fpath);
 
 // Read cameras
 int getCameras(tinyxml2::XMLElement* element, std::stringstream& ss,
@@ -51,7 +56,8 @@ int getLightSpheres(tinyxml2::XMLElement* element, std::stringstream& ss,
 			const std::vector<glm::mat4>& composites);
 
 // Read Light Meshes
-int getLightMeshes(tinyxml2::XMLElement* element, std::stringstream& ss, const std::string& fname,
+int getLightMeshes(tinyxml2::XMLElement* element, std::stringstream& ss,
+			const std::string& fname, int default_vertex_index,
 			std::vector<Light*>& 	      lights,
 			std::vector<Shape*>& 	      shapes,
 			std::vector<Mesh*>& 	      meshes,
@@ -141,6 +147,9 @@ void pushFacesOfPlyMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Ver
 void pushFacesOfMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Vertex>& vertex_data,
                         int shadingMode, int vertexOffset,
 			int textureOffset, std::stringstream& ss);
+void pushFacesOfBinMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Vertex>& vertex_data,
+			int shadingMode, int vertexOffset, int textureOffset,
+			const std::string& fname, const std::string& binname);
 
 // Specific to spheres 
 // make the original sphere unit and apply transformations on it

@@ -10,6 +10,7 @@
 // Meshes
 #define MESH_SIMPLE 0
 #define MESH_PLY 1
+#define MESH_BIN 2
 #define MESH_SHADING_FLAT 0
 #define MESH_SHADING_SMOOTH 1
 

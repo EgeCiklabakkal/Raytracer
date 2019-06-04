@@ -7,6 +7,7 @@ void Scene::loadFromXML(const std::string& fname)
 	std::stringstream ss;
 	tinyxml2::XMLElement *element;
 	tinyxml2::XMLElement *child;
+	int default_vertex_index(0);
 
 	auto load_failed = doc.LoadFile(fname.c_str());
 	if(load_failed)
@@ -43,6 +44,11 @@ void Scene::loadFromXML(const std::string& fname)
 
 	// BackfaceCulling
 	getBoolChildWithDefaultFromNode(scene_element, "BackfaceCulling", true, cullFace);
+
+	// Default indexing
+	bool zeroBasedIndexing;
+	getBoolChildWithDefaultFromNode(scene_element, "ZeroBasedIndexing", false, zeroBasedIndexing);
+	default_vertex_index = (zeroBasedIndexing) ? 1 : 0;
 	
 	// Cameras
 	element = scene_element->FirstChildElement("Cameras");
@@ -84,17 +90,7 @@ void Scene::loadFromXML(const std::string& fname)
 
 	// TexCoordData
 	element = scene_element->FirstChildElement("TexCoordData");
-	if(element)
-	{
-		ss << element->GetText() << std::endl;
-		Vec2 texCoord;
-		while(!(ss >> texCoord[0]).eof())
-		{
-			ss >> texCoord[1];
-			texCoord_data.push_back(texCoord);
-		}
-		ss.clear();
-	}
+	getTexCoordData(element, ss, texCoord_data, fname);
 
 	// Objects
 	std::vector<ObjectInstance*> baseMeshInstances;
@@ -102,8 +98,8 @@ void Scene::loadFromXML(const std::string& fname)
 	element = element->FirstChildElement("Mesh");
 	while(element)
 	{
-		std::string plyname;
-		int mesh_type = getMeshType(element, plyname);
+		std::string meshfilename;
+		int mesh_type = getMeshType(element, meshfilename);
 		std::vector<Shape*> meshTriangles;
 		Material meshMaterial;
 		Texture *instanceTexture = nullptr;
@@ -124,8 +120,10 @@ void Scene::loadFromXML(const std::string& fname)
 			child = element->FirstChildElement("Faces");
 			ss << child->GetText() << std::endl;	
 			int shadingMode  = getMeshShadingMode(element);
-			int vertexOffset = getIntAttributeWithDefault(child, "vertexOffset", 0);
-			int textureOffset = getIntAttributeWithDefault(child, "textureOffset", 0);
+			int vertexOffset = getIntAttributeWithDefault(child, "vertexOffset",
+									default_vertex_index);
+			int textureOffset = getIntAttributeWithDefault(child, "textureOffset",
+									default_vertex_index);
 			pushFacesOfMesh(meshTriangles, mesh, vertex_data, 
 						shadingMode, vertexOffset, textureOffset, ss);
 		}
@@ -141,8 +139,26 @@ void Scene::loadFromXML(const std::string& fname)
 			int shadingMode = getMeshShadingMode(element);
 
 			pushFacesOfPlyMesh(meshTriangles, mesh, vertex_data, texCoord_data,
-						shadingMode, fname, plyname);
+						shadingMode, fname, meshfilename);
 		}
+
+		else if(mesh_type == MESH_BIN)
+		{
+			child = element->FirstChildElement("Material");
+			ss << child->GetText() << std::endl;
+			ss >> itemp;
+			meshMaterial = materials[itemp - 1];
+			Mesh *mesh = new Mesh(&vertex_data, &texCoord_data, meshMaterial);
+			meshes.push_back(mesh);
+
+			int shadingMode  = getMeshShadingMode(element);
+			int vertexOffset = getIntAttributeWithDefault(child, "vertexOffset",
+									default_vertex_index);
+			int textureOffset = getIntAttributeWithDefault(child, "textureOffset",
+									default_vertex_index);
+			pushFacesOfBinMesh(meshTriangles, mesh, vertex_data, shadingMode,
+						vertexOffset, textureOffset, fname, meshfilename);
+                }
 
 		ss.clear();
 		BVH *meshBVH = new BVH(meshTriangles.data(), (int)meshTriangles.size(), 
@@ -249,8 +265,10 @@ void Scene::loadFromXML(const std::string& fname)
 		ss << child->GetText() << std::endl;
 		ss >> vitemp.e[0] >> vitemp.e[1] >> vitemp.e[2];
 
-		int vertexOffset = getIntAttributeWithDefault(child, "vertexOffset", 0);
-		int textureOffset = getIntAttributeWithDefault(child, "textureOffset", 0);
+		int vertexOffset = getIntAttributeWithDefault(child, "vertexOffset",
+								default_vertex_index);
+		int textureOffset = getIntAttributeWithDefault(child, "textureOffset",
+								default_vertex_index);
 
 		// Precompute normal
 		Vec3 a(vertex_data[vitemp.e[0] + vertexOffset - 1].position);
@@ -340,6 +358,7 @@ void Scene::loadFromXML(const std::string& fname)
 	// LightMeshes
 	element = scene_element->FirstChildElement("Objects");
 	getLightMeshes( element, ss, fname,
+			default_vertex_index,
 			lights, shapes,
 			meshes, primMeshBVHs,
 			vertex_data, texCoord_data, materials,

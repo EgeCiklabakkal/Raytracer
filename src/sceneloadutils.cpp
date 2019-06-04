@@ -282,6 +282,59 @@ int getVertexDataFromBinFile(std::vector<Vertex>& vertex_data, const std::string
 		vertex_data.push_back(vertex);
 	}
 
+	fileStream.close();
+
+	return n;
+}
+
+int getTexCoordData(tinyxml2::XMLElement* element, std::stringstream& ss,
+			std::vector<Vec2>& texCoord_data, const std::string& fname)
+{
+	if(element)
+        {
+		const char *binName = element->Attribute("binaryFile");
+
+		if(!binName) // Regular texCoord data
+		{
+			ss << element->GetText() << std::endl;
+			Vec2 texCoord;
+			while(!(ss >> texCoord[0]).eof())
+			{
+				ss >> texCoord[1];
+				texCoord_data.push_back(texCoord);
+			}
+			ss.clear();
+		}
+
+		else
+		{
+			std::size_t pos = fname.find_last_of("/");
+			std::string fpath(fname.substr(0, pos+1));
+			getTexCoordDataFromBinFile(texCoord_data, fpath + std::string(binName));
+		}
+        }
+
+	return texCoord_data.size();
+}
+
+int getTexCoordDataFromBinFile(std::vector<Vec2>& texCoord_data, const std::string& fpath)
+{
+	std::ifstream fileStream(fpath.data(), std::ifstream::binary);
+
+	int n(0);
+	fileStream.read(reinterpret_cast<char*>(&n), sizeof(int));
+
+	float data[2];
+	for(int i = 0; i < n; i++)
+	{
+		fileStream.read(reinterpret_cast<char*>(data)    , sizeof(float));
+		fileStream.read(reinterpret_cast<char*>(data + 1), sizeof(float));
+
+		texCoord_data.push_back(Vec2(data[0], data[1]));
+	}
+
+	fileStream.close();
+
 	return n;
 }
 
@@ -369,7 +422,8 @@ int getLightSpheres(tinyxml2::XMLElement* element, std::stringstream& ss,
 	return lightSphereCount;
 }
 
-int getLightMeshes(tinyxml2::XMLElement* element, std::stringstream& ss, const std::string& fname,
+int getLightMeshes(tinyxml2::XMLElement* element, std::stringstream& ss,
+			const std::string& fname, int default_vertex_index,
 			std::vector<Light*>& 	      lights,
 			std::vector<Shape*>& 	      shapes,
 			std::vector<Mesh*>& 	      meshes,
@@ -388,8 +442,8 @@ int getLightMeshes(tinyxml2::XMLElement* element, std::stringstream& ss, const s
 	element = element->FirstChildElement("LightMesh");
 	while(element)
 	{
-		std::string plyname;
-		int mesh_type = getMeshType(element, plyname);
+		std::string meshfilename;
+		int mesh_type = getMeshType(element, meshfilename);
 		std::vector<Shape*> meshTriangles;
 		Material meshMaterial;
 		Vec3 radiance;
@@ -413,8 +467,10 @@ int getLightMeshes(tinyxml2::XMLElement* element, std::stringstream& ss, const s
 			child = element->FirstChildElement("Faces");
 			ss << child->GetText() << std::endl;
 			int shadingMode  = getMeshShadingMode(element);
-			int vertexOffset = getIntAttributeWithDefault(child, "vertexOffset", 0);
-			int textureOffset = getIntAttributeWithDefault(child, "textureOffset", 0);
+			int vertexOffset = getIntAttributeWithDefault(child, "vertexOffset",
+									default_vertex_index);
+			int textureOffset = getIntAttributeWithDefault(child, "textureOffset",
+									default_vertex_index);
 			pushFacesOfMesh(meshTriangles, mesh, vertex_data,
 						shadingMode, vertexOffset, textureOffset, ss);
 		}
@@ -430,7 +486,25 @@ int getLightMeshes(tinyxml2::XMLElement* element, std::stringstream& ss, const s
 			int shadingMode = getMeshShadingMode(element);
 
 			pushFacesOfPlyMesh(meshTriangles, mesh, vertex_data, texCoord_data,
-						shadingMode, fname, plyname);
+						shadingMode, fname, meshfilename);
+		}
+
+		else if(mesh_type == MESH_BIN)
+		{
+			child = element->FirstChildElement("Material");
+			ss << child->GetText() << std::endl;
+			ss >> itemp;
+			meshMaterial = materials[itemp - 1];
+			Mesh *mesh = new Mesh(&vertex_data, &texCoord_data, meshMaterial);
+			meshes.push_back(mesh);
+
+			int shadingMode  = getMeshShadingMode(element);
+			int vertexOffset = getIntAttributeWithDefault(child, "vertexOffset",
+									default_vertex_index);
+			int textureOffset = getIntAttributeWithDefault(child, "textureOffset",
+									default_vertex_index);
+			pushFacesOfBinMesh(meshTriangles, mesh, vertex_data, shadingMode,
+						vertexOffset, textureOffset, fname, meshfilename);
 		}
 
 		ss.clear();
@@ -716,7 +790,7 @@ int getTextures(tinyxml2::XMLElement* element, std::stringstream& ss, const std:
 			interpolation_mode = getInterpolationMode(element_texture);
 			decal_mode = getDecalMode(element_texture);
 			texture_mode = getTextureModeWithDefault
-					(element_texture, TextureMode::CLAMP);
+					(element_texture, TextureMode::REPEAT);
 			getFloatChildWithDefault(element_texture, ss, "Normalizer",
 							255.0f, normalizer);
 			getBoolChildWithDefault(element_texture, "FlipVertical",
@@ -1215,14 +1289,21 @@ void pushCameraSimple(tinyxml2::XMLElement* element, std::stringstream& ss,
 					tonemap, rightHanded, integrator));
 }
 
-int getMeshType(tinyxml2::XMLElement* element, std::string& ply_path)
+int getMeshType(tinyxml2::XMLElement* element, std::string& file_path)
 {
 	tinyxml2::XMLElement *child = element->FirstChildElement("Faces");
 	const char *plyFile = child->Attribute("plyFile");
 	if(plyFile)
 	{
-		ply_path = plyFile;
+		file_path = plyFile;
 		return MESH_PLY;
+	}
+
+	const char *binFile = child->Attribute("binaryFile");
+	if(binFile)
+	{
+		file_path = binFile;
+		return MESH_BIN;
 	}
 
 	return MESH_SIMPLE;
@@ -1407,6 +1488,59 @@ void pushFacesOfMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Vertex
 			}
 		}
 	}
+}
+
+void pushFacesOfBinMesh(std::vector<Shape*>& shapes, Mesh* mesh, std::vector<Vertex>& vertex_data,
+			int shadingMode, int vertexOffset,
+			int textureOffset, const std::string& fname, const std::string& binname)
+{
+	std::array<int, 3> ptemp;
+	std::array<int, 3> textemp;
+
+	std::size_t pos = fname.find_last_of("/");
+	std::string bindir(fname.substr(0, pos+1));
+	std::string bin_path = bindir + binname;
+
+	std::ifstream fileStream(bin_path.data(), std::ifstream::binary);
+
+	int n(0);
+	fileStream.read(reinterpret_cast<char*>(&n), sizeof(int));
+
+	for(int i = 0; i < n; i++)
+	{
+		fileStream.read(reinterpret_cast<char*>(&ptemp[0]), sizeof(int));
+		fileStream.read(reinterpret_cast<char*>(&ptemp[1]), sizeof(int));
+		fileStream.read(reinterpret_cast<char*>(&ptemp[2]), sizeof(int));
+		textemp = ptemp;
+
+		// 1 based to 0 based
+		ptemp[0] = ptemp[0] + vertexOffset - 1;
+		ptemp[1] = ptemp[1] + vertexOffset - 1;
+		ptemp[2] = ptemp[2] + vertexOffset - 1;
+
+		textemp[0] = textemp[0] + textureOffset - 1;
+		textemp[1] = textemp[1] + textureOffset - 1;
+		textemp[2] = textemp[2] + textureOffset - 1;
+
+		// Precompute normal
+		Vec3 a(vertex_data[ptemp[0]].position);
+		Vec3 b(vertex_data[ptemp[1]].position);
+		Vec3 c(vertex_data[ptemp[2]].position);
+		Vec3 n(unitVector(cross(b - a, c - a)));
+		Shape *mt = new MeshTriangle(ptemp, textemp, mesh, n, shadingMode);
+		shapes.push_back(mt);
+
+		if(shadingMode == MESH_SHADING_SMOOTH)
+		{
+			// Add the found normal to each vertex
+			for(int i = 0; i < 3; i++)
+			{
+				vertex_data[ptemp[i]].addToNormal(n);
+			}
+		}
+	}
+
+	fileStream.close();
 }
 
 bool makeUnitSphere(Sphere* sphere_ptr)
