@@ -418,7 +418,8 @@ bool PathtracingIntegrator::handleTonemap(const Tonemap& tonemap,
 
 	if(record.texture && record.texture->degamma)
 	{
-		color = rgb(color.asVec3().comppow(tonemap.gamma));
+		// divide by 255, apply an exponent of gamma, multiply back with 255
+		color = rgb((color / 255.0f).asVec3().comppow(tonemap.gamma) * 255.0f);
 	}
 
 	return true;
