@@ -784,6 +784,7 @@ int getTextures(tinyxml2::XMLElement* element, std::stringstream& ss, const std:
 				textureImage = new Image(fpath + textureName);
 				textureImages.push_back(textureImage);	// to idx
 				mapImageNameToIndex[textureName] = idx;
+				uniqueImageNames.insert(textureName);
 				idx++;
 			}
 
