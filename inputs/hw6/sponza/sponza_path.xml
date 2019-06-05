@@ -18,7 +18,7 @@
             <NearDistance>0.1</NearDistance>
             <ImageResolution>800 450</ImageResolution>
             <ImageName>sponza_path.exr</ImageName>
-            <NumSamples>1</NumSamples>
+            <NumSamples>1600</NumSamples>
             <!--<ClampSamples>500</ClampSamples>-->
             <Tonemap>
                 <TMO>Photographic</TMO>
@@ -304,13 +304,11 @@
             <Interpolation>bilinear</Interpolation>
             <DecalMode>replace_kd</DecalMode>
         </Texture>
-        <!--
         <Texture id="22">
-            <ImageName>textures/</ImageName>
+            <ImageName>textures/chain_texture.jpg</ImageName>
             <Interpolation>bilinear</Interpolation>
             <DecalMode>replace_kd</DecalMode>
         </Texture>
-        -->
         <Texture id="23" degamma="true">
             <ImageName>textures/lion_flip.png</ImageName>
             <Interpolation>bilinear</Interpolation>

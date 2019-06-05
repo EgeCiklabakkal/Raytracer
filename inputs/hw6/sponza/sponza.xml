@@ -319,13 +319,11 @@
             <Interpolation>bilinear</Interpolation>
             <DecalMode>replace_kd</DecalMode>
         </Texture>
-        <!--
         <Texture id="22">
-            <ImageName>textures/</ImageName>
+            <ImageName>textures/chain_texture.jpg</ImageName>
             <Interpolation>bilinear</Interpolation>
             <DecalMode>replace_kd</DecalMode>
         </Texture>
-        -->
         <Texture id="23" degamma="true">
             <ImageName>textures/lion_flip.png</ImageName>
             <Interpolation>bilinear</Interpolation>
