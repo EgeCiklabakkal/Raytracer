@@ -208,6 +208,7 @@ bool Image::handleTonemap(const Tonemap& tonemap, std::vector<unsigned char>& da
 		std::vector<float> Ls(nx * ny, 0.0f);	// L values in an array
 		std::vector<float> Lws(nx * ny, 0.0f);	// Lw values in an array
 		float avglogLw, acclogLw, N, Lwhite, burnoutKeepRatio, Ld, a, s, g;
+		int Lwhite_index;
 		acclogLw = 0.0f;	// accumulated log Lw
 		N = nx * ny;		// Number of pixels
 		a = tonemap.a;
@@ -231,7 +232,9 @@ bool Image::handleTonemap(const Tonemap& tonemap, std::vector<unsigned char>& da
 		std::vector<float> Lscopy(Ls);
 		std::sort(Lscopy.begin(), Lscopy.end());
 		burnoutKeepRatio = (100.0f - tonemap.burnout) / 100.0f;
-		Lwhite = Lscopy[int(N * burnoutKeepRatio)];
+		Lwhite_index = int(N * burnoutKeepRatio) - 1;
+		Lwhite_index = (Lwhite_index < 0) ? 0 : Lwhite_index;
+		Lwhite = Lscopy[Lwhite_index];
 		Lwhite = Lwhite * Lwhite;	// squared
 
 		// Calculate Lcs into Ls
