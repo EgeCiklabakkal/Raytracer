@@ -59,6 +59,9 @@ rgb ImageTexture::fetch(int i, int j) const
 	{
 		i %= image->nx;
 		j %= image->ny;
+		i = (i >= 0) ? i : i + image->nx;
+		j = (j >= 0) ? j : j + image->ny;
+
 		j = (flipVertical) ? (image->ny - 1) - j : j;
 		image->get(i, j, color);
 	}
