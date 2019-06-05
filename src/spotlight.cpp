@@ -1,6 +1,7 @@
 #include "light.h"
 
-SpotLight::SpotLight(const Vec3& _position, const Vec3& _direction, const Vec3& _intensity,                                     float _alpha, float _beta) :
+SpotLight::SpotLight(const Vec3& _position, const Vec3& _direction, const Vec3& _intensity,
+			float _alpha, float _beta) :
 position(_position), direction(_direction), intensity(_intensity), alpha(_alpha), beta(_beta) {}
 
 bool SpotLight::sampleLight(const Scene* scene, const Ray& r, const HitRecord& record,
@@ -9,7 +10,7 @@ bool SpotLight::sampleLight(const Scene* scene, const Ray& r, const HitRecord& r
 	Ray shadow_ray(r.shadowRay(record, position, scene->shadow_ray_epsilon));
 	float tlight = shadow_ray.parameterAtPoint(position);
 
-	if(scene->bvh->shadowHit(shadow_ray, 0.0f, tlight, r.time, nonluminous))
+	if(scene->bvh->shadowHit(shadow_ray, 0.0f, tlight, r.time, false, nonluminous))
 	{
 		return false;
 	}

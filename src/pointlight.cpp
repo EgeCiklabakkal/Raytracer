@@ -6,7 +6,7 @@ bool PointLight::sampleLight(const Scene* scene, const Ray& r, const HitRecord& 
 	Ray shadow_ray(r.shadowRay(record, position, scene->shadow_ray_epsilon));
 	float tlight = shadow_ray.parameterAtPoint(position);
 
-	if(scene->bvh->shadowHit(shadow_ray, 0.0f, tlight, r.time, nonluminous)) // In shadow
+	if(scene->bvh->shadowHit(shadow_ray, 0.0f, tlight, r.time, false, nonluminous)) // In shadow
 	{
 		return false;
 	}

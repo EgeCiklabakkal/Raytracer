@@ -119,42 +119,39 @@ rgb PathtracingIntegrator::rayColor(const Ray& r, int recursion_depth, const Ton
 	DecalMode decal_mode;
 	bool textured;
 
-	if(scene->bvh->hit(r, tmin, tmax, time, record, nonluminous))
+	if(scene->bvh->hit(r, tmin, tmax, time, record, scene->cullFace, nonluminous))
 	{
-		if(!scene->cullFace || !r.primary || (dot(r.direction(), record.normal) < 0))
+		if(record.material.luminous)	// ray hit a luminous object
 		{
-			if(record.material.luminous)	// ray hit a luminous object
-			{
-				// if nextEventEstimation is applied,
-				// return 0 radiance for indirect rays that hit a luminaire
-				return (indirect && nextEventEstimation) ? rgb() : record.color;
-			}
-
-			// Handle texture
-			textured = handleTexture(record, decal_mode, rcolor);
-			handleTonemap(tonemap, record, rcolor);
-			if(textured && decal_mode == DecalMode::REPLACEALL)
-			{
-				// no shading
-				return rcolor;
-
-			}// else, kd modified, continue shading
-
-			rcolor = ambientColor(record);
-
-			// if nextEventEstimation is applied, add color from direct lighting
-			if(nextEventEstimation)
-			{
-				rcolor += directLightingColor(scene, r, record, nonluminous);
-			}
-
-			// Add color from indirect lighting
-			rcolor += indirectLightingColor(scene, r, record, recursion_depth,
-							tonemap, potential, nonluminous, ij);
-
-			// Add color from reflections
-			rcolor += reflectionColor(r, record, recursion_depth, tonemap, potential);
+			// if nextEventEstimation is applied,
+			// return 0 radiance for indirect rays that hit a luminaire
+			return (indirect && nextEventEstimation) ? rgb() : record.color;
 		}
+
+		// Handle texture
+		textured = handleTexture(record, decal_mode, rcolor);
+		handleTonemap(tonemap, record, rcolor);
+		if(textured && decal_mode == DecalMode::REPLACEALL)
+		{
+			// no shading
+			return rcolor;
+
+		}// else, kd modified, continue shading
+
+		rcolor = ambientColor(record);
+
+		// if nextEventEstimation is applied, add color from direct lighting
+		if(nextEventEstimation)
+		{
+			rcolor += directLightingColor(scene, r, record, nonluminous);
+		}
+
+		// Add color from indirect lighting
+		rcolor += indirectLightingColor(scene, r, record, recursion_depth,
+						tonemap, potential, nonluminous, ij);
+
+		// Add color from reflections
+		rcolor += reflectionColor(r, record, recursion_depth, tonemap, potential);
 
 		// Add color from refractions
 		rcolor += refractionColor(r, record, recursion_depth, tonemap, potential);

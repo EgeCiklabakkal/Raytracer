@@ -20,9 +20,10 @@ class ObjectInstance : public Shape
 				Texture* _texture=nullptr);
 	ObjectInstance(const glm::mat4& trans, Shape* _prim, const Material& _material,
 			bool _transformed=false, Texture* _texture=nullptr);
-	bool hit(const Ray& r, float tmin, float tmax,
-			float time, HitRecord& record, bool nonluminous) const;
-	bool shadowHit(const Ray& r, float tmin, float tmax, float time, bool nonluminous) const;
+	bool hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record,
+			bool cullFace, bool nonluminous) const;
+	bool shadowHit(const Ray& r, float tmin, float tmax, float time,
+			bool cullFace, bool nonluminous) const;
 	bool boundingBox(float time0, float time1, BBox& _box) const;
 
 	~ObjectInstance() {}

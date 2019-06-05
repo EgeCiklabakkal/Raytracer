@@ -116,45 +116,42 @@ rgb RaytracingIntegrator::rayColor(const Ray& r, int recursion_depth,
 	DecalMode decal_mode;
 	bool textured;
 
-	if(scene->bvh->hit(r, tmin, tmax, time, record, nonluminous))
+	if(scene->bvh->hit(r, tmin, tmax, time, record, scene->cullFace, nonluminous))
 	{
-		if(!scene->cullFace || !r.primary || (dot(r.direction(), record.normal) < 0))
+		if(record.material.luminous)	// ray hit a luminous object
 		{
-			if(record.material.luminous)	// ray hit a luminous object
-			{
-				return record.color;
-			}
-
-			// Handle texture
-			textured = handleTexture(record, decal_mode, rcolor);
-			handleTonemap(tonemap, record, rcolor);
-			if(textured && decal_mode == DecalMode::REPLACEALL)
-			{
-				// no shading
-				return rcolor;
-
-			}// else, kd modified, continue shading
-
-			rcolor = ambientColor(record);
-
-			// Loop over lights
-			for(const Light* light_ptr : scene->lights)
-			{
-				SampleLight sampledLight;
-				bool notShadow = light_ptr->sampleLight(scene, r, record,
-									sampledLight, nonluminous);
-
-				if(notShadow)
-				{
-					// Diffuse and Specular shading
-					rcolor += record.material.brdf->value(r, record,
-										sampledLight);
-				}
-			}
-
-			// Add color from reflections
-			rcolor += reflectionColor(r, record, recursion_depth, tonemap);
+			return record.color;
 		}
+
+		// Handle texture
+		textured = handleTexture(record, decal_mode, rcolor);
+		handleTonemap(tonemap, record, rcolor);
+		if(textured && decal_mode == DecalMode::REPLACEALL)
+		{
+			// no shading
+			return rcolor;
+
+		}// else, kd modified, continue shading
+
+		rcolor = ambientColor(record);
+
+		// Loop over lights
+		for(const Light* light_ptr : scene->lights)
+		{
+			SampleLight sampledLight;
+			bool notShadow = light_ptr->sampleLight(scene, r, record,
+								sampledLight, nonluminous);
+
+			if(notShadow)
+			{
+				// Diffuse and Specular shading
+				rcolor += record.material.brdf->value(r, record,
+									sampledLight);
+			}
+		}
+
+		// Add color from reflections
+		rcolor += reflectionColor(r, record, recursion_depth, tonemap);
 
 		// Add color from refractions
 		rcolor += refractionColor(r, record, recursion_depth, tonemap);

@@ -10,8 +10,8 @@ Vec2 Mesh::texCoord(int x) const
 	return Vec2();	// dummy
 }
 
-bool MeshTriangle::hit(const Ray& r, float tmin, float tmax,
-			float time, HitRecord& record, bool nonluminous) const
+bool MeshTriangle::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record,
+			bool cullFace, bool nonluminous) const
 {
 	Ray tray = transformRayToLocal(r);
 
@@ -67,6 +67,12 @@ bool MeshTriangle::hit(const Ray& r, float tmin, float tmax,
 			record.normal = normal;
 		}
 
+		// BackFace Culling on primary rays
+		if(cullFace && r.primary && dot(r.direction(), record.normal) > 0)
+		{
+			return false;
+		}
+
 		ONB _uvw;
 		_uvw.initFromW(record.normal);
 		record.uvw	 = _uvw;
@@ -84,8 +90,8 @@ bool MeshTriangle::hit(const Ray& r, float tmin, float tmax,
         return false;
 }
 
-bool MeshTriangle::shadowHit(const Ray& r, float tmin, float tmax,
-				float time, bool nonluminous) const
+bool MeshTriangle::shadowHit(const Ray& r, float tmin, float tmax, float time,
+				bool cullFace, bool nonluminous) const
 {
 	Ray tray = transformRayToLocal(r);
 
@@ -122,7 +128,33 @@ bool MeshTriangle::shadowHit(const Ray& r, float tmin, float tmax,
 
         float _t = -(_f*(akjb) + _e*(jcal) + _d*(blkc)) / M;
 
-        return (_t >= tmin && _t <= tmax);
+	if(_t >= tmin && _t <= tmax)
+        {
+		Vec3 hitNormal;
+		if(shadingMode == MESH_SHADING_SMOOTH)
+		{
+			Vec3 na = va().normal;
+			Vec3 nb = vb().normal;
+			Vec3 nc = vc().normal;
+
+			hitNormal = na + beta*(nb - na) + gamma*(nc - na);
+		}
+		
+		else	// MESH_SHADING_FLAT
+		{
+			hitNormal = normal;
+		}
+
+		// BackFace Culling on primary rays
+		if(cullFace && r.primary && dot(r.direction(), hitNormal) > 0)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	return false;
 }
 
 bool MeshTriangle::boundingBox(float time0, float time1, BBox& _box) const

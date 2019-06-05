@@ -19,12 +19,12 @@ prim(_prim), material(_material), texture(_texture)
 	transformed = _transformed;
 }
 
-bool ObjectInstance::hit(const Ray& r, float tmin, float tmax,
-				float time, HitRecord& record, bool nonluminous) const
+bool ObjectInstance::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record,
+				bool cullFace, bool nonluminous) const
 {
 	Ray tray = transformRayToLocal(r);
 
-	if(prim->hit(tray, tmin, tmax, time, record, nonluminous))
+	if(prim->hit(tray, tmin, tmax, time, record, cullFace, nonluminous))
 	{
 		record = transformRecordToWorld(record);
 		// Also update material and texture
@@ -37,12 +37,12 @@ bool ObjectInstance::hit(const Ray& r, float tmin, float tmax,
 	return false;
 }
 
-bool ObjectInstance::shadowHit(const Ray& r, float tmin, float tmax,
-				float time, bool nonluminous) const
+bool ObjectInstance::shadowHit(const Ray& r, float tmin, float tmax, float time,
+				bool cullFace, bool nonluminous) const
 {
 	Ray tray = transformRayToLocal(r);
 
-	return (prim->shadowHit(tray, tmin, tmax, time, nonluminous));
+	return (prim->shadowHit(tray, tmin, tmax, time, cullFace, nonluminous));
 }
 
 bool ObjectInstance::boundingBox(float time0, float time1, BBox& _box) const

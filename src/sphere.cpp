@@ -12,8 +12,8 @@ center(_center), radius(_radius), material(_material), texture(_texture)
 /*
 	At² + Bt + C = 0
 */
-bool Sphere::hit(const Ray& r, float tmin, float tmax,
-			float time, HitRecord& record, bool nonluminous) const
+bool Sphere::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record,
+			bool cullFace, bool nonluminous) const
 {
 	Ray tray = transformRayToLocal(r);
 
@@ -62,7 +62,8 @@ bool Sphere::hit(const Ray& r, float tmin, float tmax,
 	return false;
 }
 
-bool Sphere::shadowHit(const Ray& r, float tmin, float tmax, float time, bool nonluminous) const
+bool Sphere::shadowHit(const Ray& r, float tmin, float tmax, float time,
+			bool cullFace, bool nonluminous) const
 {
 	Ray tray = transformRayToLocal(r);
 

@@ -38,13 +38,13 @@ bool LightSphere::sampleLight(const Scene* scene, const Ray& r, const HitRecord&
 	// Compute emitting point
 	HitRecord lightRecord;
 	Ray sampleRay(record.p, unitVector(rtmath::transformVec(M, l)));
-	if(hit(sampleRay, 0.00001f, FLT_MAX, 0.0f, lightRecord, false)) // Change tmin/tmax
+	if(hit(sampleRay, 0.00001f, FLT_MAX, 0.0f, lightRecord, false, false)) // Change tmin/tmax
 	{
 		Ray shadow_ray(r.shadowRay(record, lightRecord.p, scene->shadow_ray_epsilon));
 		float tlight = shadow_ray.parameterAtPoint(lightRecord.p);
 
 		// nonluminous = true, so that light object will get ignored
-		if(scene->bvh->shadowHit(shadow_ray, 0.0f, tlight, r.time, true))
+		if(scene->bvh->shadowHit(shadow_ray, 0.0f, tlight, r.time, false, true))
 		{
 			return false;
 		}
@@ -58,21 +58,21 @@ bool LightSphere::sampleLight(const Scene* scene, const Ray& r, const HitRecord&
 	return false;
 }
 
-bool LightSphere::hit(const Ray& r, float tmin, float tmax,
-			float time, HitRecord& record, bool nonluminous) const
+bool LightSphere::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record,
+			bool cullFace, bool nonluminous) const
 {
 	if(nonluminous)	return false;
 
-	bool isHit = Sphere::hit(r, tmin, tmax, time, record, nonluminous);
+	bool isHit = Sphere::hit(r, tmin, tmax, time, record, cullFace, nonluminous);
 
 	record.color = radiance;
 	return isHit;
 }
 
-bool LightSphere::shadowHit(const Ray& r, float tmin, float tmax,
-				float time, bool nonluminous) const
+bool LightSphere::shadowHit(const Ray& r, float tmin, float tmax, float time,
+				bool cullFace, bool nonluminous) const
 {
 	if(nonluminous) return false;
 
-	return Sphere::shadowHit(r, tmin, tmax, time, nonluminous);
+	return Sphere::shadowHit(r, tmin, tmax, time, cullFace, nonluminous);
 }

@@ -24,7 +24,7 @@ bool SphericalDirectionalLight::sampleLight(const Scene* scene, const Ray& r,
 
 	l.makeUnitVector();
 	Ray shadow_ray(record.p + record.normal * scene->shadow_ray_epsilon, l);
-	if(scene->bvh->shadowHit(shadow_ray, 0.0f, FLT_MAX, r.time, nonluminous)) // In shadow
+	if(scene->bvh->shadowHit(shadow_ray, 0.0f, FLT_MAX, r.time, false, nonluminous)) // In shadow
 	{
 		return false;
 	}	

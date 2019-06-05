@@ -10,7 +10,7 @@ bool DirectionalLight::sampleLight(const Scene* scene, const Ray& r, const HitRe
 	shadow_ray.setTime(record.time);
 
 	if(scene->bvh->shadowHit(shadow_ray, 0.0f, std::numeric_limits<float>::max(),
-					r.time, nonluminous))
+					r.time, false, nonluminous))
 	{
 		return false;
 	}

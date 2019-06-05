@@ -26,14 +26,15 @@ bool LightMesh::sampleLight(const Scene* scene, const Ray& r, const HitRecord& r
 
 	HitRecord lightRecord;
 	Ray sampleRay(record.p, unitVector(Vec3(q - record.p)));
-	if(triangle_ptr->hit(sampleRay, 0.0f, FLT_MAX, 0.0f, lightRecord, false))
+	sampleRay.primary = true; // make the ray primary so that it may get culled
+	if(triangle_ptr->hit(sampleRay, 0.0f, FLT_MAX, 0.0f, lightRecord, true, false))
 	{
 		Vec3 wi(q - record.p);
 		Ray shadow_ray(r.shadowRay(record, q, scene->shadow_ray_epsilon));
 
 		// nonluminous = false, check if the luminous object is blocking the light
 		float tlight = shadow_ray.parameterAtPoint(q - wi * scene->shadow_ray_epsilon);
-		if(scene->bvh->shadowHit(shadow_ray, 0.0f, tlight, r.time, false))
+		if(scene->bvh->shadowHit(shadow_ray, 0.0f, tlight, r.time, false, false))
 		{
 			return false;
 		}
@@ -49,21 +50,21 @@ bool LightMesh::sampleLight(const Scene* scene, const Ray& r, const HitRecord& r
 	return false;
 }
 
-bool LightMesh::hit(const Ray& r, float tmin, float tmax,
-			float time, HitRecord& record, bool nonluminous) const
+bool LightMesh::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record,
+			bool cullFace, bool nonluminous) const
 {
 	if(nonluminous) return false;
 
-	bool isHit = ObjectInstance::hit(r, tmin, tmax, time, record, nonluminous);
+	bool isHit = ObjectInstance::hit(r, tmin, tmax, time, record, cullFace, nonluminous);
 
 	record.color = radiance;
 	return isHit;
 }
 
-bool LightMesh::shadowHit(const Ray& r, float tmin, float tmax,
-				float time, bool nonluminous) const
+bool LightMesh::shadowHit(const Ray& r, float tmin, float tmax, float time,
+			bool cullFace, bool nonluminous) const
 {
 	if(nonluminous) return false;
 
-	return ObjectInstance::shadowHit(r, tmin, tmax, time, nonluminous);
+	return ObjectInstance::shadowHit(r, tmin, tmax, time, cullFace, nonluminous);
 }

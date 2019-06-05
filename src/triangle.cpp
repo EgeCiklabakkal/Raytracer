@@ -41,8 +41,8 @@ Triangle::Triangle(const Vec3& _p0, const Vec3& _p1, const Vec3& _p2,
 	│c  f  i│ │ t │   │ l │
 	└       ┘ └   ┘   └   ┘
 */
-bool Triangle::hit(const Ray& r, float tmin, float tmax,
-			float time, HitRecord& record, bool nonluminous) const
+bool Triangle::hit(const Ray& r, float tmin, float tmax, float time, HitRecord& record,
+			bool cullFace, bool nonluminous) const
 {
 	Ray tray = transformRayToLocal(r);
 
@@ -84,6 +84,13 @@ bool Triangle::hit(const Ray& r, float tmin, float tmax,
 		record.t 	 = _t;
 		record.p	 = tray.origin() + _t*tray.direction();
 		record.normal 	 = normal;
+
+		// BackFace Culling on primary rays
+		if(cullFace && r.primary && dot(r.direction(), record.normal) > 0)
+		{
+			return false;
+		}
+
 		ONB _uvw;
 		_uvw.initFromW(normal);
 		record.uvw	 = _uvw;
@@ -101,7 +108,8 @@ bool Triangle::hit(const Ray& r, float tmin, float tmax,
 	return false;
 }
 
-bool Triangle::shadowHit(const Ray& r, float tmin, float tmax, float time, bool nonluminous) const
+bool Triangle::shadowHit(const Ray& r, float tmin, float tmax, float time,
+				bool cullFace, bool nonluminous) const
 {
 	Ray tray = transformRayToLocal(r);
 
@@ -138,7 +146,18 @@ bool Triangle::shadowHit(const Ray& r, float tmin, float tmax, float time, bool 
 
 	float _t = -(_f*(akjb) + _e*(jcal) + _d*(blkc)) / M;
 
-	return (_t >= tmin && _t <= tmax);
+	if(_t >= tmin && _t <= tmax)
+	{
+		// BackFace Culling on primary rays
+		if(cullFace && r.primary && dot(r.direction(), normal) > 0)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	return false;
 }
 
 bool Triangle::boundingBox(float time0, float time1, BBox& _box) const
