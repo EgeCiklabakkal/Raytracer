@@ -44,6 +44,7 @@ Vec3 rtmath::randSampleOverHemisphere(const ONB& uvw, bool importanceSampling,
 	sample = transformVec(trans, unitVector(sample));
 
 	pdf = (importanceSampling) ? cos(theta) * INV_PI : INV_2PI;
+	pdf = (pdf > 0.0f) ? pdf : 0.000001f;
 	return unitVector(sample);
 }
 

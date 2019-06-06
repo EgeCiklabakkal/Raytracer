@@ -214,7 +214,7 @@ inline bool rgb::hasNegatives() const
 
 inline bool rgb::isBlack() const
 {
-	return (!_r) && (!_g) && (!_b);
+	return (_r <= 0.0f) && (_g <= 0.0f) && (_b <= 0.0f);
 }
 
 #endif
