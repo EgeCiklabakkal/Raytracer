@@ -20,6 +20,12 @@
                 <Gamma>2.2</Gamma>
             </Tonemap>
 	    <Renderer>ProgressivePhotonMapping</Renderer>
+	    <RendererParams>
+		<Alpha>0.8</Alpha>
+		<ProgressiveCount>16</ProgressiveCount>
+		<NumPhotons>1000</NumPhotons>
+		<R_Initial>0.5</R_Initial>
+	    </RendererParams>
         </Camera>
     </Cameras>
 

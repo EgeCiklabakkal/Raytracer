@@ -296,9 +296,8 @@ void PhotonmappingIntegrator::accumulatePhoton(KDTreeNode* node, const HitRecord
 						-photonRecord.path.direction()));
 		SampleLight photonLight((photonRecord.power / costheta_i).asVec3(),
 					-photonRecord.path.direction());
-		rgb f = record.material.brdf->value(photonRecord.path, record, photonLight);
-
-		node->hitpoint.tau += f * photonRecord.power;
+		node->hitpoint.tau += record.material.brdf->value(photonRecord.path,
+								record, photonLight);
 	}
 
 	accumulatePhoton(node->left, record, photonRecord);
@@ -625,21 +624,26 @@ void PhotonmappingIntegrator::radianceEstimate(KDTreeNode* node, Image* img, int
 {
 	if(!node) { return; }
 
-	// Radius Reduction
-	node->hitpoint.Rx *= sqrt((node->hitpoint.Nx + alpha * node->hitpoint.Mx) /
-						(node->hitpoint.Nx + node->hitpoint.Mx));
+	float numerator(node->hitpoint.Nx + alpha * node->hitpoint.Mx);
+	float denominator(node->hitpoint.Nx + node->hitpoint.Mx);
+	if(denominator)
+	{
+		float factor(numerator / denominator);
 
-	// Flux Correction
-	node->hitpoint.tau *= (node->hitpoint.Nx + alpha * node->hitpoint.Mx) /
-						(node->hitpoint.Nx + node->hitpoint.Mx);
-	node->hitpoint.Nx += node->hitpoint.Mx * alpha;
-	node->hitpoint.Mx = 0;
+		// Radius Reduction
+		node->hitpoint.Rx *= sqrt(factor);
 
-	// Radiance Evaluation
-	float N_emitted_1 = 1.0f / (num_photons * time);
-	float r2_1 = 1.0f / (node->hitpoint.Rx * node->hitpoint.Rx);
-	rgb L = INV_PI * r2_1 * node->hitpoint.tau * N_emitted_1;
-	img->add(node->hitpoint.i, node->hitpoint.j, L);
+		// Flux Correction
+		node->hitpoint.tau *= factor;
+		node->hitpoint.Nx += alpha * node->hitpoint.Mx;
+		node->hitpoint.Mx = 0;
+
+		// Radiance Evaluation
+		float N_emitted_1 = 1.0f / (num_photons * time);
+		float r2_1 = 1.0f / (node->hitpoint.Rx * node->hitpoint.Rx);
+		rgb L = INV_PI * r2_1 * node->hitpoint.tau * N_emitted_1;
+		img->add(node->hitpoint.i, node->hitpoint.j, L);
+	}
 
 	radianceEstimate(node->left, img, time);
 	radianceEstimate(node->right, img, time);
