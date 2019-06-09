@@ -5,6 +5,8 @@
 #include "scene.h"
 #include "ONB.h"
 #include "rtmath.h"
+#include "photon.h"
+
 #include <vector>
 #include <limits>
 #include <math.h>
@@ -43,6 +45,8 @@ class Light
 
 	virtual bool sampleLight(const Scene* scene, const Ray& r, const HitRecord& record,
 					SampleLight& sampledLight, bool nonluminous=false) const=0;
+
+	virtual bool samplePhoton(Photon& photon) const { return false; }
 };
 
 class PointLight : public Light
@@ -59,6 +63,8 @@ class PointLight : public Light
 
 	virtual bool sampleLight(const Scene* scene, const Ray& r, const HitRecord& record,
 					SampleLight& sampledLight, bool nonluminous) const;
+
+	virtual bool samplePhoton(Photon& photon) const;
 };
 
 class AreaLight : public Light

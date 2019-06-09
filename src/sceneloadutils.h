@@ -13,6 +13,8 @@ bool getBoolChildWithDefaultFromNode(tinyxml2::XMLNode* node, std::string name,
 					bool _default, bool& val);
 bool getIntChildWithDefault(tinyxml2::XMLElement* element, std::stringstream& ss,
 				std::string name, int _default, int& val);
+bool getLongLongChildWithDefault(tinyxml2::XMLElement* element, std::stringstream& ss,
+				std::string name, long long int _default, long long int& val);
 bool getFloatChildWithDefault(tinyxml2::XMLElement* element, std::stringstream& ss,
 				std::string name, float _default, float& val);
 bool getBoolChildWithDefault(tinyxml2::XMLElement* element, std::string name,
@@ -137,6 +139,9 @@ void getIntegrator(tinyxml2::XMLElement* element, std::stringstream& ss,
 			const Scene* scene, Integrator*& integrator);
 void getRendererParams(tinyxml2::XMLElement* element, std::stringstream& ss,
 			bool& nextEventEstimation, bool& importanceSampling, bool& russianRoulette);
+void getPPMRendererParams(tinyxml2::XMLElement* element, std::stringstream& ss,
+				float& alpha, int& times,
+				long long int& num_photons, float& r_initial);
 void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,
                         const Scene* scene, std::vector<Camera*>& cameras);
 void pushCameraSimple(tinyxml2::XMLElement* element, std::stringstream& ss,

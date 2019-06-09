@@ -25,6 +25,7 @@ class Image
 	Image(int w, int h, rgb background);
 	bool get(int x, int y, rgb& color) const;
 	bool set(int x, int y, const rgb& color);
+	bool add(int x, int y, const rgb& color);
 	void gammaCorrect(float gamma);
 	int imread(std::string fname, int channels=4);
 	void imwrite(std::string fname, const Tonemap& tonemap=Tonemap()) const;

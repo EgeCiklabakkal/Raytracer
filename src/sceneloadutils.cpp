@@ -88,6 +88,25 @@ bool getIntChildWithDefault(tinyxml2::XMLElement* element, std::stringstream& ss
 	}
 }
 
+bool getLongLongChildWithDefault(tinyxml2::XMLElement* element, std::stringstream& ss,
+				std::string name, long long int _default, long long int& val)
+{
+	tinyxml2::XMLElement *child = element->FirstChildElement(name.data());
+
+	if(child)
+	{
+		ss << child->GetText() << std::endl;
+		ss >> val;
+		return true;
+	}
+
+	else
+	{
+		val = _default;
+		return false;
+	}
+}
+
 bool getFloatChildWithDefault(tinyxml2::XMLElement* element, std::stringstream& ss,
 				std::string name, float _default, float& val)
 {
@@ -1134,6 +1153,20 @@ void getIntegrator(tinyxml2::XMLElement* element, std::stringstream& ss,
 							importanceSampling, russianRoulette);
 			return;
 		}
+
+		if(sRenderer == "ProgressivePhotonMapping")
+		{
+			float alpha, r_initial;
+			int times;
+			long long int num_photons;
+
+			child = element->FirstChildElement("RendererParams");
+			getPPMRendererParams(child, ss, alpha, times, num_photons, r_initial);
+
+			integrator = new PhotonmappingIntegrator(scene, alpha, times,
+								num_photons, r_initial);
+			return;
+		}
 	}
 
 	// Defaults to Ray Tracing
@@ -1161,6 +1194,25 @@ void getRendererParams(tinyxml2::XMLElement* element, std::stringstream& ss,
 		}
 		ss.clear();
 	}
+}
+
+void getPPMRendererParams(tinyxml2::XMLElement* element, std::stringstream& ss,
+				float& alpha, int& times,
+				long long int& num_photons, float& r_initial)
+{
+	if(!element)
+	{
+		alpha = 0.7f;
+		times = 16;
+		num_photons = 100000;
+		r_initial   = 0.5f;
+		return;
+	}
+
+	getFloatChildWithDefault(element, ss, "Alpha", 0.7f, alpha);
+	getIntChildWithDefault(element, ss, "ProgressiveCount", 16, times);
+	getLongLongChildWithDefault(element, ss, "NumPhotons", 100000, num_photons);
+	getFloatChildWithDefault(element, ss, "R_Initial", 0.5f, r_initial);
 }
 
 void pushCameraLookAt(tinyxml2::XMLElement* element, std::stringstream& ss,

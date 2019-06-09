@@ -17,3 +17,20 @@ bool PointLight::sampleLight(const Scene* scene, const Ray& r, const HitRecord& 
 	sampledLight = SampleLight(intensity / d2, unitVector(wi));
 	return true;
 }
+
+bool PointLight::samplePhoton(Photon& photon) const
+{
+	float x, y, z;
+	// Generate random direction
+	do {
+		x = rtmath::randf() * 2.0f - 1.0f;
+		y = rtmath::randf() * 2.0f - 1.0f;
+		z = rtmath::randf() * 2.0f - 1.0f;
+	} while(x*x + y*y + z*z > 1.0f);
+
+	Ray path(position, Vec3(x, y, z));
+	rgb power(intensity * 4.0f * M_PI);
+	photon = Photon(path, power, 1.0f);
+
+	return true;
+}

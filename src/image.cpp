@@ -34,6 +34,15 @@ bool Image::set(int x, int y, const rgb& color)
 	return true;
 }
 
+bool Image::add(int x, int y, const rgb& color)
+{
+	if(0 > x || x > this->nx) return false;
+	if(0 > y || y > this->ny) return false;
+
+	raster[((ny-1) - y)*nx + x] += color;
+	return true;
+}
+
 void Image::imwrite(std::string fname, const Tonemap& tonemap) const
 {
 	std::string img_name;
