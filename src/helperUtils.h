@@ -15,7 +15,9 @@
 // util helper functions
 namespace utils
 {
-	void displayProgressBar(SafeStack<std::pair<float, float>>& pixels);	
+	void displayProgressBar(SafeStack<std::pair<float, float>>& pixels,
+					const std::string& desc="",
+					int bar_width=PROGRESS_BAR_WIDTH);
 
 	template<typename T>
 	void printTimeDiff(std::ostream& out, T prior, T latter)

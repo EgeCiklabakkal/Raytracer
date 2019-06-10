@@ -38,7 +38,7 @@ void PhotonmappingIntegrator::render(Image* img, const Camera* cam,
 		}
 	}
 
-	if(showProgress) { utils::displayProgressBar(pixels); }
+	if(showProgress) { utils::displayProgressBar(pixels, "Ray Tracing Pass", 60); }
 
 	// Wait for them to complete
 	for(i = 0; i < threadCount; i++) { threads[i].join(); }

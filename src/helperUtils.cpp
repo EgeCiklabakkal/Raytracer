@@ -1,16 +1,18 @@
 #include "helperUtils.h"
 
-void utils::displayProgressBar(SafeStack<std::pair<float, float>>& pixels)
+void utils::displayProgressBar(SafeStack<std::pair<float, float>>& pixels,
+				const std::string& desc, int bar_width)
 {
 	float progress = 0.0f;
 	float size = pixels.size;
 	int pos;
+	std::string info = (desc != "") ? (desc + " : ") : "";
 
 	while(progress < 1.0f)
 	{
-		std::cout << "[";
-		pos = PROGRESS_BAR_WIDTH * progress;
-		for(int i = 0; i < PROGRESS_BAR_WIDTH; i++)
+		std::cout << info << "[";
+		pos = bar_width * progress;
+		for(int i = 0; i < bar_width; i++)
 		{
 			if(i < pos) 
 				std::cout << "=";
@@ -28,8 +30,8 @@ void utils::displayProgressBar(SafeStack<std::pair<float, float>>& pixels)
 		progress = float(pixels.progress) / size;
 	}
 	// %100
-	std::cout << "[";
-	for(int i = 0; i < PROGRESS_BAR_WIDTH; i++)
+	std::cout << info << "[";
+	for(int i = 0; i < bar_width; i++)
 	{
 			std::cout << "=";
 	}
