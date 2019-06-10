@@ -1,6 +1,8 @@
 #ifndef _PHOTONMAPPINGINTEGRATOR_H_
 #define _PHOTONMAPPINGINTEGRATOR_H_
 
+#include <mutex>
+
 #include "integrator.h"
 #include "camera.h"
 #include "helperUtils.h"
@@ -18,6 +20,8 @@ class PhotonmappingIntegrator : public Integrator
 	long long int num_photons;	// how many photons should be emitted
 	float r_initial;		// Initial radius for photon mapping step
 
+	static std::mutex pmLock;	// lock
+
 	PhotonmappingIntegrator(const Scene* _scene, float _alpha=0.7f,
 				int _times=16, long long int _num_photons=100000,
 				float _r_initial=0.5f) :
@@ -27,14 +31,18 @@ class PhotonmappingIntegrator : public Integrator
 
 	virtual void render(Image* img, const Camera* cam,
 				int threadCount, bool showProgress) const;
-	static void photonmap_routine(const PhotonmappingIntegrator* integrator,
+	static void raytrace_routine(const PhotonmappingIntegrator* integrator,
 					const Scene* scene, const Camera* cam, Image* img,
 					SafeStack<std::pair<float, float>>* pixels,
 					SafeStack<HitPoint>* hitpoints, int num_samples);
-	static void photonmap_singleSample(const PhotonmappingIntegrator* integrator,
+	static void raytrace_singleSample(const PhotonmappingIntegrator* integrator,
 					const Scene* scene, const Camera* cam, Image* img,
 					SafeStack<std::pair<float, float>>* pixels,
 					SafeStack<HitPoint>* hitpoints);
+	static void photonmap_routine(const PhotonmappingIntegrator* integrator,
+					const Scene* scene, const Camera* cam,
+					Image* img, SafeStack<Photon>* photons, int time,
+					KDTree* kdtree);
 	void photonMapping(Image* img, SafeStack<Photon>& photons, int time,
 				KDTree& kdtree, const Tonemap& tonemap) const;
 	int samplePhotons(SafeStack<Photon>& photons) const;

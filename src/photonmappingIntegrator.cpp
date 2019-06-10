@@ -1,5 +1,8 @@
 #include "photonmappingIntegrator.h"
 
+// static variable definitions
+std::mutex PhotonmappingIntegrator::pmLock;	// lock
+
 void PhotonmappingIntegrator::render(Image* img, const Camera* cam,
 					int threadCount, bool showProgress) const
 {
@@ -27,13 +30,13 @@ void PhotonmappingIntegrator::render(Image* img, const Camera* cam,
 	{
 		if(cam->num_samples == 1)        // Single Sample
 		{
-			threads.push_back(std::thread(photonmap_singleSample, this, scene, cam,
+			threads.push_back(std::thread(raytrace_singleSample, this, scene, cam,
 							img, &pixels, &hitpoints));
 		}
 
 		else
 		{
-			threads.push_back(std::thread(photonmap_routine, this, scene, cam,
+			threads.push_back(std::thread(raytrace_routine, this, scene, cam,
 							img, &pixels, &hitpoints, cam->num_samples));
 		}
 	}
@@ -50,7 +53,7 @@ void PhotonmappingIntegrator::render(Image* img, const Camera* cam,
 	hitpoints.sstack.clear();
 	hitpoints.sstack.shrink_to_fit();
 
-	Image photonmapImg;
+	Image photonmapImg(width, height);
 	for(i = 0; i < times; i++)
 	{
 		// Determine photons
@@ -60,6 +63,24 @@ void PhotonmappingIntegrator::render(Image* img, const Camera* cam,
 		// Photon Tracing
 		photonmapImg = Image(width, height); // reset image on each pass
 		photonMapping(&photonmapImg, photons, i + 1, kdtree, cam->tonemap);
+
+		// Create threads
+		//std::vector<std::thread> photonPassThreads;
+
+		//for(j = 0; j < threadCount; j++)
+		//{
+		//	photonPassThreads.push_back(std::thread(photonmap_routine, this, scene,
+		//					cam, &photonmapImg, &photons, i + 1, &kdtree));
+		//}
+
+		if(showProgress)
+		{
+			utils::displayProgressBar(photons, "Photon Mapping Pass "
+								+ std::to_string(i + 1), 60);
+		}
+
+		//// Wait for them to complete
+		//for(j = 0; j < threadCount; j++) { photonPassThreads[j].join(); }
 	}
 
 	// Add color from photon map
@@ -74,7 +95,7 @@ void PhotonmappingIntegrator::render(Image* img, const Camera* cam,
 	}
 }
 
-void PhotonmappingIntegrator::photonmap_routine(const PhotonmappingIntegrator* integrator,
+void PhotonmappingIntegrator::raytrace_routine(const PhotonmappingIntegrator* integrator,
 						const Scene* scene, const Camera* cam, Image* img,
 						SafeStack<std::pair<float, float>>* pixels,
 						SafeStack<HitPoint>* hitpoints,
@@ -114,7 +135,7 @@ void PhotonmappingIntegrator::photonmap_routine(const PhotonmappingIntegrator* i
 	}
 }
 
-void PhotonmappingIntegrator::photonmap_singleSample(const PhotonmappingIntegrator* integrator,
+void PhotonmappingIntegrator::raytrace_singleSample(const PhotonmappingIntegrator* integrator,
 						const Scene* scene, const Camera* cam, Image* img,
 						SafeStack<std::pair<float, float>>* pixels,
 						SafeStack<HitPoint>* hitpoints)
@@ -132,6 +153,22 @@ void PhotonmappingIntegrator::photonmap_singleSample(const PhotonmappingIntegrat
 							false, Vec2(i, j));
 		img->set(i, j, raycolor);
 	}
+}
+
+void PhotonmappingIntegrator::photonmap_routine(const PhotonmappingIntegrator* integrator,
+						const Scene* scene, const Camera* cam,
+						Image* img, SafeStack<Photon>* photons, int time,
+						KDTree* kdtree)
+{
+	Photon currPhoton;
+	while(photons->pop(currPhoton))
+	{
+		integrator->tracePhoton(currPhoton, *kdtree,
+					scene->max_recursion_depth, cam->tonemap);
+	}
+
+	// Radius Reduction, Flux Correction and Radiance Estimation
+	integrator->radianceEstimate(kdtree->root, img, time);
 }
 
 void PhotonmappingIntegrator::photonMapping(Image* img, SafeStack<Photon>& photons,
@@ -287,17 +324,22 @@ void PhotonmappingIntegrator::accumulatePhoton(KDTreeNode* node, const HitRecord
 {
 	if(node == nullptr) { return; }
 
-	if(Vec3(node->hitpoint.p - photonRecord.p).length() < node->hitpoint.Rx &&
-		dot(node->hitpoint.normal, photonRecord.normal) > 0.0f)
 	{
-		node->hitpoint.Mx++;
+		std::lock_guard<std::mutex> lock(pmLock);
 
-		float costheta_i = std::max(0.000001f, dot(record.normal,
-						-photonRecord.path.direction()));
-		SampleLight photonLight((photonRecord.power / costheta_i).asVec3(),
-					-photonRecord.path.direction());
-		node->hitpoint.tau += record.material.brdf->value(photonRecord.path,
+		if(Vec3(node->hitpoint.p - photonRecord.p).length() < node->hitpoint.Rx &&
+			dot(node->hitpoint.normal, photonRecord.normal) > 0.0f)
+		{
+
+			float costheta_i = std::max(0.000001f, dot(record.normal,
+							-photonRecord.path.direction()));
+			SampleLight photonLight((photonRecord.power / costheta_i).asVec3(),
+						-photonRecord.path.direction());
+
+			node->hitpoint.tau += record.material.brdf->value(photonRecord.path,
 								record, photonLight);
+			node->hitpoint.Mx++;
+		}
 	}
 
 	accumulatePhoton(node->left, record, photonRecord);
@@ -624,25 +666,30 @@ void PhotonmappingIntegrator::radianceEstimate(KDTreeNode* node, Image* img, int
 {
 	if(!node) { return; }
 
-	float numerator(node->hitpoint.Nx + alpha * node->hitpoint.Mx);
-	float denominator(node->hitpoint.Nx + node->hitpoint.Mx);
-	if(denominator)
 	{
-		float factor(numerator / denominator);
+		std::lock_guard<std::mutex> lock(pmLock);
 
-		// Radius Reduction
-		node->hitpoint.Rx *= sqrt(factor);
+		float numerator(node->hitpoint.Nx + alpha * node->hitpoint.Mx);
+		float denominator(node->hitpoint.Nx + node->hitpoint.Mx);
+		if(denominator)
+		{
+			float factor(numerator / denominator);
 
-		// Flux Correction
-		node->hitpoint.tau *= factor;
-		node->hitpoint.Nx += alpha * node->hitpoint.Mx;
-		node->hitpoint.Mx = 0;
+			// Radius Reduction
+			node->hitpoint.Rx *= sqrt(factor);
 
-		// Radiance Evaluation
-		float N_emitted_1 = 1.0f / (num_photons * time);
-		float r2_1 = 1.0f / (node->hitpoint.Rx * node->hitpoint.Rx);
-		rgb L = INV_PI * r2_1 * node->hitpoint.tau * N_emitted_1;
-		img->add(node->hitpoint.i, node->hitpoint.j, L);
+			// Flux Correction
+			node->hitpoint.tau *= factor;
+			node->hitpoint.Nx += alpha * node->hitpoint.Mx;
+			node->hitpoint.Mx = 0;
+
+			// Radiance Evaluation
+			float N_emitted_1 = 1.0f / (num_photons * time);
+			float r2_1 = 1.0f / (node->hitpoint.Rx * node->hitpoint.Rx);
+			rgb L = INV_PI * r2_1 * node->hitpoint.tau * N_emitted_1;
+
+			img->add(node->hitpoint.i, node->hitpoint.j, L);
+		}
 	}
 
 	radianceEstimate(node->left, img, time);
