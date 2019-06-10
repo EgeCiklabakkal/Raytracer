@@ -15,9 +15,47 @@
 // util helper functions
 namespace utils
 {
-	void displayProgressBar(SafeStack<std::pair<float, float>>& pixels,
+	template<typename T>
+	void displayProgressBar(SafeStack<T>& stack,
 					const std::string& desc="",
-					int bar_width=PROGRESS_BAR_WIDTH);
+					int bar_width=PROGRESS_BAR_WIDTH)
+	{
+		float progress = 0.0f;
+		float size = stack.size;
+		int pos;
+		std::string info = (desc != "") ? (desc + " : ") : "";
+
+		while(progress < 1.0f)
+		{
+			std::cout << info << "[";
+			pos = bar_width * progress;
+			for(int i = 0; i < bar_width; i++)
+			{
+				if(i < pos)
+					std::cout << "=";
+				else if(i == pos)
+					std::cout << ">";
+				else
+					std::cout << " ";
+			}
+			std::cout << "] " << int(progress * 100.0) << "%\r";
+			std::cout.flush();
+
+			// we don't want this thread to hog the CPU, sleep
+			std::this_thread::sleep_for(std::chrono::milliseconds(PROGRESS_BAR_UPDATE_WAIT));
+
+			progress = float(stack.progress) / size;
+		}
+		// %100
+		std::cout << info << "[";
+		for(int i = 0; i < bar_width; i++)
+		{
+				std::cout << "=";
+		}
+		std::cout << "] " << 100 << "%" << std::endl;
+
+		// adapted from https://stackoverflow.com/a/14539953
+	}
 
 	template<typename T>
 	void printTimeDiff(std::ostream& out, T prior, T latter)
