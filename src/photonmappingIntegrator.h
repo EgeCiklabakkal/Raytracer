@@ -44,22 +44,22 @@ class PhotonmappingIntegrator : public Integrator
 					Image* img, SafeStack<Photon>* photons, int time,
 					KDTree* kdtree);
 	void photonMapping(Image* img, SafeStack<Photon>& photons, int time,
-				KDTree& kdtree, const Tonemap& tonemap) const;
+				KDTree* kdtree, const Tonemap& tonemap) const;
 	int samplePhotons(SafeStack<Photon>& photons) const;
 
 	rgb rayColor(const Ray& r, int recursion_depth, const Tonemap& tonemap,
 			SafeStack<HitPoint>* hitpoints,
 			bool nonluminous=false, const Vec2& ij=Vec2()) const;
-	void tracePhoton(const Photon& photon, KDTree& kdtree,
+	void tracePhoton(const Photon& photon, KDTree* kdtree,
 				int recursion_depth, const Tonemap& tonemap) const;
 	void photonReflection(const Photon& photon, const HitRecord& record, 
-				KDTree& kdtree, int recursion_depth,
+				KDTree* kdtree, int recursion_depth,
 				const Tonemap& tonemap) const;
 	void photonRefraction(const Photon& photon, const HitRecord& record,
-					KDTree& kdtree, int recursion_depth,
+					KDTree* kdtree, int recursion_depth,
 					const Tonemap& tonemap) const;
 	void photonPathTracing(const Photon& photon, const HitRecord& record,
-					KDTree& kdtree, int recursion_depth,
+					KDTree* kdtree, int recursion_depth,
 					const Tonemap& tonemap) const;
 	void accumulatePhoton(KDTreeNode* node, const HitRecord& record,
 					const PhotonHitRecord& photonRecord) const;

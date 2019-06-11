@@ -56,13 +56,15 @@ void PhotonmappingIntegrator::render(Image* img, const Camera* cam,
 	Image photonmapImg(width, height);
 	for(i = 0; i < times; i++)
 	{
+		int time = i + 1;
+
 		// Determine photons
 		SafeStack<Photon> photons(num_photons);
 		samplePhotons(photons);
 		
 		// Photon Tracing
 		photonmapImg = Image(width, height); // reset image on each pass
-		photonMapping(&photonmapImg, photons, i + 1, kdtree, cam->tonemap);
+		photonMapping(&photonmapImg, photons, i + 1, &kdtree, cam->tonemap);
 
 		// Create threads
 		//std::vector<std::thread> photonPassThreads;
@@ -70,17 +72,20 @@ void PhotonmappingIntegrator::render(Image* img, const Camera* cam,
 		//for(j = 0; j < threadCount; j++)
 		//{
 		//	photonPassThreads.push_back(std::thread(photonmap_routine, this, scene,
-		//					cam, &photonmapImg, &photons, i + 1, &kdtree));
+		//					cam, &photonmapImg, &photons, time, &kdtree));
 		//}
 
-		if(showProgress)
-		{
-			utils::displayProgressBar(photons, "Photon Mapping Pass "
-								+ std::to_string(i + 1), 60);
-		}
+		//if(showProgress)
+		//{
+		//	utils::displayProgressBar(photons, "Photon Mapping Pass "
+		//						+ std::to_string(time), 60);
+		//}
 
 		//// Wait for them to complete
 		//for(j = 0; j < threadCount; j++) { photonPassThreads[j].join(); }
+
+		//// Radius Reduction, Flux Correction and Radiance Estimation
+		//radianceEstimate(kdtree.root, img, time);
 	}
 
 	// Add color from photon map
@@ -163,16 +168,13 @@ void PhotonmappingIntegrator::photonmap_routine(const PhotonmappingIntegrator* i
 	Photon currPhoton;
 	while(photons->pop(currPhoton))
 	{
-		integrator->tracePhoton(currPhoton, *kdtree,
+		integrator->tracePhoton(currPhoton, kdtree,
 					scene->max_recursion_depth, cam->tonemap);
 	}
-
-	// Radius Reduction, Flux Correction and Radiance Estimation
-	integrator->radianceEstimate(kdtree->root, img, time);
 }
 
 void PhotonmappingIntegrator::photonMapping(Image* img, SafeStack<Photon>& photons,
-					int time, KDTree& kdtree, const Tonemap& tonemap) const
+					int time, KDTree* kdtree, const Tonemap& tonemap) const
 {
 	Photon currPhoton;
 	while(photons.pop(currPhoton))
@@ -181,7 +183,7 @@ void PhotonmappingIntegrator::photonMapping(Image* img, SafeStack<Photon>& photo
 	}
 		
 	// Radius Reduction, Flux Correction and Radiance Estimation
-	radianceEstimate(kdtree.root, img, time);
+	radianceEstimate(kdtree->root, img, time);
 }
 
 int PhotonmappingIntegrator::samplePhotons(SafeStack<Photon>& photons) const
@@ -276,7 +278,7 @@ rgb PhotonmappingIntegrator::rayColor(const Ray& r, int recursion_depth,
 	return rgb();
 }
 
-void PhotonmappingIntegrator::tracePhoton(const Photon& photon, KDTree& kdtree,
+void PhotonmappingIntegrator::tracePhoton(const Photon& photon, KDTree* kdtree,
 					int recursion_depth, const Tonemap& tonemap) const
 {
 	if(recursion_depth <= 0) { return; }
@@ -305,7 +307,7 @@ void PhotonmappingIntegrator::tracePhoton(const Photon& photon, KDTree& kdtree,
 		{
 			PhotonHitRecord photonRecord(record.p, record.normal,
 							photon.path, photon.power);
-			accumulatePhoton(kdtree.root, record, photonRecord);
+			accumulatePhoton(kdtree->root, record, photonRecord);
 		}
 
 		// Photon reflection
@@ -324,20 +326,20 @@ void PhotonmappingIntegrator::accumulatePhoton(KDTreeNode* node, const HitRecord
 {
 	if(node == nullptr) { return; }
 
+	if(Vec3(node->hitpoint.p - photonRecord.p).length() < node->hitpoint.Rx &&
+		dot(node->hitpoint.normal, photonRecord.normal) > 0.0f)
 	{
-		std::lock_guard<std::mutex> lock(pmLock);
 
-		if(Vec3(node->hitpoint.p - photonRecord.p).length() < node->hitpoint.Rx &&
-			dot(node->hitpoint.normal, photonRecord.normal) > 0.0f)
+		float costheta_i = std::max(0.000001f, dot(record.normal,
+						-photonRecord.path.direction()));
+		SampleLight photonLight((photonRecord.power / costheta_i).asVec3(),
+					-photonRecord.path.direction());
+
+		rgb flux(record.material.brdf->value(photonRecord.path, record, photonLight));
+
 		{
-
-			float costheta_i = std::max(0.000001f, dot(record.normal,
-							-photonRecord.path.direction()));
-			SampleLight photonLight((photonRecord.power / costheta_i).asVec3(),
-						-photonRecord.path.direction());
-
-			node->hitpoint.tau += record.material.brdf->value(photonRecord.path,
-								record, photonLight);
+			std::lock_guard<std::mutex> lock(pmLock);
+			node->hitpoint.tau += flux;
 			node->hitpoint.Mx++;
 		}
 	}
@@ -424,7 +426,7 @@ rgb PhotonmappingIntegrator::reflectionColor(const Ray& r, const HitRecord& reco
 }
 
 void PhotonmappingIntegrator::photonReflection(const Photon& photon, const HitRecord& record,
-						KDTree& kdtree, int recursion_depth,
+						KDTree* kdtree, int recursion_depth,
 						const Tonemap& tonemap) const
 {
 	rgb km(record.material.mirror);
@@ -504,7 +506,7 @@ rgb PhotonmappingIntegrator::refractionColor(const Ray& r, const HitRecord& reco
 }
 
 void PhotonmappingIntegrator::photonRefraction(const Photon& photon, const HitRecord& record,
-						KDTree& kdtree, int recursion_depth,
+						KDTree* kdtree, int recursion_depth,
 						const Tonemap& tonemap) const
 {
 	Vec3 transparency = record.material.transparency;
@@ -570,7 +572,7 @@ void PhotonmappingIntegrator::photonRefraction(const Photon& photon, const HitRe
 }
 
 void PhotonmappingIntegrator::photonPathTracing(const Photon& photon, const HitRecord& record,
-						KDTree& kdtree, int recursion_depth,
+						KDTree* kdtree, int recursion_depth,
 						const Tonemap& tonemap) const
 {
 	if(!recursion_depth) { return; }
@@ -666,30 +668,26 @@ void PhotonmappingIntegrator::radianceEstimate(KDTreeNode* node, Image* img, int
 {
 	if(!node) { return; }
 
+	float numerator(node->hitpoint.Nx + alpha * node->hitpoint.Mx);
+	float denominator(node->hitpoint.Nx + node->hitpoint.Mx);
+	if(denominator)
 	{
-		std::lock_guard<std::mutex> lock(pmLock);
+		float factor(numerator / denominator);
 
-		float numerator(node->hitpoint.Nx + alpha * node->hitpoint.Mx);
-		float denominator(node->hitpoint.Nx + node->hitpoint.Mx);
-		if(denominator)
-		{
-			float factor(numerator / denominator);
+		// Radius Reduction
+		node->hitpoint.Rx *= sqrt(factor);
 
-			// Radius Reduction
-			node->hitpoint.Rx *= sqrt(factor);
+		// Flux Correction
+		node->hitpoint.tau *= factor;
+		node->hitpoint.Nx += alpha * node->hitpoint.Mx;
+		node->hitpoint.Mx = 0;
 
-			// Flux Correction
-			node->hitpoint.tau *= factor;
-			node->hitpoint.Nx += alpha * node->hitpoint.Mx;
-			node->hitpoint.Mx = 0;
+		// Radiance Evaluation
+		float N_emitted_1 = 1.0f / (num_photons * time);
+		float r2_1 = 1.0f / (node->hitpoint.Rx * node->hitpoint.Rx);
+		rgb L = INV_PI * r2_1 * node->hitpoint.tau * N_emitted_1;
 
-			// Radiance Evaluation
-			float N_emitted_1 = 1.0f / (num_photons * time);
-			float r2_1 = 1.0f / (node->hitpoint.Rx * node->hitpoint.Rx);
-			rgb L = INV_PI * r2_1 * node->hitpoint.tau * N_emitted_1;
-
-			img->add(node->hitpoint.i, node->hitpoint.j, L);
-		}
+		img->add(node->hitpoint.i, node->hitpoint.j, L);
 	}
 
 	radianceEstimate(node->left, img, time);
