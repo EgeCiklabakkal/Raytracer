@@ -16,7 +16,7 @@ template<class T> class SafeStack
 	int size;
 	int progress = 0;
 
-	SafeStack() {}
+	SafeStack() : size(0) {}
 	SafeStack(const std::vector<T>& _sstack) : sstack(_sstack), size(sstack.size()) {}
 	SafeStack(int _size) : size(_size)
 	{

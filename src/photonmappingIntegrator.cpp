@@ -64,28 +64,27 @@ void PhotonmappingIntegrator::render(Image* img, const Camera* cam,
 		
 		// Photon Tracing
 		photonmapImg = Image(width, height); // reset image on each pass
-		photonMapping(&photonmapImg, photons, i + 1, &kdtree, cam->tonemap);
 
 		// Create threads
-		//std::vector<std::thread> photonPassThreads;
+		std::vector<std::thread> photonPassThreads;
 
-		//for(j = 0; j < threadCount; j++)
-		//{
-		//	photonPassThreads.push_back(std::thread(photonmap_routine, this, scene,
-		//					cam, &photonmapImg, &photons, time, &kdtree));
-		//}
+		for(j = 0; j < threadCount; j++)
+		{
+			photonPassThreads.push_back(std::thread(photonmap_routine, this, scene,
+							cam, &photonmapImg, &photons, time, &kdtree));
+		}
 
-		//if(showProgress)
-		//{
-		//	utils::displayProgressBar(photons, "Photon Mapping Pass "
-		//						+ std::to_string(time), 60);
-		//}
+		if(showProgress)
+		{
+			utils::displayProgressBar(photons, "Photon Mapping Pass "
+								+ std::to_string(time), 60);
+		}
 
-		//// Wait for them to complete
-		//for(j = 0; j < threadCount; j++) { photonPassThreads[j].join(); }
+		// Wait for them to complete
+		for(j = 0; j < threadCount; j++) { photonPassThreads[j].join(); }
 
-		//// Radius Reduction, Flux Correction and Radiance Estimation
-		//radianceEstimate(kdtree.root, img, time);
+		// Radius Reduction, Flux Correction and Radiance Estimation
+		radianceEstimate(kdtree.root, &photonmapImg, time);
 	}
 
 	// Add color from photon map
@@ -95,7 +94,7 @@ void PhotonmappingIntegrator::render(Image* img, const Camera* cam,
 		{
 			rgb photonmapColor;
 			photonmapImg.get(i, j, photonmapColor);
-			img->add(i, j, photonmapColor);
+			img->add(i, j, photonmapColor / cam->num_samples);
 		}
 	}
 }
@@ -171,19 +170,6 @@ void PhotonmappingIntegrator::photonmap_routine(const PhotonmappingIntegrator* i
 		integrator->tracePhoton(currPhoton, kdtree,
 					scene->max_recursion_depth, cam->tonemap);
 	}
-}
-
-void PhotonmappingIntegrator::photonMapping(Image* img, SafeStack<Photon>& photons,
-					int time, KDTree* kdtree, const Tonemap& tonemap) const
-{
-	Photon currPhoton;
-	while(photons.pop(currPhoton))
-	{
-		tracePhoton(currPhoton, kdtree, scene->max_recursion_depth, tonemap);
-	}
-		
-	// Radius Reduction, Flux Correction and Radiance Estimation
-	radianceEstimate(kdtree->root, img, time);
 }
 
 int PhotonmappingIntegrator::samplePhotons(SafeStack<Photon>& photons) const
@@ -344,8 +330,18 @@ void PhotonmappingIntegrator::accumulatePhoton(KDTreeNode* node, const HitRecord
 		}
 	}
 
-	accumulatePhoton(node->left, record, photonRecord);
-	accumulatePhoton(node->right, record, photonRecord);
+	float eps(scene->shadow_ray_epsilon);
+	Vec3 normal(0.0f);
+
+	if(node->splitAxis == Axis::X)      { normal.setX(1.0f); }
+	else if(node->splitAxis == Axis::Y) { normal.setY(1.0f); }
+	else if(node->splitAxis == Axis::Z) { normal.setZ(1.0f); }
+	float l(dot(Vec3(photonRecord.p - node->hitpoint.p), normal));
+
+	if(l < eps || std::abs(l) < node->hitpoint.Rx + eps)
+		accumulatePhoton(node->left, record, photonRecord);
+	if(l > -eps || std::abs(l) < node->hitpoint.Rx + eps)
+		accumulatePhoton(node->right, record, photonRecord);
 }
 
 rgb PhotonmappingIntegrator::backgroundColor(const Vec2& ij, const Vec3& direction) const
@@ -578,11 +574,10 @@ void PhotonmappingIntegrator::photonPathTracing(const Photon& photon, const HitR
 	if(!recursion_depth) { return; }
 
 	float pdf;
-	rgb kd(record.material.diffuse);
 
 	Vec3 dir(rtmath::randSampleOverHemisphere(record.uvw, false, pdf));
 	Ray path(record.p + record.normal * scene->shadow_ray_epsilon, dir);
-	Photon reflectedPhoton(path, kd * photon.power);
+	Photon reflectedPhoton(path, photon.power);
 
 	tracePhoton(reflectedPhoton, kdtree, recursion_depth - 1, tonemap);
 }
@@ -656,6 +651,7 @@ bool PhotonmappingIntegrator::handleHitPoints(const Ray& r, const HitRecord& rec
 {
 	if(record.material.diffuse.length())	// material has diffuse component
 	{
+		std::lock_guard<std::mutex> lock(pmLock);
 		hitpoints->push(HitPoint(record.p, record.normal, r, record.material.brdf,
 						ij[0], ij[1], r.weight, r_initial));
 		return true;

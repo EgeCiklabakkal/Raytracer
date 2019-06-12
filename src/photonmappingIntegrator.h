@@ -43,8 +43,6 @@ class PhotonmappingIntegrator : public Integrator
 					const Scene* scene, const Camera* cam,
 					Image* img, SafeStack<Photon>* photons, int time,
 					KDTree* kdtree);
-	void photonMapping(Image* img, SafeStack<Photon>& photons, int time,
-				KDTree* kdtree, const Tonemap& tonemap) const;
 	int samplePhotons(SafeStack<Photon>& photons) const;
 
 	rgb rayColor(const Ray& r, int recursion_depth, const Tonemap& tonemap,
