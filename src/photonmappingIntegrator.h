@@ -66,9 +66,11 @@ class PhotonmappingIntegrator : public Integrator
 	rgb diffuseColor(const Ray& r, const HitRecord& record, const SampleLight& slight) const;
 	rgb specularColor(const Ray& r, const HitRecord& record, const SampleLight& slight) const;
 	rgb reflectionColor(const Ray& r, const HitRecord& record, int recursion_depth,
-				const Tonemap& tonemap, SafeStack<HitPoint>* hitpoints) const;
+				const Tonemap& tonemap, SafeStack<HitPoint>* hitpoints,
+				const Vec2& ij) const;
 	rgb refractionColor(const Ray& r, const HitRecord& record, int recursion_depth,
-				const Tonemap& tonemap, SafeStack<HitPoint>* hitpoints) const;
+				const Tonemap& tonemap, SafeStack<HitPoint>* hitpoints,
+				const Vec2& ij) const;
 	bool handleTexture(HitRecord& record, DecalMode& decal_mode, rgb& color) const;
 	bool handleTonemap(const Tonemap& tonemap, HitRecord& record, rgb& color) const;
 	bool handleHitPoints(const Ray& r, const HitRecord& record,

@@ -245,10 +245,10 @@ rgb PhotonmappingIntegrator::rayColor(const Ray& r, int recursion_depth,
 		}
 
 		// Add color from reflections
-		rcolor += reflectionColor(r, record, recursion_depth, tonemap, hitpoints);
+		rcolor += reflectionColor(r, record, recursion_depth, tonemap, hitpoints, ij);
 
 		// Add color from refractions
-		rcolor += refractionColor(r, record, recursion_depth, tonemap, hitpoints);
+		rcolor += refractionColor(r, record, recursion_depth, tonemap, hitpoints, ij);
 
 		// Store hit points on diffuse surfaces
 		handleHitPoints(r, record, hitpoints, ij);
@@ -294,6 +294,9 @@ void PhotonmappingIntegrator::tracePhoton(const Photon& photon, KDTree* kdtree,
 			PhotonHitRecord photonRecord(record.p, record.normal,
 							photon.path, photon.power);
 			accumulatePhoton(kdtree->root, record, photonRecord);
+
+			// Path trace photon
+			photonPathTracing(photon, record, kdtree, recursion_depth, tonemap);
 		}
 
 		// Photon reflection
@@ -301,9 +304,6 @@ void PhotonmappingIntegrator::tracePhoton(const Photon& photon, KDTree* kdtree,
 
 		// Photon refraction
 		photonRefraction(photon, record, kdtree, recursion_depth, tonemap);
-
-		// Path trace photon
-		photonPathTracing(photon, record, kdtree, recursion_depth, tonemap);
 	}
 }
 
@@ -403,7 +403,8 @@ rgb PhotonmappingIntegrator::specularColor(const Ray& r, const HitRecord& record
 rgb PhotonmappingIntegrator::reflectionColor(const Ray& r, const HitRecord& record,
 						int recursion_depth,
 						const Tonemap& tonemap,
-						SafeStack<HitPoint>* hitpoints) const
+						SafeStack<HitPoint>* hitpoints,
+						const Vec2& ij) const
 {
 	rgb km(record.material.mirror);
 
@@ -418,7 +419,7 @@ rgb PhotonmappingIntegrator::reflectionColor(const Ray& r, const HitRecord& reco
 	}
 
 	return km * rayColor(r.reflectionRay(record, scene->shadow_ray_epsilon),
-				recursion_depth - 1, tonemap, hitpoints);
+				recursion_depth - 1, tonemap, hitpoints, false, ij);
 }
 
 void PhotonmappingIntegrator::photonReflection(const Photon& photon, const HitRecord& record,
@@ -439,7 +440,8 @@ void PhotonmappingIntegrator::photonReflection(const Photon& photon, const HitRe
 rgb PhotonmappingIntegrator::refractionColor(const Ray& r, const HitRecord& record,
 						int recursion_depth,
 						const Tonemap& tonemap,
-						SafeStack<HitPoint>* hitpoints) const
+						SafeStack<HitPoint>* hitpoints,
+						const Vec2& ij) const
 {
 	Vec3 transparency = record.material.transparency;
 
@@ -481,7 +483,8 @@ rgb PhotonmappingIntegrator::refractionColor(const Ray& r, const HitRecord& reco
 			{
 				return rgb(k) * rayColor(reflectionRay,
 							 recursion_depth - 1,
-							 tonemap, hitpoints);
+							 tonemap, hitpoints,
+							 false, ij);
 			}
 		}
 
@@ -491,11 +494,13 @@ rgb PhotonmappingIntegrator::refractionColor(const Ray& r, const HitRecord& reco
 		Ray transmissionRay(r.transmissionRay(nrecord, transmissionDirection,
 					scene->intersection_test_epsilon));
 
-		return rgb(k) * (R * rayColor(reflectionRay, recursion_depth - 1, tonemap, hitpoints)
+		return rgb(k) * (R * rayColor(reflectionRay, recursion_depth - 1, tonemap,
+						hitpoints, false, ij)
 					+ (1.0f - R) * rayColor(transmissionRay,
 								recursion_depth - 1,
 								tonemap,
-								hitpoints));
+								hitpoints,
+								false, ij));
 	}
 
 	return rgb();
@@ -574,10 +579,11 @@ void PhotonmappingIntegrator::photonPathTracing(const Photon& photon, const HitR
 	if(!recursion_depth) { return; }
 
 	float pdf;
+	rgb kd(record.material.diffuse);
 
 	Vec3 dir(rtmath::randSampleOverHemisphere(record.uvw, false, pdf));
 	Ray path(record.p + record.normal * scene->shadow_ray_epsilon, dir);
-	Photon reflectedPhoton(path, photon.power);
+	Photon reflectedPhoton(path, kd * photon.power);
 
 	tracePhoton(reflectedPhoton, kdtree, recursion_depth - 1, tonemap);
 }
