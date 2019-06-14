@@ -94,7 +94,7 @@ void PhotonmappingIntegrator::render(Image* img, const Camera* cam,
 		{
 			rgb photonmapColor;
 			photonmapImg.get(i, j, photonmapColor);
-			img->add(i, j, photonmapColor / cam->num_samples);
+			img->set(i, j, photonmapColor / cam->num_samples);
 		}
 	}
 }
@@ -321,7 +321,7 @@ void PhotonmappingIntegrator::accumulatePhoton(KDTreeNode* node, const HitRecord
 		SampleLight photonLight((photonRecord.power / costheta_i).asVec3(),
 					-photonRecord.path.direction());
 
-		rgb flux(record.material.brdf->value(photonRecord.path, record, photonLight));
+		rgb flux(node->hitpoint.brdf->value(photonRecord.path, record, photonLight));
 
 		{
 			std::lock_guard<std::mutex> lock(pmLock);
@@ -566,8 +566,14 @@ void PhotonmappingIntegrator::photonRefraction(const Photon& photon, const HitRe
 
 		else
 		{
+			// Trace more than once, otherwise, caustics do not appear
+			// Obviously, this shouldn't be the case, there is a bug
 			tracePhoton(Photon(transmissionRay, (1.0f - R) * photon.power),
-					kdtree, recursion_depth - 1, tonemap);
+					kdtree, recursion_depth, tonemap);
+			tracePhoton(Photon(transmissionRay, (1.0f - R) * photon.power),
+					kdtree, recursion_depth, tonemap);
+			tracePhoton(Photon(transmissionRay, (1.0f - R) * photon.power),
+					kdtree, recursion_depth, tonemap);
 		}
 	}
 }
