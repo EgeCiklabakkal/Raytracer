@@ -32,3 +32,27 @@ bool AreaLight::sampleLight(const Scene* scene, const Ray& r, const HitRecord& r
 	sampledLight = SampleLight(_I, wi);
 	return true;
 }
+
+bool AreaLight::samplePhoton(Photon& photon) const
+{
+	float e1, e2, u, v, sqrtu;
+	static float _2pi = 2.0f * M_PI;
+	ONB onb;
+	onb.initFromW(normal);
+
+	e1 = rtmath::randf() - 0.5f;
+	e2 = rtmath::randf() - 0.5f;
+
+	Vec3 ls(position + size*(e1*onb.u() + e2*onb.v()));
+
+	u = rtmath::randf();
+	v = _2pi * rtmath::randf();
+	sqrtu = sqrt(u);
+	Vec3 d(cos(v) * sqrtu, sin(v) * sqrtu, sqrt(1.0f - u));
+
+	Ray path(ls, d);
+	rgb power(radiance * size * size);
+	photon = Photon(path, power, 1.0f);
+
+	return true;
+}

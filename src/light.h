@@ -81,6 +81,8 @@ class AreaLight : public Light
 
 	virtual bool sampleLight(const Scene* scene, const Ray& r, const HitRecord& record,
 					SampleLight& sampledLight, bool nonluminous) const;
+
+	virtual bool samplePhoton(Photon& photon) const;
 };
 
 class DirectionalLight : public Light

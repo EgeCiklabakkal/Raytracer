@@ -20,15 +20,16 @@ bool PointLight::sampleLight(const Scene* scene, const Ray& r, const HitRecord& 
 
 bool PointLight::samplePhoton(Photon& photon) const
 {
-	float x, y, z;
-	// Generate random direction
-	do {
-		x = rtmath::randf() * 2.0f - 1.0f;
-		y = rtmath::randf() * 2.0f - 1.0f;
-		z = rtmath::randf() * 2.0f - 1.0f;
-	} while(x*x + y*y + z*z > 1.0f);
+	float u, v, sinv;
+	static float _2pi = 2.0f * M_PI;
 
-	Ray path(position, Vec3(x, y, z));
+	// Generate random direction
+	u = _2pi * rtmath::randf();
+	v = 2.0f * acos(sqrt(rtmath::randf()));
+	sinv = sin(v);
+	Vec3 d(cos(u) * sinv, cos(v), sin(u) * sinv);
+
+	Ray path(position, d);
 	rgb power(intensity * 4.0f * M_PI);
 	photon = Photon(path, power, 1.0f);
 
